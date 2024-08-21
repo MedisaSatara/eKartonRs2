@@ -249,13 +249,13 @@ namespace eKarton.Service.Databases
                     .HasMaxLength(13)
                     .HasColumnName("JMBG");
 
-                entity.Property(e => e.KorisnickoIme).HasMaxLength(20);
+               // entity.Property(e => e.KorisnickoIme).HasMaxLength(20);
 
                 entity.Property(e => e.KrvnaGrupa).HasMaxLength(10);
 
-                entity.Property(e => e.LozinkaHash).HasMaxLength(50);
+               // entity.Property(e => e.LozinkaHash).HasMaxLength(50);
 
-                entity.Property(e => e.LozinkaSalt).HasMaxLength(50);
+               // entity.Property(e => e.LozinkaSalt).HasMaxLength(50);
 
                 entity.Property(e => e.MjestoRodjenja).HasMaxLength(50);
 
@@ -269,11 +269,11 @@ namespace eKarton.Service.Databases
 
                 entity.Property(e => e.Telefon).HasMaxLength(20);
 
-                entity.HasOne(d => d.Korisnik)
+               /* entity.HasOne(d => d.Korisnik)
                     .WithMany(p => p.Pacijents)
                     .HasForeignKey(d => d.KorisnikId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Korisnik_Pacijent");
+                    .HasConstraintName("FK_Korisnik_Pacijent");*/
             });
 
             modelBuilder.Entity<PacijentOboljenja>(entity =>

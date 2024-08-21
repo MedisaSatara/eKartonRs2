@@ -19,10 +19,10 @@ namespace eKarton.Services.Database
                 Salt.Add(KorisnikService.GenerateSalt());
             }
 
-            for (int i = 0; i < 5; i++)
+            /*for (int i = 0; i < 5; i++)
             {
                 Salt.Add(PacijentService.GenerateSalt());
-            }
+            }*/
 
 
             #region Dodavanje Korisnika
@@ -390,11 +390,11 @@ namespace eKarton.Services.Database
                     RhFaktor = "+",
                     HronicneBolesti = "Nema",
                     Alergija = "Ne",
-                    KorisnickoIme = "pacijent1",
-                    LozinkaSalt = Salt[0],
-                    LozinkaHash = PacijentService.GenerateHash(Salt[0], "pacijent05"),
                     BrojKartona = "14B579",
-                    KorisnikId = 1002
+                    /* KorisnickoIme = "pacijent1",
+                     LozinkaSalt = Salt[0],
+                     LozinkaHash = PacijentService.GenerateHash(Salt[0], "pacijent05"),
+                     KorisnikId = 1002*/
                 },
                 new Pacijent()
                 {
@@ -412,11 +412,11 @@ namespace eKarton.Services.Database
                     RhFaktor = "+",
                     HronicneBolesti = "Nema",
                     Alergija = "Antibiotik",
-                    KorisnickoIme = "Pacijent2",
+                   // KorisnickoIme = "Pacijent2",
                     BrojKartona = "19378A",
-                    LozinkaSalt = Salt[0],
+                   /* LozinkaSalt = Salt[0],
                     LozinkaHash = PacijentService.GenerateHash(Salt[0], "pacijent21"),
-                    KorisnikId = 1002
+                    KorisnikId = 1002*/
                 },
                 new Pacijent()
                 {
@@ -434,11 +434,11 @@ namespace eKarton.Services.Database
                     RhFaktor = "-",
                     HronicneBolesti = "Nema",
                     Alergija = "Ne",
-                    KorisnickoIme = "pacijent3",
+                   // KorisnickoIme = "pacijent3",
                     BrojKartona = "8537C",
-                    LozinkaSalt = Salt[0],
+                   /* LozinkaSalt = Salt[0],
                     LozinkaHash = PacijentService.GenerateHash(Salt[0], "pacijent45"),
-                    KorisnikId = 1002
+                    KorisnikId = 1002*/
                 });
             #endregion
 

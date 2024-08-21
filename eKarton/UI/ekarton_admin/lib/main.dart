@@ -1,9 +1,11 @@
 import 'package:ekarton_admin/providers/administrator_provider.dart';
 import 'package:ekarton_admin/providers/bolnica_provider.dart';
 import 'package:ekarton_admin/providers/doktor_provider.dart';
+import 'package:ekarton_admin/providers/korisnik_provider.dart';
 import 'package:ekarton_admin/providers/odjel_provider.dart';
 import 'package:ekarton_admin/providers/pacijent_provider.dart';
 import 'package:ekarton_admin/screens/administrator_screen.dart';
+import 'package:ekarton_admin/screens/home_screen.dart';
 import 'package:ekarton_admin/screens/pacijent_list_screen.dart';
 import 'package:ekarton_admin/utils/util.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => PacijentProvider()),
       ChangeNotifierProvider(create: (_) => OdjelProvider()),
       ChangeNotifierProvider(create: (_) => DoktorProvider()),
+      ChangeNotifierProvider(create: (_) => KorisnikProvider()),
 
       /*  
       ChangeNotifierProvider(create: (_) => PacijentiProvider()),
@@ -165,7 +168,7 @@ class Login extends StatelessWidget {
 
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => PacijentiScreen(),
+                              builder: (context) => HomeScreen(),
                             ),
                           );
                         } on Exception catch (e) {

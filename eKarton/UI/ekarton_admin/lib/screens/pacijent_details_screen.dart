@@ -1,8 +1,9 @@
-import 'package:ekarton_admin/main.dart';
 import 'package:ekarton_admin/models/pacijent.dart';
+import 'package:ekarton_admin/providers/pacijent_provider.dart';
 import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:provider/provider.dart';
 
 class PacijentiDetailsScreen extends StatefulWidget {
   final Pacijent? pacijent;
@@ -14,6 +15,7 @@ class PacijentiDetailsScreen extends StatefulWidget {
 
 class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
+  late PacijentProvider _pacijentProvider;
   late Map<String, dynamic> _initialValue;
 
   @override
@@ -21,8 +23,8 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
     super.initState();
     _initialValue = {
       'ime': widget.pacijent?.ime,
-      'brojKartona': widget.pacijent?.brojKartona,
       'prezime': widget.pacijent?.prezime,
+      'brojKartona': widget.pacijent?.brojKartona,
       'datumRodjenja': widget.pacijent?.datumRodjenja,
       'spol': widget.pacijent?.spol,
       'prebivaliste': widget.pacijent?.prebivaliste,
@@ -32,9 +34,51 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
       'hronicneBolesti': widget.pacijent?.hronicneBolesti,
       'rhFaktor': widget.pacijent?.rhFaktor,
       'telefon': widget.pacijent?.telefon,
-      'korisnickoIme': widget.pacijent?.korisnickoIme,
       'krvnaGrupa': widget.pacijent?.krvnaGrupa,
+      'koagulopatija': widget.pacijent?.koagulopatija,
     };
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _pacijentProvider = context.read<PacijentProvider>();
+  }
+
+  Future<void> _submitForm() async {
+    if (_formKey.currentState!.saveAndValidate()) {
+      final formData = _formKey.currentState!.value;
+
+      try {
+        if (widget.pacijent == null) {
+          // Insert new patient
+          await _pacijentProvider.insert(Pacijent.fromJson(formData));
+        } else {
+          // Update existing patient
+          if (widget.pacijent!.pacijentId == null) {
+            throw Exception('Patient ID is null');
+          }
+          await _pacijentProvider.update(
+            widget.pacijent!.pacijentId!,
+            Pacijent.fromJson(formData),
+          );
+        }
+        Navigator.of(context).pop();
+      } catch (e) {
+        print('Error: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save patient. Please try again.')),
+        );
+      }
+    } else {
+      final validationErrors = _formKey.currentState?.errors;
+      print('Validation errors: $validationErrors');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                'Form validation failed. Please correct the errors and try again.')),
+      );
+    }
   }
 
   @override
@@ -42,162 +86,138 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
     return MasterScreenWidget(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            SizedBox(height: 24),
-            Divider(height: 1, thickness: 2),
-            SizedBox(height: 24),
-            Expanded(
-              child: SingleChildScrollView(
-                child: _buildForm(),
-              ),
+        child: SingleChildScrollView(
+          child: FormBuilder(
+            key: _formKey,
+            initialValue: _initialValue,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Detaljni prikaz podataka pacijenta',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24, // Adjusted size for better readability
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                FormBuilderTextField(
+                  name: 'ime',
+                  decoration: InputDecoration(
+                    labelText: 'Ime',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'prezime',
+                  decoration: InputDecoration(
+                    labelText: 'Prezime',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'brojKartona',
+                  decoration: InputDecoration(
+                    labelText: 'Broj kartona',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'datumRodjenja',
+                  decoration: InputDecoration(
+                    labelText: 'Datum rodjenja',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'spol',
+                  decoration: InputDecoration(
+                    labelText: 'Spol',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'jmbg',
+                  decoration: InputDecoration(
+                    labelText: 'JMBG',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'mjestoRodjenja',
+                  decoration: InputDecoration(
+                    labelText: 'Mjesto rodjenja',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'prebivaliste',
+                  decoration: InputDecoration(
+                    labelText: 'Prebivaliste',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'telefon',
+                  decoration: InputDecoration(
+                    labelText: 'Telefon',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'krvnaGrupa',
+                  decoration: InputDecoration(
+                    labelText: 'Krva grupa',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'rhFaktor',
+                  decoration: InputDecoration(
+                    labelText: 'Rh faktor',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'hronicneBolesti',
+                  decoration: InputDecoration(
+                    labelText: 'Hronicne bolesti',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'alergican',
+                  decoration: InputDecoration(
+                    labelText: 'Alergican',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: _submitForm,
+                  child:
+                      Text(widget.pacijent == null ? 'Dodaj' : 'Uredi podatke'),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
-      title: widget.pacijent?.ime ?? "Pacijent details",
-    );
-  }
-
-  Widget _buildHeader() {
-    return Row(
-      children: [
-        Expanded(
-          child: FormBuilderTextField(
-            decoration: InputDecoration(
-              labelText: "Ime pacijenta",
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            name: "ime",
-            initialValue: _initialValue['ime'],
-          ),
-        ),
-        SizedBox(width: 8),
-        Expanded(
-          child: FormBuilderTextField(
-            decoration: InputDecoration(
-              labelText: "Prezime pacijenta",
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            name: "prezime",
-            initialValue: _initialValue['prezime'],
-          ),
-        ),
-        SizedBox(width: 8),
-        Expanded(
-          child: FormBuilderTextField(
-            decoration: InputDecoration(
-              labelText: "Broj kartona",
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            name: "brojKartona",
-            initialValue: _initialValue['brojKartona'],
-          ),
-        ),
-      ],
-    );
-  }
-
-  FormBuilder _buildForm() {
-    return FormBuilder(
-      key: _formKey,
-      initialValue: _initialValue,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          FormBuilderTextField(
-            decoration: InputDecoration(
-              labelText: "Spol",
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            name: "spol",
-            initialValue: _initialValue['spol'],
-          ),
-          SizedBox(height: 16),
-          FormBuilderTextField(
-            decoration: InputDecoration(
-              labelText: "Datum rodjenja",
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            name: "datumRodjenja",
-            initialValue: _initialValue['datumRodjenja'],
-          ),
-          SizedBox(height: 16),
-          FormBuilderTextField(
-            decoration: InputDecoration(
-              labelText: "JMBG",
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            name: "jmbg",
-            initialValue: _initialValue['jmbg'],
-          ),
-          SizedBox(height: 16),
-          FormBuilderTextField(
-            decoration: InputDecoration(
-              labelText: "Telefon",
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            name: "telefon",
-            initialValue: _initialValue['telefon'],
-          ),
-          SizedBox(height: 16),
-          FormBuilderTextField(
-            decoration: InputDecoration(
-              labelText: "Prebivaliste",
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            name: "prebivaliste",
-            initialValue: _initialValue['prebivaliste'],
-          ),
-          SizedBox(height: 16),
-          FormBuilderTextField(
-            decoration: InputDecoration(
-              labelText: "Krvna grupa",
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            name: "krvnaGrupa",
-            initialValue: _initialValue['krvnaGrupa'],
-          ),
-          SizedBox(height: 16),
-          FormBuilderTextField(
-            decoration: InputDecoration(
-              labelText: "Rh faktor",
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            name: "rhFaktor",
-            initialValue: _initialValue['rhFaktor'],
-          ),
-          SizedBox(height: 16),
-          FormBuilderTextField(
-            decoration: InputDecoration(
-              labelText: "Alergican",
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            name: "alergican",
-            initialValue: _initialValue['alergican'],
-          ),
-          SizedBox(height: 16),
-          FormBuilderTextField(
-            decoration: InputDecoration(
-              labelText: "Hronicne bolesti",
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            name: "hronicneBolesti",
-            initialValue: _initialValue['hronicneBolesti'],
-          ),
-          SizedBox(height: 16),
-          FormBuilderTextField(
-            decoration: InputDecoration(
-              labelText: "Korisnicko ime",
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            name: "korisnickoIme",
-            initialValue: _initialValue['korisnickoIme'],
-          ),
-        ],
-      ),
+      title: widget.pacijent != null
+          ? "Pacijent: ${widget.pacijent?.ime}"
+          : "Pacijent details",
     );
   }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eKarton.Service.Databases;
 
@@ -11,9 +12,10 @@ using eKarton.Service.Databases;
 namespace eKarton.Service.Migrations
 {
     [DbContext(typeof(eKartonContext))]
-    partial class eKartonContextModelSnapshot : ModelSnapshot
+    [Migration("20240821130139_pacijentUpdate")]
+    partial class pacijentUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -424,8 +426,8 @@ namespace eKarton.Service.Migrations
                             KorisnikId = 1001,
                             Ime = "Arijana",
                             KorisnickoIme = "admin",
-                            LozinkaHash = "k507CnRQrQDpt7h3vP7CjpYG274=",
-                            LozinkaSalt = "B1H4C7syRK1eyHCDXgcl4g==",
+                            LozinkaHash = "dgmZPga0TPofvNJK2WjjYRJEaWI=",
+                            LozinkaSalt = "np+1VfZWYiPHoRHkVX3dNg==",
                             Prezime = "Husic"
                         },
                         new
@@ -433,8 +435,8 @@ namespace eKarton.Service.Migrations
                             KorisnikId = 1002,
                             Ime = "Medisa",
                             KorisnickoIme = "korisnik",
-                            LozinkaHash = "hgz4afcUsPgM1fnhQ12Abmpbihc=",
-                            LozinkaSalt = "FZ0K5Wo9pgxaDpYzRfF8Kg==",
+                            LozinkaHash = "AxirRCuTrikLkM+8MoLz8zPqtB4=",
+                            LozinkaSalt = "nfdZjq3uBdI6oszI4z4+aA==",
                             Prezime = "Satara"
                         });
                 });
@@ -468,14 +470,14 @@ namespace eKarton.Service.Migrations
                         new
                         {
                             KorisnikUlogaId = 1,
-                            DatumIzmjene = new DateTime(2024, 8, 21, 15, 11, 26, 363, DateTimeKind.Local).AddTicks(7366),
+                            DatumIzmjene = new DateTime(2024, 8, 21, 15, 1, 37, 40, DateTimeKind.Local).AddTicks(6266),
                             KorisnikId = 1001,
                             UlogaId = 1
                         },
                         new
                         {
                             KorisnikUlogaId = 2,
-                            DatumIzmjene = new DateTime(2024, 8, 21, 15, 11, 26, 363, DateTimeKind.Local).AddTicks(7422),
+                            DatumIzmjene = new DateTime(2024, 8, 21, 15, 1, 37, 40, DateTimeKind.Local).AddTicks(6317),
                             KorisnikId = 1002,
                             UlogaId = 2
                         });

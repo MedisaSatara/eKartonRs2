@@ -41,7 +41,7 @@ class Pacijent {
   String? brojKartona;
   String? korisnickoIme;
   String? alergican;
-  //Bool? koagulopatije;
+  bool? koagulopatija;
 
   factory Pacijent.fromJson(Map<String, dynamic> json) =>
       _$PacijentFromJson(json);

@@ -10,10 +10,10 @@ class AdministratorScreen extends StatefulWidget {
   const AdministratorScreen({Key? key}) : super(key: key);
 
   @override
-  State<AdministratorScreen> createState() => _AdministratorScreen();
+  State<AdministratorScreen> createState() => _AdministratorScreenState();
 }
 
-class _AdministratorScreen extends State<AdministratorScreen> {
+class _AdministratorScreenState extends State<AdministratorScreen> {
   late AdministratorProvider _administratorProvider;
   SearchResult<Administrator>? administratorResult;
 
@@ -33,88 +33,129 @@ class _AdministratorScreen extends State<AdministratorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final administrator = administratorResult?.result.first;
+
     return MasterScreenWidget(
-      title_widget: Text("Profil administratora"),
-      child: Center(
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildDataListView(),
-            ],
-          ),
+      title_widget: Text(
+        "Hello, Admin! Welcome to your profile!",
+        style: TextStyle(
+          color: Colors.white, // Set the color of the title text
         ),
       ),
+      child: administrator != null
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 60,
+                              backgroundColor: Colors.blueAccent,
+                              child: Text(
+                                administrator.ime?[0] ?? '',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 48,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 24),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${administrator.ime ?? ''} ${administrator.prezime ?? ''}",
+                                  style: TextStyle(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  administrator.email ?? '',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  administrator.telefon ?? '',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 32),
+                        Divider(),
+                        SizedBox(height: 16),
+                        _buildProfileDetail("Date of Birth",
+                            administrator.datumRodjenja ?? "", Icons.cake),
+                        _buildProfileDetail("Address",
+                            administrator.prebivaliste ?? "", Icons.home),
+                        _buildProfileDetail(
+                            "Phone", administrator.telefon ?? "", Icons.phone),
+                        _buildProfileDetail(
+                            "Email", administrator.email ?? "", Icons.email),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
+          : Center(child: CircularProgressIndicator()),
     );
   }
 
-  Expanded _buildDataListView() {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: DataTable(
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Ime',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+  Widget _buildProfileDetail(String title, String value, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[200], // Pozadinska boja
+          borderRadius: BorderRadius.circular(10.0), // Zaobljeni uglovi
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 8.0,
+              offset: Offset(0, 4), // Senka ispod
+            ),
+          ],
+        ),
+        padding: EdgeInsets.all(12.0), // Unutrašnji padding
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.blueAccent, size: 28),
+            SizedBox(width: 16),
+            Text(
+              "$title:",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
               ),
             ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Prezime',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Datum rodjenja',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Prebivaliste',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Telefon',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Email',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                value,
+                style: TextStyle(fontSize: 20),
               ),
             ),
           ],
-          rows: administratorResult?.result
-                  .map((Administrator e) => DataRow(
-                        cells: [
-                          DataCell(Text(e.ime ?? "")),
-                          DataCell(Text(e.prezime ?? "")),
-                          DataCell(Text(e.datumRodjenja ?? "")),
-                          DataCell(Text(e.prebivaliste ?? "")),
-                          DataCell(Text(e.telefon ?? "")),
-                          DataCell(Text(e.email ?? "")),
-                        ],
-                      ))
-                  .toList() ??
-              [],
         ),
       ),
     );

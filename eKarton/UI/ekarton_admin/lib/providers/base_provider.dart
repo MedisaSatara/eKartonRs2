@@ -7,10 +7,9 @@ import 'package:http/http.dart';
 
 abstract class BaseProvider<T> with ChangeNotifier {
   static String? _baseUrl;
-  String _endpoint = "";
+  String _endpoint;
 
-  BaseProvider(String endpoint) {
-    _endpoint = endpoint;
+  BaseProvider(String endpoint) : _endpoint = endpoint {
     _baseUrl = const String.fromEnvironment("baseUrl",
         defaultValue: "https://localhost:7285/");
   }
@@ -26,40 +25,46 @@ abstract class BaseProvider<T> with ChangeNotifier {
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
-    var response = await http.get(uri, headers: headers);
-    //print("response:${response.statusCode}, ${response.body}");
+    try {
+      var response = await http.get(uri, headers: headers);
 
-    if (isValidResponse(response)) {
-      var data = jsonDecode(response.body);
-      var result = SearchResult<T>();
-      result.count = data['count'];
-      for (var item in data['result']) {
-        result.result.add(fromJson(item));
+      if (isValidResponse(response)) {
+        var data = jsonDecode(response.body);
+        var result = SearchResult<T>();
+        result.count = data['count'];
+        for (var item in data['result']) {
+          result.result.add(fromJson(item));
+        }
+        return result;
+      } else {
+        throw Exception("Unknown error");
       }
-
-      return result;
-    } else {
-      throw new Exception("Unknown error");
+    } catch (e) {
+      print("Error during GET request: $e");
+      rethrow;
     }
   }
 
-  T fromJson(data) {
-    throw Exception("Method not implemented");
-  }
+  T fromJson(dynamic data);
 
   Future<T> update(int id, [dynamic request]) async {
     var url = "$_baseUrl$_endpoint/$id";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
-    var jsonRequest = jsonEncode(request);
-    var response = await http.put(uri, headers: headers, body: jsonRequest);
+    try {
+      var jsonRequest = jsonEncode(request);
+      var response = await http.put(uri, headers: headers, body: jsonRequest);
 
-    if (isValidResponse(response)) {
-      var data = jsonDecode(response.body);
-      return fromJson(data);
-    } else {
-      throw new Exception(("unknown error"));
+      if (isValidResponse(response)) {
+        var data = jsonDecode(response.body);
+        return fromJson(data);
+      } else {
+        throw Exception("Unknown error");
+      }
+    } catch (e) {
+      print("Error during PUT request: $e");
+      rethrow;
     }
   }
 
@@ -68,21 +73,26 @@ abstract class BaseProvider<T> with ChangeNotifier {
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
-    var jsonRequest = jsonEncode(request);
-    print("Request URL: $url");
-    print("Request Headers: $headers");
-    print("Request Body: $jsonRequest");
+    try {
+      var jsonRequest = jsonEncode(request);
+      print("Request URL: $url");
+      print("Request Headers: $headers");
+      print("Request Body: $jsonRequest");
 
-    var response = await http.post(uri, headers: headers, body: jsonRequest);
+      var response = await http.post(uri, headers: headers, body: jsonRequest);
 
-    print("Response Status Code: ${response.statusCode}");
-    print("Response Body: ${response.body}");
+      print("Response Status Code: ${response.statusCode}");
+      print("Response Body: ${response.body}");
 
-    if (isValidResponse(response)) {
-      var data = jsonDecode(response.body);
-      return fromJson(data);
-    } else {
-      throw Exception("Error: ${response.statusCode} ${response.body}");
+      if (isValidResponse(response)) {
+        var data = jsonDecode(response.body);
+        return fromJson(data);
+      } else {
+        throw Exception("Error: ${response.statusCode} ${response.body}");
+      }
+    } catch (e) {
+      print("Error during POST request: $e");
+      rethrow;
     }
   }
 
@@ -91,19 +101,10 @@ abstract class BaseProvider<T> with ChangeNotifier {
     String query = '';
     params.forEach((key, value) {
       if (inRecursion) {
-        if (key is int) {
-          key = '[$key]';
-        } else if (value is List || value is Map) {
-          key = '.$key';
-        } else {
-          key = '.$key';
-        }
+        key = (key is int) ? '[$key]' : '.$key';
       }
       if (value is String || value is int || value is double || value is bool) {
-        var encoded = value;
-        if (value is String) {
-          encoded = Uri.encodeComponent(value);
-        }
+        var encoded = Uri.encodeComponent(value.toString());
         query += '$prefix$key=$encoded';
       } else if (value is DateTime) {
         query += '$prefix$key=${(value as DateTime).toIso8601String()}';
@@ -119,13 +120,13 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   bool isValidResponse(Response response) {
-    if (response.statusCode < 299) {
+    if (response.statusCode < 300) {
       return true;
     } else if (response.statusCode == 401) {
-      throw new Exception("Unauthorized");
+      throw Exception("Unauthorized");
     } else {
       print(response.body);
-      throw new Exception("Something bad happened please try again");
+      throw Exception("Something bad happened, please try again");
     }
   }
 
@@ -133,15 +134,14 @@ abstract class BaseProvider<T> with ChangeNotifier {
     String username = Authorization.username ?? "";
     String password = Authorization.password ?? "";
 
-    print("passed creds: $username, $password");
+    print("Passed credentials: $username, $password");
 
     String basicAuth =
         "Basic ${base64Encode(utf8.encode('$username:$password'))}";
 
-    var headers = {
+    return {
       "Content-Type": "application/json",
-      "Authorization": basicAuth
+      "Authorization": basicAuth,
     };
-    return headers;
   }
 }

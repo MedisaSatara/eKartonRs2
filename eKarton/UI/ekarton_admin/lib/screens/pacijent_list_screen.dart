@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PacijentiScreen extends StatefulWidget {
-  const PacijentiScreen({Key? key}) : super(key: key);
+  Pacijent? pacijent;
+  PacijentiScreen({Key? key, this.pacijent}) : super(key: key);
 
   @override
   State<PacijentiScreen> createState() => _PacijentiScreenState();
@@ -18,6 +19,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
   late PacijentProvider _pacijentiProvider;
   SearchResult<Pacijent>? result;
   TextEditingController _imeController = TextEditingController();
+  TextEditingController _prezimeController = TextEditingController();
   TextEditingController _brojkartonaController = TextEditingController();
 
   @override
@@ -37,12 +39,28 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Pretraga pacijenta"),
+      title_widget: Text(
+        "Pacijenti",
+        style: TextStyle(
+          color: Colors.white, // Set the color of the title text
+        ),
+      ),
       child: Container(
         child: Column(
           children: [
             _buildSearch(),
             _buildDataListView(),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        PacijentiDetailsScreen(pacijent: null),
+                  ),
+                );
+              },
+              child: Text("Dodaj novog pacijenta"),
+            ),
           ],
         ),
       ),
@@ -52,32 +70,66 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
   Widget _buildSearch() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(labelText: "Ime"),
-              controller: _imeController,
+          // Title for the search section
+          Text(
+            "Pretraži pacijenta:",
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(labelText: "Broj kartona"),
-              controller: _brojkartonaController,
+          SizedBox(height: 16.0),
+          // Input fields and button stacked vertically
+          TextField(
+            decoration: InputDecoration(
+              labelText: "Ime",
             ),
+            controller: _imeController,
           ),
+          SizedBox(height: 8.0),
+          TextField(
+            decoration: InputDecoration(
+              labelText: "Prezime",
+            ),
+            controller: _prezimeController,
+          ),
+          SizedBox(height: 8.0),
+          TextField(
+            decoration: InputDecoration(
+              labelText: "Broj kartona",
+            ),
+            controller: _brojkartonaController,
+          ),
+          SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () async {
               var data = await _pacijentiProvider.get(filter: {
                 'imePacijenta': _imeController.text,
+                'prezimePacijenta': _prezimeController.text,
                 'brojKartona': _brojkartonaController.text,
               });
               setState(() {
                 result = data;
               });
             },
-            child: Text("Pretraga"),
+            child: Text(
+              "Pretraga",
+              style: TextStyle(
+                color: Colors.black, // Set the color of the title text
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              elevation: 5.0, // Button background color
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
           ),
         ],
       ),

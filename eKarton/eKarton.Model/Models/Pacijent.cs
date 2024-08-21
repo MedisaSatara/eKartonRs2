@@ -23,12 +23,12 @@ namespace eKarton.Model.Models
         public string? Alergija { get; set; }
         public bool? Koagulopatija { get; set; }
         public string BrojKartona { get; set; } = null!;
-        public string KorisnickoIme { get; set; } = null!;
+        /*public string KorisnickoIme { get; set; } = null!;
         public string? Password { get; set; }
         public string? PotvrdaPassworda { get; set; }
-        public int KorisnikId { get; set; }
+        public int KorisnikId { get; set; }*/
 
-        public virtual Korisnik Korisnik { get; set; } = null!;
+       // public virtual Korisnik Korisnik { get; set; } = null!;
        // public virtual ICollection<DodjeljeniDoktor> DodjeljeniDoktors { get; set; }
        // public virtual ICollection<Nalaz> Nalazs { get; set; }
        // public virtual ICollection<PacijentOboljenja> PacijentOboljenjas { get; set; }

@@ -16,7 +16,7 @@ namespace eKarton.Controllers
 
         }
 
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Admin")]
         public override Korisnik Insert([FromBody] KorisnikInsertRequest insert)
         {
             return base.Insert(insert);
