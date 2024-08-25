@@ -53,7 +53,7 @@ class _PregledScreen extends State<PregledScreen> {
               ),
             ),
           ],
-          rows: [], // Populate with data as needed
+          rows: [],
         ),
       ),
     );

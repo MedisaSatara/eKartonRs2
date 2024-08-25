@@ -23,32 +23,31 @@ class _TerminScreen extends State<TerminScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   late PacijentProvider _pacijentProvider;
   late TerminProvider _terminProvider;
-  late DoktorProvider _doktorProvider; // Dodajte provajder za doktore
+  late DoktorProvider _doktorProvider;
   SearchResult<Termin>? terminResult;
   SearchResult<Pacijent>? pacijentResult;
-  SearchResult<Doktor>? doktorResult; // Dodajte rezultat za doktore
+  SearchResult<Doktor>? doktorResult;
   TextEditingController _brojKartonaController = TextEditingController();
-  bool searchExecuted = false; // Flag for search execution
+  bool searchExecuted = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _pacijentProvider = context.read<PacijentProvider>();
     _terminProvider = context.read<TerminProvider>();
-    _doktorProvider =
-        context.read<DoktorProvider>(); // Inicijalizujte provajder
+    _doktorProvider = context.read<DoktorProvider>();
     _fetchTermini();
   }
 
   Future<void> _fetchTermini() async {
     var terminData = await _terminProvider.get();
     var pacijentData = await _pacijentProvider.get();
-    var doktorData = await _doktorProvider.get(); // Dohvati doktore
+    var doktorData = await _doktorProvider.get();
 
     setState(() {
       terminResult = terminData;
       pacijentResult = pacijentData;
-      doktorResult = doktorData; // Setuj rezultate doktora
+      doktorResult = doktorData;
     });
   }
 
@@ -121,7 +120,6 @@ class _TerminScreen extends State<TerminScreen> {
             ),
           ],
           rows: terminResult?.result.map((Termin e) {
-                // Find the Pacijent and Doktor based on IDs
                 var pacijentName = pacijentResult?.result
                     .firstWhere((p) => p.pacijentId == e.pacijentId);
 

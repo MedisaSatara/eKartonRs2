@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomeScreen(),
+      home: Login(),
     );
   }
 }
@@ -66,7 +66,6 @@ class Login extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background image covering the entire screen
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -75,12 +74,10 @@ class Login extends StatelessWidget {
               ),
             ),
           ),
-          // Login form
           SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: 100), // Adjust space at the top if needed
-                // Text logo
+                SizedBox(height: 100),
                 Column(
                   children: [
                     Text(
@@ -91,7 +88,7 @@ class Login extends StatelessWidget {
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(height: 10), // Space between "Login" and "eKarton"
+                    SizedBox(height: 10),
                     RichText(
                       text: TextSpan(
                         children: <TextSpan>[
@@ -108,7 +105,7 @@ class Login extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 35,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black, // Black color for "Karton"
+                              color: Colors.black,
                             ),
                           ),
                         ],
@@ -116,9 +113,7 @@ class Login extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(
-                    height:
-                        30), // Space between the text logo and username field
+                SizedBox(height: 30),
                 Padding(
                   padding: EdgeInsets.all(40),
                   child: Container(
@@ -158,7 +153,7 @@ class Login extends StatelessWidget {
                     ]),
                   ),
                 ),
-                SizedBox(height: 20), // Adjust space between elements if needed
+                SizedBox(height: 20),
                 Container(
                   height: 50,
                   margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
@@ -178,11 +173,9 @@ class Login extends StatelessWidget {
                       String password = _passwordController.text;
 
                       try {
-                        // Set the credentials for authorization
                         Authorization.username = username;
                         Authorization.password = password;
 
-                        // Fetch the user by the username and password
                         var korisnici = await korisnikProvider.get(filter: {
                           'korisnickoIme': username,
                           'password': password,
@@ -192,14 +185,12 @@ class Login extends StatelessWidget {
                           var korisnik = korisnici.result.first;
 
                           if (korisnik.ulogaId == 2) {
-                            // If the user is a regular user (ulogaId = 2)
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => KorisnikProfileScreen(),
                               ),
                             );
                           } else {
-                            // Show an error message if the user is not a regular user
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -215,7 +206,6 @@ class Login extends StatelessWidget {
                             );
                           }
                         } else {
-                          // Show an error message if no user is found
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(

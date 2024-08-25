@@ -31,7 +31,6 @@ class NalazScreen extends StatelessWidget {
         return ListTile(
           title: Text("Nalaz ID: ${nalaz.nalazId}"),
           subtitle: Text("Opis: ${nalaz.datum ?? 'N/A'}"),
-          // Add more details about the 'Nalaz' as needed
         );
       },
     );

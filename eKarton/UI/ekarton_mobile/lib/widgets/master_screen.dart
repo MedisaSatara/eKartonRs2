@@ -34,18 +34,15 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             ),
         leading: Builder(
           builder: (context) => IconButton(
-            icon: Icon(Icons.menu,
-                color: Colors.black), // Promijenjena boja ikone na crnu
+            icon: Icon(Icons.menu, color: Colors.black),
             onPressed: () {
-              Scaffold.of(context)
-                  .openDrawer(); // Ovdje kontekst pripada Scaffoldu
+              Scaffold.of(context).openDrawer();
             },
           ),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.person,
-                color: Colors.black), // Promijenjena boja ikone na crnu
+            icon: Icon(Icons.person, color: Colors.black),
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -61,7 +58,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             ListTile(
               title: Text("<-"),
               onTap: () {
-                Navigator.of(context).pop(); // Zatvorite Drawer
+                Navigator.of(context).pop();
               },
             ),
             ListTile(

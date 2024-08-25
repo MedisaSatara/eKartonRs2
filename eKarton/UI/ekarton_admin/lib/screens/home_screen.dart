@@ -44,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
               fit: BoxFit.cover,
             ),
           ),
-          // Sloj za druge widgete koji će se nalaziti preko slike
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

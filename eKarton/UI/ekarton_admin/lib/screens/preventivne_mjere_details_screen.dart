@@ -23,7 +23,7 @@ class _PreventivneMjereDetailsScreen
   final _formKey = GlobalKey<FormBuilderState>();
   late PreventivneMjereProvider _preventivneMjereProvider;
   late PacijentProvider _pacijentProvider;
-  List<Pacijent>? _pacijenti; // To hold the list of patients
+  List<Pacijent>? _pacijenti;
   String? _selectedPacijentId;
 
   late Map<String, dynamic> _initialValue;
@@ -43,7 +43,6 @@ class _PreventivneMjereDetailsScreen
     _preventivneMjereProvider = context.read<PreventivneMjereProvider>();
     _pacijentProvider = context.read<PacijentProvider>();
 
-    // Fetch the list of patients
     _fetchPatients();
   }
 
@@ -62,10 +61,8 @@ class _PreventivneMjereDetailsScreen
     if (_formKey.currentState!.saveAndValidate()) {
       final formData = _formKey.currentState!.value;
 
-      // Create a mutable copy of the form data
       final mutableFormData = Map<String, dynamic>.from(formData);
 
-      // Convert the pacijentId to a num type if needed
       if (mutableFormData['pacijentId'] != null) {
         mutableFormData['pacijentId'] =
             int.tryParse(mutableFormData['pacijentId'] as String) ?? 0;

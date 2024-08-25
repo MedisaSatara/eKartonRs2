@@ -24,7 +24,7 @@ class _KorisnikScreen extends State<KorisnikScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _korisnikProvider = context.read<KorisnikProvider>();
-    _fetchKorisnici(); // Fetch data on initialization
+    _fetchKorisnici(); 
   }
 
   Future<void> _fetchKorisnici() async {
@@ -129,7 +129,7 @@ class _KorisnikScreen extends State<KorisnikScreen> {
           child: Text("Dodaj novi korisnik"),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromARGB(
-                255, 236, 233, 233), // Button background color
+                255, 236, 233, 233), 
             padding:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
             shape: RoundedRectangleBorder(

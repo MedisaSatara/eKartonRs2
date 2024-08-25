@@ -50,7 +50,6 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
     _pacijentProvider = context.read<PacijentProvider>();
     _doktorProvider = context.read<DoktorProvider>();
 
-    // Fetch the list of patients
     _fetchPatients();
     _fetchDoktori();
   }
@@ -81,10 +80,8 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
     if (_formKey.currentState!.saveAndValidate()) {
       final formData = _formKey.currentState!.value;
 
-      // Create a mutable copy of the form data
       final mutableFormData = Map<String, dynamic>.from(formData);
 
-      // Convert the pacijentId and doktorId to integer if needed
       if (mutableFormData['pacijentId'] != null) {
         mutableFormData['pacijentId'] =
             int.tryParse(mutableFormData['pacijentId'] as String) ?? 0;

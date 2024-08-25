@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class OboljenjaScreen extends StatefulWidget {
-  final Pacijent? pacijent; // Ensure this field is present
+  final Pacijent? pacijent;
 
   OboljenjaScreen({Key? key, this.pacijent}) : super(key: key);
 
@@ -36,8 +36,7 @@ class _OboljenjaScreen extends State<OboljenjaScreen> {
       result = data;
     });
 
-    print(
-        "Pacijent: ${widget.pacijent?.ime} ${widget.pacijent?.prezime}"); // Print to verify the patient data
+    print("Pacijent: ${widget.pacijent?.ime} ${widget.pacijent?.prezime}");
   }
 
   @override
@@ -63,7 +62,6 @@ class _OboljenjaScreen extends State<OboljenjaScreen> {
           ),
         ],
         rows: result?.result.map((PacijentOboljenja e) {
-              // Ensure that this logic matches your data
               return DataRow(
                 cells: [
                   DataCell(Text(e.oboljenjeId.toString())),

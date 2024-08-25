@@ -126,7 +126,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
                   _selectedOdjelId = value;
                 });
                 print(
-                    "Odabrani odjelId: $_selectedOdjelId"); // Proverite odabrani `odjelId`
+                    "Odabrani odjelId: $_selectedOdjelId"); 
               },
             ),
           ),
@@ -162,11 +162,11 @@ class _DoktorScreenState extends State<DoktorScreen> {
       filter['odjelId'] = _selectedOdjelId!;
     }
 
-    print("Filter: $filter"); // Proveri da li se `odjelId` pravilno prosleđuje
+    print("Filter: $filter"); 
 
     var data = await _doktorProvider.get(filter: filter);
 
-    print("Data: ${data.result}"); // Proveri rezultate pretrage
+    print("Data: ${data.result}");
 
     setState(() {
       doktorResult = data;
@@ -242,7 +242,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
                                       orElse: () =>
                                           Odjel(odjelId: 0, naziv: "N/A"))
                                   .naziv ??
-                              "")), // Prikaz naziva odjela
+                              "")), 
                         ],
                       ))
                   .toList() ??

@@ -25,7 +25,7 @@ class _OsiguranjeScreen extends State<OsiguranjeScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _osiguranjeProvider = context.read<OsiguranjeProvider>();
-    _fetchKorisnici(); // Fetch data on initialization
+    _fetchKorisnici(); 
   }
 
   Future<void> _fetchKorisnici() async {

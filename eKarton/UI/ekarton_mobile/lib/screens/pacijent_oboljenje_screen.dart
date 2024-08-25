@@ -100,10 +100,8 @@ class _PacijentOboljenjeScreen extends State<PacijentOboljenjeScreen> {
             ),
           ],
           rows: result?.result.map((PacijentOboljenja e) {
-                // Find the patient by pacijentId
                 var pacijent = pacijentResult?.result.firstWhere(
                   (p) => p.pacijentId == e.pacijentId,
-                  // Provide a fallback
                 );
 
                 return DataRow(

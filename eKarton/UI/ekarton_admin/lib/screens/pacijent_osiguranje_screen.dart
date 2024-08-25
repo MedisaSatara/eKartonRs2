@@ -189,10 +189,8 @@ class _PacijentOsiguranjeScreen extends State<PacijentOsiguranjeScreen> {
             ),
           ],
           rows: result?.result.map((PacijentOsiguranje e) {
-                // Find the patient by pacijentId
                 var pacijent = pacijentResult?.result.firstWhere(
                   (p) => p.pacijentId == e.pacijentId,
-                  // Provide a fallback
                 );
                 var osiguranje = osiguranjeResult?.result.firstWhere(
                   (o) => o.osiguranjeId == e.osiguranjeId,

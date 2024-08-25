@@ -56,10 +56,8 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
 
       try {
         if (widget.pacijent == null) {
-          // Insert new patient
           await _pacijentProvider.insert(Pacijent.fromJson(formData));
         } else {
-          // Update existing patient
           if (widget.pacijent!.pacijentId == null) {
             throw Exception('Patient ID is null');
           }
@@ -102,7 +100,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                   'Detaljni prikaz podataka pacijenta',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 24, // Adjusted size for better readability
+                    fontSize: 24,
                   ),
                 ),
                 SizedBox(height: 16.0),

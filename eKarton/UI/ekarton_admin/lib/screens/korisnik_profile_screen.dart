@@ -22,13 +22,12 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _korisnikProvider = context.read<KorisnikProvider>();
-    _fetchKorisnici(); // Fetch data on initialization
+    _fetchKorisnici(); 
   }
 
   Future<void> _fetchKorisnici() async {
     var data = await _korisnikProvider.get();
     setState(() {
-      // Filter users where ulogaId = 1
       korisnikResult =
           data.result.where((korisnik) => korisnik.ulogaId == 1).toList();
     });
@@ -42,7 +41,7 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
       title_widget: Text(
         "Hello, Admin! Welcome to your profile!",
         style: TextStyle(
-          color: Colors.white, // Set the color of the title text
+          color: Colors.white, 
         ),
       ),
       child: korisnik != null
@@ -74,7 +73,7 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
                                 ),
                               ),
                               SizedBox(
-                                  width: 16), // Space between avatar and text
+                                  width: 16), 
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -125,17 +124,17 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[200], // Background color
-          borderRadius: BorderRadius.circular(10.0), // Rounded corners
+          color: Colors.grey[200], 
+          borderRadius: BorderRadius.circular(10.0), 
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
               blurRadius: 8.0,
-              offset: Offset(0, 4), // Shadow below
+              offset: Offset(0, 4), 
             ),
           ],
         ),
-        padding: EdgeInsets.all(12.0), // Inner padding
+        padding: EdgeInsets.all(12.0),
         child: Row(
           children: [
             Icon(icon, color: Colors.blueAccent, size: 28),

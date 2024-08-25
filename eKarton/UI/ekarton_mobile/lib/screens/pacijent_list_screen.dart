@@ -20,7 +20,7 @@ class _PacijentListScreen extends State<PacijentListScreen> {
   late PacijentProvider _pacijentProvider;
   SearchResult<Pacijent>? pacijentResult;
   TextEditingController _brojKartonaController = TextEditingController();
-  bool searchExecuted = false; // Flag for search execution
+  bool searchExecuted = false;
 
   @override
   void didChangeDependencies() {
@@ -35,7 +35,6 @@ class _PacijentListScreen extends State<PacijentListScreen> {
       child: Container(
         child: Column(children: [
           _buildSearch(),
-          // Display the data list view only if search has been executed and results are not empty
           if (searchExecuted &&
               pacijentResult != null &&
               pacijentResult!.result.isNotEmpty)
@@ -73,11 +72,11 @@ class _PacijentListScreen extends State<PacijentListScreen> {
 
     var data = await _pacijentProvider.get(filter: filter);
 
-    print("Data: ${data.result}"); // Proveri rezultate pretrage
+    print("Data: ${data.result}");
 
     setState(() {
       pacijentResult = data;
-      searchExecuted = true; // Set flag to true after search
+      searchExecuted = true;
     });
   }
 

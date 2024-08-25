@@ -29,7 +29,7 @@ class _PreventivneMjereScreen extends State<PreventivneMjereScreen> {
               ),
             ),
           ],
-          rows: [], // Populate with data as needed
+          rows: [],
         ),
       ),
     );

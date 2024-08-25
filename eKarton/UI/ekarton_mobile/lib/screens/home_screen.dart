@@ -12,7 +12,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title: 'Home Page', // Set the title for the AppBar
+      title: 'Home Page',
       child: Stack(
         children: [
           Positioned.fill(
@@ -22,16 +22,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Center(
-            // Use Center here to vertically and horizontally align the content
             child: Column(
-              mainAxisAlignment:
-                  MainAxisAlignment.center, // Center the column vertically
-              crossAxisAlignment: CrossAxisAlignment
-                  .stretch, // Stretch to the width of the parent
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildWelcomeCard(), // The welcome card is now centered
+                _buildWelcomeCard(),
                 SizedBox(height: 16),
-                // Add more content here if needed
               ],
             ),
           ),
@@ -43,8 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildWelcomeCard() {
     return Center(
       child: SizedBox(
-        width: 400, // Specify the width
-        height: 300, // Specify the height
+        width: 400,
+        height: 300,
         child: Card(
           color: Colors.white.withOpacity(0.8),
           elevation: 4,

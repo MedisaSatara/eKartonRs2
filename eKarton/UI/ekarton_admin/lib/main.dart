@@ -29,14 +29,6 @@ void main() {
       ChangeNotifierProvider(create: (_) => OsiguranjeProvider()),
       ChangeNotifierProvider(create: (_) => PacijentOsiguranjeProvider()),
       ChangeNotifierProvider(create: (_) => UlogaProvider()),
-
-      /*  
-      ChangeNotifierProvider(create: (_) => PacijentiProvider()),
-      ChangeNotifierProvider(create: (_) => KorisnikProvider()),
-      ChangeNotifierProvider(create: (_) => DoktorProvider()),
-      ChangeNotifierProvider(create: (_) => OdjelProvider()),
-      ChangeNotifierProvider(create: (_) => TerminProvider()),
-      ChangeNotifierProvider(create: (_) => BolnicaProvider()),*/
     ],
     child: MyMaterialApp(),
   ));
@@ -45,7 +37,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -130,11 +121,9 @@ class LoginPage extends StatelessWidget {
                     String password = _passwordController.text;
 
                     try {
-                      // Set the credentials for authorization
                       Authorization.username = username;
                       Authorization.password = password;
 
-                      // Fetch the user by the username and password
                       var korisnici = await korisnikProvider.get(filter: {
                         'korisnickoIme': username,
                         'password': password,
@@ -143,12 +132,10 @@ class LoginPage extends StatelessWidget {
                       if (korisnici.result.isNotEmpty) {
                         var korisnik = korisnici.result.first;
 
-                        // Check if the user has the admin role
                         if (korisnik.ulogaId == 1) {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => KorisnikProfileScreen()));
                         } else {
-                          // Show an error message if the user is not an admin
                           showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -164,7 +151,6 @@ class LoginPage extends StatelessWidget {
                                   ));
                         }
                       } else {
-                        // Show an error message if no user is found
                         showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
