@@ -1,11 +1,12 @@
 import 'package:ekarton_admin/main.dart';
 import 'package:ekarton_admin/models/bolnica.dart';
 import 'package:ekarton_admin/providers/bolnica_provider.dart';
-import 'package:ekarton_admin/screens/administrator_screen.dart';
+import 'package:ekarton_admin/screens/korisnik_profile_screen.dart';
 import 'package:ekarton_admin/screens/doktor_list_scren.dart';
 import 'package:ekarton_admin/screens/korisnik_screen.dart';
 import 'package:ekarton_admin/screens/pacijent_details_screen.dart';
 import 'package:ekarton_admin/screens/pacijent_list_screen.dart';
+import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,11 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('eKarton Admin Dashboard'),
-      ),
-      body: Stack(
+    return MasterScreenWidget(
+      child: Stack(
         children: [
           Positioned.fill(
             child: Image.asset(
@@ -50,7 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildNavbar(context),
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(16.0),
@@ -81,7 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          SizedBox(width: 250.0),
+          _buildNavButton(context, "", HomeScreen(), Icons.home),
+          SizedBox(width: 200.0),
           _buildNavButton(context, "Korisnik", KorisnikScreen(), Icons.person),
           SizedBox(width: 50.0),
           _buildNavButton(
@@ -96,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildNavButton(
               context, "Termini", PacijentiDetailsScreen(), Icons.schedule),
           Spacer(),
-          _buildNavButton(context, "", AdministratorScreen(), Icons.person),
+          _buildNavButton(context, "", KorisnikProfileScreen(), Icons.person),
         ],
       ),
     );

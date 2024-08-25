@@ -3,8 +3,13 @@ import 'package:ekarton_admin/providers/bolnica_provider.dart';
 import 'package:ekarton_admin/providers/doktor_provider.dart';
 import 'package:ekarton_admin/providers/korisnik_provider.dart';
 import 'package:ekarton_admin/providers/odjel_provider.dart';
+import 'package:ekarton_admin/providers/osiguranje_provider.dart';
+import 'package:ekarton_admin/providers/pacijent_osiguranje_provider.dart';
 import 'package:ekarton_admin/providers/pacijent_provider.dart';
-import 'package:ekarton_admin/screens/administrator_screen.dart';
+import 'package:ekarton_admin/providers/preventivne_mjere_provider.dart';
+import 'package:ekarton_admin/providers/uloga_provider.dart';
+import 'package:ekarton_admin/screens/bolnica_list_screen.dart';
+import 'package:ekarton_admin/screens/korisnik_profile_screen.dart';
 import 'package:ekarton_admin/screens/home_screen.dart';
 import 'package:ekarton_admin/screens/pacijent_list_screen.dart';
 import 'package:ekarton_admin/utils/util.dart';
@@ -20,6 +25,10 @@ void main() {
       ChangeNotifierProvider(create: (_) => OdjelProvider()),
       ChangeNotifierProvider(create: (_) => DoktorProvider()),
       ChangeNotifierProvider(create: (_) => KorisnikProvider()),
+      ChangeNotifierProvider(create: (_) => PreventivneMjereProvider()),
+      ChangeNotifierProvider(create: (_) => OsiguranjeProvider()),
+      ChangeNotifierProvider(create: (_) => PacijentOsiguranjeProvider()),
+      ChangeNotifierProvider(create: (_) => UlogaProvider()),
 
       /*  
       ChangeNotifierProvider(create: (_) => PacijentiProvider()),
@@ -59,44 +68,6 @@ class MyAppBar extends StatelessWidget {
   }
 }
 
-class LayoutExamples extends StatelessWidget {
-  const LayoutExamples({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          height: 150,
-          color: Colors.red,
-          child: Center(
-            child: Container(
-              height: 100,
-              color: Colors.blue,
-              child: Text("Example text"),
-              alignment: Alignment.bottomLeft,
-            ),
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text("Item 1"),
-            Text("Item 2"),
-            Text("Item 3"),
-          ],
-        ),
-        Container(
-          height: 150,
-          color: Colors.red,
-          child: Text("Contain"),
-          alignment: Alignment.center,
-        )
-      ],
-    );
-  }
-}
-
 class MyMaterialApp extends StatelessWidget {
   const MyMaterialApp({Key? key}) : super(key: key);
 
@@ -105,78 +76,85 @@ class MyMaterialApp extends StatelessWidget {
     return MaterialApp(
       title: 'RS II Material app',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: Login(),
+      home: LoginPage(),
     );
   }
 }
 
-class Login extends StatelessWidget {
-  Login({Key? key}) : super(key: key);
+class LoginPage extends StatelessWidget {
+  LoginPage({super.key});
 
-  TextEditingController _usernamecontroller = TextEditingController();
-  TextEditingController _passwordcontroller = TextEditingController();
-  late PacijentProvider _pacijentiProvider;
+  TextEditingController _usernameController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    _pacijentiProvider = context.read<PacijentProvider>();
     return Scaffold(
-        appBar: AppBar(
-          title: Text("login"),
-        ),
-        body: Center(
-          child: Container(
-            constraints: BoxConstraints(maxWidth: 400, maxHeight: 400),
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(children: [
-                  Image.asset("assets/images/logo.jpg"),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: "Username",
-                      prefixIcon: Icon(Icons.person),
-                    ),
-                    controller: _usernamecontroller,
+      appBar: AppBar(
+        title: Text("Login"),
+      ),
+      body: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxHeight: 400, maxWidth: 400),
+          child: Card(
+            child: Column(
+              children: [
+                Image.asset(
+                  "assets/images/logo.jpg",
+                  height: 200,
+                  width: 300,
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _usernameController,
+                  decoration: InputDecoration(
+                    labelText: "Username",
+                    prefixIcon: Icon(Icons.email),
                   ),
-                  SizedBox(
-                    height: 8,
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: "Password",
+                    prefixIcon: Icon(Icons.password),
                   ),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      prefixIcon: Icon(Icons.password),
-                    ),
-                    controller: _passwordcontroller,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  ElevatedButton(
-                      onPressed: () async {
-                        var username = _usernamecontroller.text;
-                        var password = _passwordcontroller.text;
-                        _passwordcontroller.text = username;
+                  obscureText: true, // Hide password input
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    KorisnikProvider korisnikProvider =
+                        context.read<KorisnikProvider>();
 
-                        print("login proceed $username $password");
+                    String username = _usernameController.text;
+                    String password = _passwordController.text;
 
-                        Authorization.username = username;
-                        Authorization.password = password;
+                    try {
+                      // Set the credentials for authorization
+                      Authorization.username = username;
+                      Authorization.password = password;
 
-                        try {
-                          await _pacijentiProvider.get();
+                      // Fetch the user by the username and password
+                      var korisnici = await korisnikProvider.get(filter: {
+                        'korisnickoIme': username,
+                        'password': password,
+                      });
 
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => HomeScreen(),
-                            ),
-                          );
-                        } on Exception catch (e) {
+                      if (korisnici.result.isNotEmpty) {
+                        var korisnik = korisnici.result.first;
+
+                        // Check if the user has the admin role
+                        if (korisnik.ulogaId == 1) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => KorisnikProfileScreen()));
+                        } else {
+                          // Show an error message if the user is not an admin
                           showDialog(
                               context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text(e.toString()),
+                              builder: (context) => AlertDialog(
+                                    title: Text("Access Denied"),
+                                    content:
+                                        Text("You do not have admin rights."),
                                     actions: [
                                       TextButton(
                                           onPressed: () =>
@@ -185,12 +163,42 @@ class Login extends StatelessWidget {
                                     ],
                                   ));
                         }
-                      },
-                      child: Text("Login"))
-                ]),
-              ),
+                      } else {
+                        // Show an error message if no user is found
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: Text("Login Failed"),
+                                  content:
+                                      Text("Invalid username or password."),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text("OK"))
+                                  ],
+                                ));
+                      }
+                    } on Exception catch (e) {
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text("Error"),
+                                content: Text(e.toString()),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text("OK"))
+                                ],
+                              ));
+                    }
+                  },
+                  child: Text("Login"),
+                ),
+              ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

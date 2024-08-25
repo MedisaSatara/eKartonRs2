@@ -23,20 +23,21 @@ namespace eKarton.Model.Models
         public string? Alergija { get; set; }
         public bool? Koagulopatija { get; set; }
         public string BrojKartona { get; set; } = null!;
+        public int PreventivneMjereId { get; set; }
         /*public string KorisnickoIme { get; set; } = null!;
         public string? Password { get; set; }
         public string? PotvrdaPassworda { get; set; }
         public int KorisnikId { get; set; }*/
 
-       // public virtual Korisnik Korisnik { get; set; } = null!;
-       // public virtual ICollection<DodjeljeniDoktor> DodjeljeniDoktors { get; set; }
-       // public virtual ICollection<Nalaz> Nalazs { get; set; }
-       // public virtual ICollection<PacijentOboljenja> PacijentOboljenjas { get; set; }
-       // public virtual ICollection<PacijentOsiguranje> PacijentOsiguranjes { get; set; }
-       // public virtual ICollection<PacijentVakcinacija> PacijentVakcinacijas { get; set; }
-       // public virtual ICollection<Pregled> Pregleds { get; set; }
-       // public virtual ICollection<PreventivneMjere> PreventivneMjeres { get; set; }
+        // public virtual Korisnik Korisnik { get; set; } = null!;
+        // public virtual ICollection<DodjeljeniDoktor> DodjeljeniDoktors { get; set; }
+        // public virtual ICollection<Nalaz> Nalazs { get; set; }
+        // public virtual ICollection<PacijentOboljenja> PacijentOboljenjas { get; set; }
+        public virtual ICollection<PacijentOsiguranje> PacijentOsiguranjes { get; set; }
+        // public virtual ICollection<PacijentVakcinacija> PacijentVakcinacijas { get; set; }
+        // public virtual ICollection<Pregled> Pregleds { get; set; }
+        public virtual ICollection<PreventivneMjere> PreventivneMjeres { get; set; }
        // public virtual ICollection<SistematskiPregled> SistematskiPregleds { get; set; }
-      //  public virtual ICollection<Termin> Termins { get; set; }
+       public virtual ICollection<Termin> Termins { get; set; }
     }
 }

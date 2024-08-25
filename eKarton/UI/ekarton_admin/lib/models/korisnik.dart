@@ -12,12 +12,22 @@ class Korisnik {
   String? prezime;
   String? korisnickoIme;
   String? lozinka;
+  String? spol;
+  String? telefon;
+  String? email;
+  String? datumRodjenja;
+  int? ulogaId;
 
   Korisnik(
       {this.korisnikId,
       this.ime,
       this.prezime,
       this.korisnickoIme,
+      this.spol,
+      this.telefon,
+      this.email,
+      this.datumRodjenja,
+      this.ulogaId,
       this.lozinka});
 
   factory Korisnik.fromJson(Map<String, dynamic> json) =>

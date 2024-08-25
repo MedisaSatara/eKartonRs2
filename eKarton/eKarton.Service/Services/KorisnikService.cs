@@ -58,7 +58,7 @@ namespace eKarton.Service.Services
         {
             if (search?.IsUlogeIncluded == true)
             {
-                query = query.Include("KorisnikUlogas.Uloga");
+                query = query.Include("Uloga");
             }
             return base.AddInclude(query, search);
         }
@@ -82,23 +82,22 @@ namespace eKarton.Service.Services
             return filteredQuery;
         }
 
-        public async Task<Model.Models.Korisnik> Login(string username, string password)
+        public Model.Models.Korisnik Login(string username, string password)
         {
-            var entity = await _context.Korisniks.FirstOrDefaultAsync(x => x.KorisnickoIme == username);
+            var entity = _context.Korisniks.FirstOrDefault(x => x.KorisnickoIme == username);
 
             if (entity == null)
             {
                 return null;
             }
-
             var hash = GenerateHash(entity.LozinkaSalt, password);
 
             if (hash != entity.LozinkaHash)
             {
                 return null;
             }
-
-            return _mapper.Map<Model.Models.Korisnik>(entity);
+            return this._mapper.Map<Model.Models.Korisnik>(entity);
         }
+
     }
 }

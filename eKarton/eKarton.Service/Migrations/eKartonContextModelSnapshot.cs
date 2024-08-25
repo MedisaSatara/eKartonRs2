@@ -214,6 +214,9 @@ namespace eKarton.Service.Migrations
                         .HasMaxLength(1)
                         .HasColumnType("nvarchar(1)");
 
+                    b.Property<string>("StateMachine")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Telefon")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
@@ -236,6 +239,7 @@ namespace eKarton.Service.Migrations
                             OdjelId = 2001,
                             Prezime = "TOKMAKČIJA",
                             Spol = "Z",
+                            StateMachine = "active",
                             Telefon = "063 246 022"
                         },
                         new
@@ -249,6 +253,7 @@ namespace eKarton.Service.Migrations
                             OdjelId = 2006,
                             Prezime = "Šandrk",
                             Spol = "Z",
+                            StateMachine = "active",
                             Telefon = "063 246 722"
                         },
                         new
@@ -262,6 +267,7 @@ namespace eKarton.Service.Migrations
                             OdjelId = 2006,
                             Prezime = "Pavlovic",
                             Spol = "Z",
+                            StateMachine = "active",
                             Telefon = "063 216 722"
                         },
                         new
@@ -275,6 +281,7 @@ namespace eKarton.Service.Migrations
                             OdjelId = 2005,
                             Prezime = "Martinac",
                             Spol = "M",
+                            StateMachine = "active",
                             Telefon = "063 216 722"
                         },
                         new
@@ -288,6 +295,7 @@ namespace eKarton.Service.Migrations
                             OdjelId = 2005,
                             Prezime = "Bazina",
                             Spol = "Z",
+                            StateMachine = "archived",
                             Telefon = "062 216 722"
                         },
                         new
@@ -301,6 +309,7 @@ namespace eKarton.Service.Migrations
                             OdjelId = 2004,
                             Prezime = "Zalihic",
                             Spol = "Z",
+                            StateMachine = "draft",
                             Telefon = "061 216 722"
                         },
                         new
@@ -314,6 +323,7 @@ namespace eKarton.Service.Migrations
                             OdjelId = 2001,
                             Prezime = "Gacic",
                             Spol = "M",
+                            StateMachine = "draft",
                             Telefon = "062 317 722"
                         },
                         new
@@ -327,6 +337,7 @@ namespace eKarton.Service.Migrations
                             OdjelId = 2001,
                             Prezime = "Soce",
                             Spol = "Z",
+                            StateMachine = "cancelled",
                             Telefon = "062 216 722"
                         },
                         new
@@ -340,6 +351,7 @@ namespace eKarton.Service.Migrations
                             OdjelId = 2001,
                             Prezime = "Sopta",
                             Spol = "Z",
+                            StateMachine = "active",
                             Telefon = "062 216 722"
                         },
                         new
@@ -353,6 +365,7 @@ namespace eKarton.Service.Migrations
                             OdjelId = 2001,
                             Prezime = "Pivic",
                             Spol = "Z",
+                            StateMachine = "active",
                             Telefon = "062 216 722"
                         },
                         new
@@ -366,6 +379,7 @@ namespace eKarton.Service.Migrations
                             OdjelId = 2002,
                             Prezime = "Vujica",
                             Spol = "M",
+                            StateMachine = "archived",
                             Telefon = "062 216 722"
                         },
                         new
@@ -379,6 +393,7 @@ namespace eKarton.Service.Migrations
                             OdjelId = 2003,
                             Prezime = "Brajkovic",
                             Spol = "Z",
+                            StateMachine = "active",
                             Telefon = "062 216 722"
                         });
                 });
@@ -390,6 +405,14 @@ namespace eKarton.Service.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("KorisnikId"), 1L, 1);
+
+                    b.Property<string>("DatumRodjenja")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ime")
                         .IsRequired()
@@ -414,7 +437,20 @@ namespace eKarton.Service.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<string>("Spol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UlogaId")
+                        .HasColumnType("int");
+
                     b.HasKey("KorisnikId");
+
+                    b.HasIndex("UlogaId");
 
                     b.ToTable("Korisnik", (string)null);
 
@@ -422,61 +458,29 @@ namespace eKarton.Service.Migrations
                         new
                         {
                             KorisnikId = 1001,
+                            DatumRodjenja = "1998/11/11",
+                            Email = "administrator@gmail.com",
                             Ime = "Arijana",
                             KorisnickoIme = "admin",
-                            LozinkaHash = "k507CnRQrQDpt7h3vP7CjpYG274=",
-                            LozinkaSalt = "B1H4C7syRK1eyHCDXgcl4g==",
-                            Prezime = "Husic"
-                        },
-                        new
-                        {
-                            KorisnikId = 1002,
-                            Ime = "Medisa",
-                            KorisnickoIme = "korisnik",
-                            LozinkaHash = "hgz4afcUsPgM1fnhQ12Abmpbihc=",
-                            LozinkaSalt = "FZ0K5Wo9pgxaDpYzRfF8Kg==",
-                            Prezime = "Satara"
-                        });
-                });
-
-            modelBuilder.Entity("eKarton.Service.Databases.KorisnikUloga", b =>
-                {
-                    b.Property<int>("KorisnikUlogaId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("KorisnikUlogaId"), 1L, 1);
-
-                    b.Property<DateTime?>("DatumIzmjene")
-                        .HasColumnType("date");
-
-                    b.Property<int?>("KorisnikId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UlogaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("KorisnikUlogaId");
-
-                    b.HasIndex("KorisnikId");
-
-                    b.HasIndex("UlogaId");
-
-                    b.ToTable("KorisnikUloga", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            KorisnikUlogaId = 1,
-                            DatumIzmjene = new DateTime(2024, 8, 21, 15, 11, 26, 363, DateTimeKind.Local).AddTicks(7366),
-                            KorisnikId = 1001,
+                            LozinkaHash = "NB6jdLG4bKbGj4CNNklSBZjaPTk=",
+                            LozinkaSalt = "iD+4eruco/kDQHwztZt6KQ==",
+                            Prezime = "Husic",
+                            Spol = "Z",
+                            Telefon = "063 222 333",
                             UlogaId = 1
                         },
                         new
                         {
-                            KorisnikUlogaId = 2,
-                            DatumIzmjene = new DateTime(2024, 8, 21, 15, 11, 26, 363, DateTimeKind.Local).AddTicks(7422),
                             KorisnikId = 1002,
+                            DatumRodjenja = "1998/05/07",
+                            Email = "korisnik@gmail.com",
+                            Ime = "Medisa",
+                            KorisnickoIme = "korisnik",
+                            LozinkaHash = "Ufc1dELnNF15e8fGOQPgltP6N9o=",
+                            LozinkaSalt = "7iiViZTTfiv3advvcAa92w==",
+                            Prezime = "Satara",
+                            Spol = "Z",
+                            Telefon = "063 111 333",
                             UlogaId = 2
                         });
                 });
@@ -594,6 +598,9 @@ namespace eKarton.Service.Migrations
                     b.Property<int>("DoktorId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("KorisnikId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("Ocjena")
                         .HasColumnType("int");
 
@@ -606,6 +613,8 @@ namespace eKarton.Service.Migrations
 
                     b.HasIndex("DoktorId");
 
+                    b.HasIndex("KorisnikId");
+
                     b.ToTable("OcjenaDoktor", (string)null);
 
                     b.HasData(
@@ -614,6 +623,7 @@ namespace eKarton.Service.Migrations
                             OcjenaId = 3100,
                             Anonimno = true,
                             DoktorId = 3001,
+                            KorisnikId = 1002,
                             Ocjena = 4,
                             Razlog = "Vrlo dobar"
                         },
@@ -622,6 +632,7 @@ namespace eKarton.Service.Migrations
                             OcjenaId = 3200,
                             Anonimno = true,
                             DoktorId = 3002,
+                            KorisnikId = 1002,
                             Ocjena = 5,
                             Razlog = "Odlican"
                         },
@@ -630,6 +641,187 @@ namespace eKarton.Service.Migrations
                             OcjenaId = 3300,
                             Anonimno = true,
                             DoktorId = 3009,
+                            KorisnikId = 1002,
+                            Ocjena = 4,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3400,
+                            Anonimno = true,
+                            DoktorId = 3001,
+                            KorisnikId = 1002,
+                            Ocjena = 4,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3500,
+                            Anonimno = true,
+                            DoktorId = 3002,
+                            KorisnikId = 1002,
+                            Ocjena = 4,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3600,
+                            Anonimno = true,
+                            DoktorId = 3003,
+                            KorisnikId = 1002,
+                            Ocjena = 4,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3700,
+                            Anonimno = true,
+                            DoktorId = 3004,
+                            KorisnikId = 1002,
+                            Ocjena = 4,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3800,
+                            Anonimno = true,
+                            DoktorId = 3010,
+                            KorisnikId = 1002,
+                            Ocjena = 5,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3900,
+                            Anonimno = true,
+                            DoktorId = 3011,
+                            KorisnikId = 1002,
+                            Ocjena = 4,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3301,
+                            Anonimno = true,
+                            DoktorId = 3012,
+                            KorisnikId = 1002,
+                            Ocjena = 3,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3302,
+                            Anonimno = true,
+                            DoktorId = 3007,
+                            KorisnikId = 1002,
+                            Ocjena = 2,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3303,
+                            Anonimno = true,
+                            DoktorId = 3008,
+                            KorisnikId = 1002,
+                            Ocjena = 8,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3304,
+                            Anonimno = true,
+                            DoktorId = 3006,
+                            KorisnikId = 1002,
+                            Ocjena = 4,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3305,
+                            Anonimno = true,
+                            DoktorId = 3005,
+                            KorisnikId = 1002,
+                            Ocjena = 4,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3306,
+                            Anonimno = true,
+                            DoktorId = 3005,
+                            KorisnikId = 1002,
+                            Ocjena = 2,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3307,
+                            Anonimno = true,
+                            DoktorId = 3005,
+                            KorisnikId = 1002,
+                            Ocjena = 3,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3308,
+                            Anonimno = true,
+                            DoktorId = 3005,
+                            KorisnikId = 1002,
+                            Ocjena = 5,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3309,
+                            Anonimno = true,
+                            DoktorId = 3005,
+                            KorisnikId = 1002,
+                            Ocjena = 4,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3405,
+                            Anonimno = true,
+                            DoktorId = 3007,
+                            KorisnikId = 1002,
+                            Ocjena = 4,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3505,
+                            Anonimno = true,
+                            DoktorId = 3007,
+                            KorisnikId = 1002,
+                            Ocjena = 4,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3605,
+                            Anonimno = true,
+                            DoktorId = 3008,
+                            KorisnikId = 1002,
+                            Ocjena = 4,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3705,
+                            Anonimno = true,
+                            DoktorId = 3008,
+                            KorisnikId = 1002,
+                            Ocjena = 4,
+                            Razlog = "Vrlo dobar"
+                        },
+                        new
+                        {
+                            OcjenaId = 3709,
+                            Anonimno = true,
+                            DoktorId = 3009,
+                            KorisnikId = 1002,
                             Ocjena = 4,
                             Razlog = "Vrlo dobar"
                         });
@@ -1082,6 +1274,39 @@ namespace eKarton.Service.Migrations
                             RazlogPosjete = "Bol  uhu i glava",
                             TerapijaId = 6001,
                             UputnicaId = 6100
+                        },
+                        new
+                        {
+                            PregledId = 6111,
+                            Datum = "05.05.2022",
+                            Dijagnoza = "Moguca alergijska reakcija",
+                            DoktorId = 3001,
+                            PacijentId = 5001,
+                            RazlogPosjete = "Moguca alergijska reakcija",
+                            TerapijaId = 6001,
+                            UputnicaId = 6101
+                        },
+                        new
+                        {
+                            PregledId = 6112,
+                            Datum = "05.05.2022",
+                            Dijagnoza = "Upala srednjeg uha",
+                            DoktorId = 3001,
+                            PacijentId = 5001,
+                            RazlogPosjete = "Bol  uhu i glava",
+                            TerapijaId = 6001,
+                            UputnicaId = 6102
+                        },
+                        new
+                        {
+                            PregledId = 6113,
+                            Datum = "05.05.2022",
+                            Dijagnoza = "Sum na srcu",
+                            DoktorId = 3001,
+                            PacijentId = 5001,
+                            RazlogPosjete = "Otezano kretanje",
+                            TerapijaId = 6001,
+                            UputnicaId = 6103
                         });
                 });
 
@@ -1371,6 +1596,10 @@ namespace eKarton.Service.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<string>("StateMachine")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("UputnicaId");
 
                     b.ToTable("Uputnica", (string)null);
@@ -1381,7 +1610,32 @@ namespace eKarton.Service.Migrations
                             UputnicaId = 6100,
                             Datum = "06.02.2022",
                             Naziv = "Posjeta orl doktora",
-                            Razlog = "Upala uha"
+                            Razlog = "Upala uha",
+                            StateMachine = "arhived"
+                        },
+                        new
+                        {
+                            UputnicaId = 6101,
+                            Datum = "06.02.2022",
+                            Naziv = "Alergo-test",
+                            Razlog = "Moguca alergija na odredjene proizvode",
+                            StateMachine = "draft"
+                        },
+                        new
+                        {
+                            UputnicaId = 6102,
+                            Datum = "06.02.2022",
+                            Naziv = "CTG",
+                            Razlog = "neki razlog",
+                            StateMachine = "cancelled"
+                        },
+                        new
+                        {
+                            UputnicaId = 6103,
+                            Datum = "06.02.2022",
+                            Naziv = "Endoskopija",
+                            Razlog = "Bolovi u prsima",
+                            StateMachine = "active"
                         });
                 });
 
@@ -1451,19 +1705,11 @@ namespace eKarton.Service.Migrations
                     b.Navigation("Odjel");
                 });
 
-            modelBuilder.Entity("eKarton.Service.Databases.KorisnikUloga", b =>
+            modelBuilder.Entity("eKarton.Service.Databases.Korisnik", b =>
                 {
-                    b.HasOne("eKarton.Service.Databases.Korisnik", "Korisnik")
-                        .WithMany("KorisnikUlogas")
-                        .HasForeignKey("KorisnikId")
-                        .HasConstraintName("FK_Korisnik_KorisnikUloga");
-
                     b.HasOne("eKarton.Service.Databases.Uloga", "Uloga")
-                        .WithMany("KorisnikUlogas")
-                        .HasForeignKey("UlogaId")
-                        .HasConstraintName("FK_Uloga_KorisnikUloga");
-
-                    b.Navigation("Korisnik");
+                        .WithMany()
+                        .HasForeignKey("UlogaId");
 
                     b.Navigation("Uloga");
                 });
@@ -1487,7 +1733,13 @@ namespace eKarton.Service.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Doktor_OcjenaDoktor");
 
+                    b.HasOne("eKarton.Service.Databases.Korisnik", "Korisnik")
+                        .WithMany()
+                        .HasForeignKey("KorisnikId");
+
                     b.Navigation("Doktor");
+
+                    b.Navigation("Korisnik");
                 });
 
             modelBuilder.Entity("eKarton.Service.Databases.Odjel", b =>
@@ -1655,8 +1907,6 @@ namespace eKarton.Service.Migrations
 
             modelBuilder.Entity("eKarton.Service.Databases.Korisnik", b =>
                 {
-                    b.Navigation("KorisnikUlogas");
-
                     b.Navigation("Pacijents");
                 });
 
@@ -1699,11 +1949,6 @@ namespace eKarton.Service.Migrations
             modelBuilder.Entity("eKarton.Service.Databases.Terapija", b =>
                 {
                     b.Navigation("Pregleds");
-                });
-
-            modelBuilder.Entity("eKarton.Service.Databases.Uloga", b =>
-                {
-                    b.Navigation("KorisnikUlogas");
                 });
 
             modelBuilder.Entity("eKarton.Service.Databases.Uputnica", b =>

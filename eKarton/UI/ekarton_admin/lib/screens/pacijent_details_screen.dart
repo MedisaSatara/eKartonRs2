@@ -1,5 +1,8 @@
 import 'package:ekarton_admin/models/pacijent.dart';
+import 'package:ekarton_admin/models/preventivne_mjere.dart';
+import 'package:ekarton_admin/models/search_result.dart';
 import 'package:ekarton_admin/providers/pacijent_provider.dart';
+import 'package:ekarton_admin/providers/preventivne_mjere_provider.dart';
 import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -17,6 +20,8 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   late PacijentProvider _pacijentProvider;
   late Map<String, dynamic> _initialValue;
+  late PreventivneMjereProvider _preventivneMjereProvider;
+  SearchResult<PreventivneMjere>? preventivneMjereResult;
 
   @override
   void initState() {
@@ -30,7 +35,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
       'prebivaliste': widget.pacijent?.prebivaliste,
       'mjestoRodjenja': widget.pacijent?.mjestoRodjenja,
       'jmbg': widget.pacijent?.jmbg,
-      'alergican': widget.pacijent?.alergican,
+      'alergija': widget.pacijent?.alergija,
       'hronicneBolesti': widget.pacijent?.hronicneBolesti,
       'rhFaktor': widget.pacijent?.rhFaktor,
       'telefon': widget.pacijent?.telefon,
@@ -198,9 +203,9 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                 ),
                 SizedBox(height: 16),
                 FormBuilderTextField(
-                  name: 'alergican',
+                  name: 'alergija',
                   decoration: InputDecoration(
-                    labelText: 'Alergican',
+                    labelText: 'Alergija',
                     border: OutlineInputBorder(),
                   ),
                 ),

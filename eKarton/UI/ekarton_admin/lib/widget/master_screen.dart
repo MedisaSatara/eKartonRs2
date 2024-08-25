@@ -1,11 +1,14 @@
 import 'package:ekarton_admin/main.dart';
-import 'package:ekarton_admin/screens/administrator_screen.dart';
+import 'package:ekarton_admin/screens/home_screen.dart';
+import 'package:ekarton_admin/screens/korisnik_profile_screen.dart';
 import 'package:ekarton_admin/screens/bolnica_screen.dart';
 import 'package:ekarton_admin/screens/doktor_list_scren.dart';
 import 'package:ekarton_admin/screens/korisnik_screen.dart';
 import 'package:ekarton_admin/screens/odjel_screen.dart';
+import 'package:ekarton_admin/screens/osiguranje_screen.dart';
 import 'package:ekarton_admin/screens/pacijent_details_screen.dart';
 import 'package:ekarton_admin/screens/pacijent_list_screen.dart';
+import 'package:ekarton_admin/screens/pacijent_osiguranje_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -35,79 +38,6 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               ),
             ),
       ),
-      /*drawer: Drawer(
-        child: ListView(
-          children: [
-            ListTile(
-              title: Text("<-"),
-              onTap: () {
-                /* Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => Login()),
-                );*/
-              },
-            ),
-            ListTile(
-              title: Text("Administrator"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) => AdministratorScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("Korisnik"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => KorisnikScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("Pacijenti"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) => const PacijentiScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("Doktori"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => DoktorScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("Odjel"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => OdjelScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("Termini"),
-              onTap: () {
-                /* Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => TerminiScreen()),
-                );*/
-              },
-            ),
-            ListTile(
-              title: Text("Bolnica"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => BolnicaScreen()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-      body: widget.child!,*/
       body: Column(
         children: [
           _buildNavbar(context),
@@ -125,21 +55,26 @@ Widget _buildNavbar(BuildContext context) {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        SizedBox(width: 250.0),
-        _buildNavButton(context, "Korisnik", KorisnikScreen(), Icons.person),
+        _buildNavButton(context, "", HomeScreen(), Icons.home),
         SizedBox(width: 50.0),
+        _buildNavButton(context, "Korisnici", KorisnikScreen(), Icons.person),
+        SizedBox(width: 20.0),
         _buildNavButton(context, "Pacijenti", PacijentiScreen(), Icons.people),
-        SizedBox(width: 50.0),
+        SizedBox(width: 20.0),
         _buildNavButton(
             context, "Doktori", DoktorScreen(), Icons.local_hospital),
-        SizedBox(width: 50.0),
+        SizedBox(width: 20.0),
+        _buildNavButton(context, "Odjeli", OdjelScreen(), Icons.business),
+        SizedBox(width: 20.0),
+        /* _buildNavButton(
+            context, "Termini", PacijentiDetailsScreen(), Icons.schedule),*/
         _buildNavButton(
-            context, "Odjel", PacijentiDetailsScreen(), Icons.business),
-        SizedBox(width: 50.0),
-        _buildNavButton(
-            context, "Termini", PacijentiDetailsScreen(), Icons.schedule),
-        Spacer(),
-        _buildNavButton(context, "", AdministratorScreen(), Icons.person),
+            context, "Osiguranja", OsiguranjeScreen(), Icons.security),
+        SizedBox(width: 20.0),
+        _buildNavButton(context, "Osiguranja pacijenata",
+            PacijentOsiguranjeScreen(), Icons.person),
+        SizedBox(width: 20.0),
+        _buildNavButton(context, "", KorisnikProfileScreen(), Icons.person),
       ],
     ),
   );

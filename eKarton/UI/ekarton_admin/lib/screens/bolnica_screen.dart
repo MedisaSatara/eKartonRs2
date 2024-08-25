@@ -17,7 +17,7 @@ class _BolnicaScreenState extends State<BolnicaScreen> {
   late BolnicaProvider _bolnicaProvider;
   SearchResult<Bolnica>? result;
 
-  @override
+  /*@override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _bolnicaProvider = context.read<BolnicaProvider>();
@@ -29,7 +29,7 @@ class _BolnicaScreenState extends State<BolnicaScreen> {
     setState(() {
       result = data;
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {

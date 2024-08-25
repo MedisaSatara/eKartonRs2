@@ -1,0 +1,75 @@
+version: '3'
+services:
+#mssql docker
+ 
+  ekarton-sql:
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=st123
+      - MSSQL_PID=Developer
+    ports:
+      - 1401:1433
+    networks:
+      - ekartonnet
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - ekartonnet
+
+  ekarton-api:
+    restart: unless-stopped
+    build:
+      context: .
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=ekarton-sql,1433;Database=eKarton;User=sa;Password=st123;ConnectRetryCount=0;TrustServerCertificate=True; MultipleActiveResultSets=true
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_VIRTUALHOST=/
+    ports:
+      - 7073:7073
+    networks:
+      - ekartonnet
+    links:
+      - ekarton-sql
+    depends_on:
+      - ekarton-sql
+      - rabbitmq
+  
+  subscriber:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./eKarton.Subscriber/Dockerfile
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      
+    ports:
+      - 5265:5265
+    networks:
+      - ekartonnet
+    depends_on:
+      - rabbitmq
+      - ekarton-sql
+      - ekarton-api
+  
+networks:
+  network: {}
+  ekartonnet:
+    driver: bridge

@@ -22,7 +22,7 @@ namespace eKarton.Service.Databases
         public virtual DbSet<DodjeljeniDoktor> DodjeljeniDoktors { get; set; } = null!;
         public virtual DbSet<Doktor> Doktors { get; set; } = null!;
         public virtual DbSet<Korisnik> Korisniks { get; set; } = null!;
-        public virtual DbSet<KorisnikUloga> KorisnikUlogas { get; set; } = null!;
+        //public virtual DbSet<KorisnikUloga> KorisnikUlogas { get; set; } = null!;
         public virtual DbSet<Nalaz> Nalazs { get; set; } = null!;
         public virtual DbSet<Oboljenje> Oboljenjes { get; set; } = null!;
         public virtual DbSet<OcjenaDoktor> OcjenaDoktors { get; set; } = null!;
@@ -150,7 +150,7 @@ namespace eKarton.Service.Databases
                 entity.Property(e => e.Prezime).HasMaxLength(30);
             });
 
-            modelBuilder.Entity<KorisnikUloga>(entity =>
+           /* modelBuilder.Entity<KorisnikUloga>(entity =>
             {
                 entity.ToTable("KorisnikUloga");
 
@@ -165,7 +165,7 @@ namespace eKarton.Service.Databases
                     .WithMany(p => p.KorisnikUlogas)
                     .HasForeignKey(d => d.UlogaId)
                     .HasConstraintName("FK_Uloga_KorisnikUloga");
-            });
+            });*/
 
             modelBuilder.Entity<Nalaz>(entity =>
             {

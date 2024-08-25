@@ -13,5 +13,7 @@ namespace eKarton.Model.Request.SearchObject
         public string? NazivOdjela { get; set; }
         public int? OdjelId { get; set; }
         public bool? IsOdjelIncluded { get; set; }
+        public bool? IsIncludedOcjena { get; set; }
+
     }
 }

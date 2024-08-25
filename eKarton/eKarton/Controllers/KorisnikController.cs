@@ -21,6 +21,12 @@ namespace eKarton.Controllers
         {
             return base.Insert(insert);
         }
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public Model.Models.Korisnik Login(string username, string password)
+        {
+            return (_service as IKorisnikService).Login(username, password);
+        }
 
     }
 }

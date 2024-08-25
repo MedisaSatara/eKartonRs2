@@ -10,10 +10,10 @@ namespace eKarton
 {
     public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        IKorisnikService _korisniciService;
-        public BasicAuthenticationHandler(IKorisnikService korisniciService, IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
+        IKorisnikService _korisnikService;
+        public BasicAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, IKorisnikService korisnikService) : base(options, logger, encoder, clock)
         {
-            _korisniciService = korisniciService;
+            _korisnikService = korisnikService;
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -30,26 +30,19 @@ namespace eKarton
             var username = credentials[0];
             var password = credentials[1];
 
-            var user = await _korisniciService.Login(username, password);
+            var user = _korisnikService.Login(username, password);
 
             if (user == null)
             {
-                return AuthenticateResult.Fail("Incorrect username or password");
+                return AuthenticateResult.Fail("Auth failed");
             }
             else
             {
-
-
                 var claims = new List<Claim>()
                 {
                     new Claim(ClaimTypes.Name, user.Ime),
                     new Claim(ClaimTypes.NameIdentifier, user.KorisnickoIme)
                 };
-
-                foreach (var role in user.KorisnikUlogas)
-                {
-                    claims.Add(new Claim(ClaimTypes.Role, role.Uloga.Naziv));
-                }
 
                 var identity = new ClaimsIdentity(claims, Scheme.Name);
 

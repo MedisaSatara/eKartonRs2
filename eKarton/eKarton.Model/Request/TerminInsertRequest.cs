@@ -8,7 +8,7 @@ namespace eKarton.Model.Request
 {
     public class TerminInsertRequest
     {
-        public int TerminId { get; set; }
+      //  public int TerminId { get; set; }
         public string Datum { get; set; } = null!;
         public string Vrijeme { get; set; } = null!;
         public string? Razlog { get; set; }

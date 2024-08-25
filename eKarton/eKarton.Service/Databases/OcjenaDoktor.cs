@@ -10,6 +10,8 @@ namespace eKarton.Service.Databases
         public string? Razlog { get; set; }
         public bool? Anonimno { get; set; }
         public int DoktorId { get; set; }
+        public int? KorisnikId { get; set; }
+        public virtual Korisnik Korisnik { get; set; }
 
         public virtual Doktor Doktor { get; set; } = null!;
     }

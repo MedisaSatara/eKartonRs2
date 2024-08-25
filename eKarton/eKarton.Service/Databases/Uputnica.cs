@@ -14,6 +14,8 @@ namespace eKarton.Service.Databases
         public string Naziv { get; set; } = null!;
         public string Datum { get; set; } = null!;
         public string Razlog { get; set; } = null!;
+        public string StateMachine { get; set; } = null!;
+
 
         public virtual ICollection<Pregled> Pregleds { get; set; }
     }

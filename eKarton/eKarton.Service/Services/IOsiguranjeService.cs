@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace eKarton.Service.Services
 {
-    public interface IOsiguranjeService : ICRUDService<Model.Models.Osiguranje, PacijentSearchObject, Model.Request.PacijentInsertRequest, Model.Request.PacijentUpdateRequest>
+    public interface IOsiguranjeService : ICRUDService<Model.Models.Osiguranje, PacijentSearchObject, Model.Request.OsiguranjeInsertRequest, Model.Request.OsiguranjeUpdateRequest>
     {
     }
 }

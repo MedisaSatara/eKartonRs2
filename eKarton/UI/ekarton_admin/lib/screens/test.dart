@@ -34,7 +34,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
       'prebivaliste': widget.pacijent?.prebivaliste,
       'mjestoRodjenja': widget.pacijent?.mjestoRodjenja,
       'jmbg': widget.pacijent?.jmbg,
-      'alergican': widget.pacijent?.alergican,
+      'alergija': widget.pacijent?.alergija,
       'hronicneBolesti': widget.pacijent?.hronicneBolesti,
       'rhFaktor': widget.pacijent?.rhFaktor,
       'telefon': widget.pacijent?.telefon,

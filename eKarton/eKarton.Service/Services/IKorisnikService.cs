@@ -11,6 +11,7 @@ namespace eKarton.Service.Services
 {
     public interface IKorisnikService : ICRUDService<Model.Models.Korisnik, KorisnikSearchObject, KorisnikInsertRequest, KorisnikUpdateRequest>
     {
-        public Task<Model.Models.Korisnik> Login(string username, string password);
+        Model.Models.Korisnik Login(string username, string password);
+
     }
 }

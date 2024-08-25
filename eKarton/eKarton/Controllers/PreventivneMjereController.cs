@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace eKarton.Controllers
 {
     [Route("[controller]")]
-    public class PreventivneMjereController : BaseCRUDController<Model.Models.PreventivneMjere, PacijentSearchObject, PacijentInsertRequest, PacijentUpdateRequest>
+    public class PreventivneMjereController : BaseCRUDController<Model.Models.PreventivneMjere, PacijentSearchObject, PreventivneMjereInsertRequest, PreventivneMjereUpdateRequest>
     {
         public PreventivneMjereController(ILogger<BaseController<Model.Models.PreventivneMjere, PacijentSearchObject>> logger, IPreventivneMjere service) : base(logger, service)
         {
         }
 
-        public override Model.Models.PreventivneMjere Insert([FromBody] PacijentInsertRequest insert)
+        public override Model.Models.PreventivneMjere Insert([FromBody] PreventivneMjereInsertRequest insert)
         {
             return base.Insert(insert);
         }

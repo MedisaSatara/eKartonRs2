@@ -1,8 +1,12 @@
 import 'package:ekarton_admin/main.dart';
 import 'package:ekarton_admin/models/pacijent.dart';
+import 'package:ekarton_admin/models/preventivne_mjere.dart';
 import 'package:ekarton_admin/models/search_result.dart';
 import 'package:ekarton_admin/providers/pacijent_provider.dart';
+import 'package:ekarton_admin/providers/preventivne_mjere_provider.dart';
 import 'package:ekarton_admin/screens/pacijent_details_screen.dart';
+import 'package:ekarton_admin/screens/preventivne_mjere_details_screen.dart';
+import 'package:ekarton_admin/screens/preventivne_mjere_screen.dart';
 import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +21,10 @@ class PacijentiScreen extends StatefulWidget {
 
 class _PacijentiScreenState extends State<PacijentiScreen> {
   late PacijentProvider _pacijentiProvider;
+  late PreventivneMjereProvider _preventivneMjereProvider;
   SearchResult<Pacijent>? result;
+  SearchResult<PreventivneMjere>? preventivneMjereResult;
+
   TextEditingController _imeController = TextEditingController();
   TextEditingController _prezimeController = TextEditingController();
   TextEditingController _brojkartonaController = TextEditingController();
@@ -26,14 +33,22 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _pacijentiProvider = context.read<PacijentProvider>();
+    _preventivneMjereProvider = context.read<PreventivneMjereProvider>();
     _fetchInitialData();
   }
 
   Future<void> _fetchInitialData() async {
     var data = await _pacijentiProvider.get();
+    var preventivneMjereData = await _preventivneMjereProvider.get();
     setState(() {
       result = data;
+      preventivneMjereResult = preventivneMjereData;
     });
+
+    // Debugging prints
+    print("Pacijenti: ${result?.result.map((p) => p.pacijentId).toList()}");
+    print(
+        "Preventivne Mjere: ${preventivneMjereResult?.result.map((m) => m.pacijentId).toList()}");
   }
 
   @override
@@ -42,7 +57,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
       title_widget: Text(
         "Pacijenti",
         style: TextStyle(
-          color: Colors.white, // Set the color of the title text
+          color: Colors.white,
         ),
       ),
       child: Container(
@@ -61,6 +76,19 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
               },
               child: Text("Dodaj novog pacijenta"),
             ),
+            SizedBox(
+              height: 8.0,
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => PreventivneMjereDetailsScreen(),
+                  ),
+                );
+              },
+              child: Text("Dodaj preventivne mjere pacijenta"),
+            ),
           ],
         ),
       ),
@@ -73,7 +101,6 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title for the search section
           Text(
             "Pretraži pacijenta:",
             style: TextStyle(
@@ -82,7 +109,6 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
             ),
           ),
           SizedBox(height: 16.0),
-          // Input fields and button stacked vertically
           TextField(
             decoration: InputDecoration(
               labelText: "Ime",
@@ -118,12 +144,12 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
             child: Text(
               "Pretraga",
               style: TextStyle(
-                color: Colors.black, // Set the color of the title text
+                color: Colors.black,
               ),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
-              elevation: 5.0, // Button background color
+              elevation: 5.0,
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
               shape: RoundedRectangleBorder(
@@ -173,27 +199,47 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
                 ),
               ),
             ),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  'Preventivna mjera',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
           ],
-          rows: result?.result
-                  .map((Pacijent e) => DataRow(
-                        onSelectChanged: (selected) {
-                          if (selected == true) {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    PacijentiDetailsScreen(pacijent: e),
-                              ),
-                            );
-                          }
-                        },
-                        cells: [
-                          DataCell(Text(e.ime ?? "")),
-                          DataCell(Text(e.prezime ?? "")),
-                          DataCell(Text(e.datumRodjenja ?? "")),
-                          DataCell(Text(e.brojKartona ?? "")),
-                        ],
-                      ))
-                  .toList() ??
+          rows: result?.result.map((Pacijent e) {
+                var preventiveMjere = preventivneMjereResult?.result
+                    .where(
+                      (mj) => mj.pacijentId == e.pacijentId,
+                    )
+                    .toList();
+
+                var preventiveMjereText =
+                    preventiveMjere != null && preventiveMjere.isNotEmpty
+                        ? preventiveMjere.map((mj) => mj.stanje).join(', ')
+                        : "/";
+
+                return DataRow(
+                  onSelectChanged: (selected) {
+                    if (selected == true) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PacijentiDetailsScreen(pacijent: e),
+                        ),
+                      );
+                    }
+                  },
+                  cells: [
+                    DataCell(Text(e.ime ?? "")),
+                    DataCell(Text(e.prezime ?? "")),
+                    DataCell(Text(e.datumRodjenja ?? "")),
+                    DataCell(Text(e.brojKartona ?? "")),
+                    DataCell(Text(preventiveMjereText)),
+                  ],
+                );
+              }).toList() ??
               [],
         ),
       ),

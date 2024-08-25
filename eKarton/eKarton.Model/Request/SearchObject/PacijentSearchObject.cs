@@ -14,5 +14,6 @@ namespace eKarton.Model.Request.SearchObject
         public bool? isPreventivneMjereIncluded { get; set; }
         public bool? isOsiguranjeInclude { get; set; }
 
+
     }
 }

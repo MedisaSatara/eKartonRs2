@@ -32,9 +32,14 @@ namespace eKarton.Services.Database
                        KorisnikId = 1001,
                        Ime = "Arijana",
                        Prezime = "Husic",
+                       Spol = "Z",
+                       Telefon = "063 222 333",
+                       Email = "administrator@gmail.com",
+                       DatumRodjenja = "1998/11/11",
                        KorisnickoIme = "admin",
                        LozinkaSalt = Salt[1],
-                       LozinkaHash = PacijentService.GenerateHash(Salt[1], "admin")
+                       LozinkaHash = PacijentService.GenerateHash(Salt[1], "admin"),
+                       UlogaId=1,
 
                    },
                     new Korisnik()
@@ -42,9 +47,14 @@ namespace eKarton.Services.Database
                         KorisnikId = 1002,
                         Ime = "Medisa",
                         Prezime = "Satara",
+                        Spol = "Z",
+                        Telefon = "063 111 333",
+                        Email = "korisnik@gmail.com",
+                        DatumRodjenja = "1998/05/07",
                         KorisnickoIme = "korisnik",
                         LozinkaSalt = Salt[2],
-                        LozinkaHash = PacijentService.GenerateHash(Salt[2], "korisnik")
+                        LozinkaHash = PacijentService.GenerateHash(Salt[2], "korisnik"),
+                        UlogaId=2
 
                     });
             #endregion
@@ -67,7 +77,7 @@ namespace eKarton.Services.Database
             #endregion
 
             #region Dodavanje KorisnikUloga
-            modelBuilder.Entity<KorisnikUloga>().HasData(
+            /*modelBuilder.Entity<KorisnikUloga>().HasData(
                 new KorisnikUloga()
                 {
                     KorisnikUlogaId = 1,
@@ -81,7 +91,7 @@ namespace eKarton.Services.Database
                       KorisnikId = 1002,
                       UlogaId = 2,
                       DatumIzmjene = DateTime.Now
-                  });
+                  });*/
             #endregion
 
 
@@ -177,6 +187,7 @@ namespace eKarton.Services.Database
                     Email = "stanija@gmail.com",
                     Grad = "Sarajevo",
                     Jmbg = "1215988789654",
+                    StateMachine = "active",
                     OdjelId = 2001
                 },
                 new Doktor()
@@ -190,6 +201,7 @@ namespace eKarton.Services.Database
                     Email = "radas@gmail.com",
                     Grad = "Mostar",
                     Jmbg = "0102988789654",
+                    StateMachine="active",
                     OdjelId = 2006
                 },
                 new Doktor()
@@ -203,6 +215,7 @@ namespace eKarton.Services.Database
                     Email = "jelenap@gmail.com",
                     Grad = "Sarajevo",
                     Jmbg = "1002980789654",
+                    StateMachine = "active",
                     OdjelId = 2006
                 },
                  new Doktor()
@@ -216,6 +229,7 @@ namespace eKarton.Services.Database
                      Email = "markom@gmail.com",
                      Grad = "Sarajevo",
                      Jmbg = "2099750789654",
+                     StateMachine = "active",
                      OdjelId = 2005
                  },
                  new Doktor()
@@ -229,6 +243,7 @@ namespace eKarton.Services.Database
                      Email = "bznada@gmail.com",
                      Grad = "Mostar",
                      Jmbg = "0507990078965",
+                     StateMachine = "archived",
                      OdjelId = 2005
                  },
                  new Doktor()
@@ -242,6 +257,7 @@ namespace eKarton.Services.Database
                      Email = "adnaz@gmail.com",
                      Grad = "Mostar",
                      Jmbg = "2806989789654",
+                     StateMachine = "draft",
                      OdjelId = 2004
                  },
                  new Doktor()
@@ -255,6 +271,7 @@ namespace eKarton.Services.Database
                      Email = "rankog@gmail.com",
                      Grad = "Tuzla",
                      Jmbg = "2039801236547",
+                     StateMachine = "draft",
                      OdjelId = 2001
                  },
                  new Doktor()
@@ -268,6 +285,7 @@ namespace eKarton.Services.Database
                      Email = "nikolinas@gmail.com",
                      Grad = "Mostar",
                      Jmbg = "1111197523974",
+                     StateMachine = "cancelled",
                      OdjelId = 2001
                  },
                  new Doktor()
@@ -281,6 +299,7 @@ namespace eKarton.Services.Database
                      Email = "editas@gmail.com",
                      Grad = "Stolac",
                      Jmbg = "2203197154239",
+                     StateMachine = "active",
                      OdjelId = 2001
                  },
                  new Doktor()
@@ -294,6 +313,7 @@ namespace eKarton.Services.Database
                      Email = "gordanap@gmail.com",
                      Grad = "Mostar",
                      Jmbg = "1105971289654",
+                     StateMachine = "active",
                      OdjelId = 2001
                  },
                  new Doktor()
@@ -307,6 +327,7 @@ namespace eKarton.Services.Database
                      Email = "senadv@gmail.com",
                      Grad = "Mostar",
                      Jmbg = "1911980647123",
+                     StateMachine = "archived",
                      OdjelId = 2002
                  },
                  new Doktor()
@@ -320,6 +341,7 @@ namespace eKarton.Services.Database
                      Email = "sandrab@gmail.com",
                      Grad = "Sarajevo",
                      Jmbg = "2206985452136",
+                     StateMachine = "active",
                      OdjelId = 2003
                  });
             #endregion
@@ -351,6 +373,7 @@ namespace eKarton.Services.Database
                     Ocjena = 4,
                     Razlog = "Vrlo dobar",
                     Anonimno = true,
+                    KorisnikId=1002,
                     DoktorId = 3001
                 },
                   new OcjenaDoktor()
@@ -359,6 +382,7 @@ namespace eKarton.Services.Database
                       Ocjena = 5,
                       Razlog = "Odlican",
                       Anonimno = true,
+                      KorisnikId = 1002,
                       DoktorId = 3002
                   },
                   new OcjenaDoktor()
@@ -367,8 +391,191 @@ namespace eKarton.Services.Database
                       Ocjena = 4,
                       Razlog = "Vrlo dobar",
                       Anonimno = true,
+                      KorisnikId = 1002,
                       DoktorId = 3009
-                  });
+                  },
+                                   new OcjenaDoktor()
+                                    {
+                                        OcjenaId = 3400,
+                                        Ocjena = 4,
+                                        Razlog = "Vrlo dobar",
+                                        Anonimno = true,
+                                        KorisnikId = 1002,
+                                        DoktorId = 3001
+                                    },
+                                                      new OcjenaDoktor()
+                                                      {
+                                                          OcjenaId = 3500,
+                                                          Ocjena = 4,
+                                                          Razlog = "Vrlo dobar",
+                                                          Anonimno = true,
+                                                          KorisnikId = 1002,
+                                                          DoktorId = 3002
+                                                      },
+                                                                        new OcjenaDoktor()
+                                                                        {
+                                                                            OcjenaId = 3600,
+                                                                            Ocjena = 4,
+                                                                            Razlog = "Vrlo dobar",
+                                                                            Anonimno = true,
+                                                                            KorisnikId = 1002,
+                                                                            DoktorId = 3003
+                                                                        },
+                                                                                          new OcjenaDoktor()
+                                                                                          {
+                                                                                              OcjenaId = 3700,
+                                                                                              Ocjena = 4,
+                                                                                              Razlog = "Vrlo dobar",
+                                                                                              Anonimno = true,
+                                                                                              KorisnikId = 1002,
+                                                                                              DoktorId = 3004
+                                                                                          },
+                  new OcjenaDoktor()
+                  {
+                      OcjenaId = 3800,
+                      Ocjena = 5,
+                      Razlog = "Vrlo dobar",
+                      Anonimno = true,
+                      KorisnikId = 1002,
+                      DoktorId = 3010
+                  },
+                                    new OcjenaDoktor()
+                                    {
+                                        OcjenaId = 3900,
+                                        Ocjena = 4,
+                                        Razlog = "Vrlo dobar",
+                                        Anonimno = true,
+                                        KorisnikId = 1002,
+                                        DoktorId = 3011
+                                    },
+                                                      new OcjenaDoktor()
+                                                      {
+                                                          OcjenaId = 3301,
+                                                          Ocjena = 3,
+                                                          Razlog = "Vrlo dobar",
+                                                          Anonimno = true,
+                                                          KorisnikId = 1002,
+                                                          DoktorId = 3012
+                                                      },
+                                                                        new OcjenaDoktor()
+                                                                        {
+                                                                            OcjenaId = 3302,
+                                                                            Ocjena = 2,
+                                                                            Razlog = "Vrlo dobar",
+                                                                            Anonimno = true,
+                                                                            KorisnikId = 1002,
+                                                                            DoktorId = 3007
+                                                                        },
+                                                                                          new OcjenaDoktor()
+                                                                                          {
+                                                                                              OcjenaId = 3303,
+                                                                                              Ocjena = 8,
+                                                                                              Razlog = "Vrlo dobar",
+                                                                                              Anonimno = true,
+                                                                                              KorisnikId = 1002,
+                                                                                              DoktorId = 3008
+                                                                                          },
+
+                  new OcjenaDoktor()
+                  {
+                      OcjenaId = 3304,
+                      Ocjena = 4,
+                      Razlog = "Vrlo dobar",
+                      Anonimno = true,
+                      KorisnikId = 1002,
+                      DoktorId = 3006
+                  },
+                                    new OcjenaDoktor()
+                                    {
+                                        OcjenaId = 3305,
+                                        Ocjena = 4,
+                                        Razlog = "Vrlo dobar",
+                                        Anonimno = true,
+                                        KorisnikId = 1002,
+                                        DoktorId = 3005
+                                    },
+                                     new OcjenaDoktor()
+                                     {
+                                         OcjenaId = 3306,
+                                         Ocjena = 2,
+                                         Razlog = "Vrlo dobar",
+                                         Anonimno = true,
+                                         KorisnikId = 1002,
+                                         DoktorId = 3005
+                                     },
+                                      new OcjenaDoktor()
+                                      {
+                                          OcjenaId = 3307,
+                                          Ocjena = 3,
+                                          Razlog = "Vrlo dobar",
+                                          Anonimno = true,
+                                          KorisnikId = 1002,
+                                          DoktorId = 3005
+                                      },
+                                       new OcjenaDoktor()
+                                       {
+                                           OcjenaId = 3308,
+                                           Ocjena = 5,
+                                           Razlog = "Vrlo dobar",
+                                           Anonimno = true,
+                                           KorisnikId = 1002,
+                                           DoktorId = 3005
+                                       },
+                                        new OcjenaDoktor()
+                                        {
+                                            OcjenaId = 3309,
+                                            Ocjena = 4,
+                                            Razlog = "Vrlo dobar",
+                                            Anonimno = true,
+                                            KorisnikId = 1002,
+                                            DoktorId = 3005
+                                        },
+                                         new OcjenaDoktor()
+                                         {
+                                             OcjenaId = 3405,
+                                             Ocjena = 4,
+                                             Razlog = "Vrlo dobar",
+                                             Anonimno = true,
+                                             KorisnikId = 1002,
+                                             DoktorId = 3007
+                                         },
+                                          new OcjenaDoktor()
+                                          {
+                                              OcjenaId = 3505,
+                                              Ocjena = 4,
+                                              Razlog = "Vrlo dobar",
+                                              Anonimno = true,
+                                              KorisnikId = 1002,
+                                              DoktorId = 3007
+                                          },
+                                           new OcjenaDoktor()
+                                           {
+                                               OcjenaId = 3605,
+                                               Ocjena = 4,
+                                               Razlog = "Vrlo dobar",
+                                               Anonimno = true,
+                                               KorisnikId = 1002,
+                                               DoktorId = 3008
+                                           },
+                                            new OcjenaDoktor()
+                                            {
+                                                OcjenaId = 3705,
+                                                Ocjena = 4,
+                                                Razlog = "Vrlo dobar",
+                                                Anonimno = true,
+                                                KorisnikId = 1002,
+                                                DoktorId = 3008
+                                            },
+                                             new OcjenaDoktor()
+                                             {
+                                                 OcjenaId = 3709,
+                                                 Ocjena = 4,
+                                                 Razlog = "Vrlo dobar",
+                                                 Anonimno = true,
+                                                 KorisnikId = 1002,
+                                                 DoktorId = 3009
+                                             }
+                  );
             #endregion
 
             #region DodavanjePacijenta
@@ -517,8 +724,34 @@ namespace eKarton.Services.Database
                     UputnicaId = 6100,
                     Naziv = "Posjeta orl doktora",
                     Datum = "06.02.2022",
-                    Razlog = "Upala uha"
-                });
+                    Razlog = "Upala uha",
+                    StateMachine="arhived"
+                },
+                                new Uputnica()
+                                {
+                                    UputnicaId = 6101,
+                                    Naziv = "Alergo-test",
+                                    Datum = "06.02.2022",
+                                    Razlog = "Moguca alergija na odredjene proizvode",
+                                    StateMachine="draft"
+                                },
+                                                new Uputnica()
+                                                {
+                                                    UputnicaId = 6102,
+                                                    Naziv = "CTG",
+                                                    Datum = "06.02.2022",
+                                                    Razlog = "neki razlog",
+                                                    StateMachine="cancelled"
+                                                },
+                                                                new Uputnica()
+                                                                {
+                                                                    UputnicaId = 6103,
+                                                                    Naziv = "Endoskopija",
+                                                                    Datum = "06.02.2022",
+                                                                    Razlog = "Bolovi u prsima",
+                                                                    StateMachine="active"
+                                                                }
+                );
             #endregion
 
             #region Dodavnje Pregleda
@@ -534,7 +767,44 @@ namespace eKarton.Services.Database
                     PacijentId = 5001,
                     DoktorId = 3001
 
-                });
+                },
+                                new Pregled()
+                                {
+                                    PregledId = 6111,
+                                    RazlogPosjete = "Moguca alergijska reakcija",
+                                    Datum = "05.05.2022",
+                                    Dijagnoza = "Moguca alergijska reakcija",
+                                    TerapijaId = 6001,
+                                    UputnicaId = 6101,
+                                    PacijentId = 5001,
+                                    DoktorId = 3001
+
+                                },
+                                                new Pregled()
+                                                {
+                                                    PregledId = 6112,
+                                                    RazlogPosjete = "Bol  uhu i glava",
+                                                    Datum = "05.05.2022",
+                                                    Dijagnoza = "Upala srednjeg uha",
+                                                    TerapijaId = 6001,
+                                                    UputnicaId = 6102,
+                                                    PacijentId = 5001,
+                                                    DoktorId = 3001
+
+                                                },
+                                                                new Pregled()
+                                                                {
+                                                                    PregledId = 6113,
+                                                                    RazlogPosjete = "Otezano kretanje",
+                                                                    Datum = "05.05.2022",
+                                                                    Dijagnoza = "Sum na srcu",
+                                                                    TerapijaId = 6001,
+                                                                    UputnicaId = 6103,
+                                                                    PacijentId = 5001,
+                                                                    DoktorId = 3001
+
+                                                                }
+                );
             #endregion
 
             #region Dodavnje Termina

@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eKarton.Service.Services
 {
-    public class PreventivneMjereService : BaseCRUDService<Model.Models.PreventivneMjere, Databases.PreventivneMjere, PacijentSearchObject, PacijentInsertRequest, PacijentUpdateRequest>, IPreventivneMjere
+    public class PreventivneMjereService : BaseCRUDService<Model.Models.PreventivneMjere, Databases.PreventivneMjere, PacijentSearchObject, PreventivneMjereInsertRequest, PreventivneMjereUpdateRequest>, IPreventivneMjere
     {
         public PreventivneMjereService(eKartonContext context, IMapper mapper)
         : base(context, mapper)
         {
         }
 
-        public override IQueryable<Databases.PreventivneMjere> AddInclude(IQueryable<Databases.PreventivneMjere> query, PacijentSearchObject? search = null)
+       /* public override IQueryable<Databases.PreventivneMjere> AddInclude(IQueryable<Databases.PreventivneMjere> query, PacijentSearchObject? search = null)
         {
             if (search?.isPreventivneMjereIncluded == true)
             {
@@ -29,7 +29,7 @@ namespace eKarton.Service.Services
                 query = query.Include("PacijentOsiguranjes.Osiguranje");
             }
             return base.AddInclude(query, search);
-        }
+        }*/
         public override IQueryable<Databases.PreventivneMjere> AddFilter(IQueryable<Databases.PreventivneMjere> query, PacijentSearchObject? search = null)
         {
             var filteredQuery = base.AddFilter(query, search);

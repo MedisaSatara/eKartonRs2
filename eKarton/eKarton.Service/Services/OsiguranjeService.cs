@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eKarton.Service.Services
 {
-    public class OsiguranjeService : BaseCRUDService<Model.Models.Osiguranje, Databases.Osiguranje, PacijentSearchObject, PacijentInsertRequest, PacijentUpdateRequest>, IOsiguranjeService
+    public class OsiguranjeService : BaseCRUDService<Model.Models.Osiguranje, Databases.Osiguranje, PacijentSearchObject, OsiguranjeInsertRequest, OsiguranjeUpdateRequest>, IOsiguranjeService
     {
         public OsiguranjeService(eKartonContext context, IMapper mapper)
         : base(context, mapper)
