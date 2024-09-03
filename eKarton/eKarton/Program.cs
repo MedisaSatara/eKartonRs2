@@ -1,6 +1,7 @@
 using eKarton;
 using eKarton.Filters;
 using eKarton.Service.Databases;
+using eKarton.Service.RabbitMQ;
 using eKarton.Service.Services;
 using eKarton.Service.UputniceStateMachine;
 using Microsoft.AspNetCore.Authentication;
@@ -25,6 +26,7 @@ builder.Services.AddTransient<INalazService, NalazService>();
 builder.Services.AddTransient<IUputnicaService, UputnicaService>();
 builder.Services.AddTransient<IPregledService, PregledService>();
 builder.Services.AddTransient<ITerapijaService, TerapijaService>();
+builder.Services.AddSingleton<IMailProducer, MailProducer>();
 
 
 builder.Services.AddTransient<BaseDoktorState>();
@@ -32,7 +34,7 @@ builder.Services.AddTransient<InitialDoktorState>();
 builder.Services.AddTransient<DraftDoktorState>();
 builder.Services.AddTransient<ActiveDoktorState>();
 
-
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 
 

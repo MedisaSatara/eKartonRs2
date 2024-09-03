@@ -6,8 +6,8 @@ services:
     container_name: rabbitmq
     restart: unless-stopped
     environment:
-      - RABBITMQ_DEFAULT_USER=user
-      - RABBITMQ_DEFAULT_PASS=password
+      - RABBITMQ_DEFAULT_USER=test
+      - RABBITMQ_DEFAULT_PASS=test
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -38,8 +38,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
-      - RABBITMQ_USERNAME=user
-      - RABBITMQ_PASSWORD=password
+      - RABBITMQ_USERNAME=test
+      - RABBITMQ_PASSWORD=test
       - SMTP_SERVER=smtp.outlook.com
       - SMTP_PORT=587
       - SMTP_USERNAME=tt8915119@gmail.com
@@ -63,8 +63,8 @@ services:
     environment:
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
-      - RABBITMQ_USERNAME=user
-      - RABBITMQ_PASSWORD=password
+      - RABBITMQ_USERNAME=test
+      - RABBITMQ_PASSWORD=test
       - SMTP_SERVER=smtp.outlook.com
       - SMTP_PORT=587
       - SMTP_USERNAME=tt8915119@gmail.com

@@ -26,6 +26,7 @@ namespace eKarton.Service.Databases
         public string Jmbg { get; set; } = null!;
         public string? MjestoRodjenja { get; set; }
         public string? Prebivaliste { get; set; }
+        public string? Email { get; set; }
         public string Telefon { get; set; } = null!;
         public string? KrvnaGrupa { get; set; }
         public string? RhFaktor { get; set; }

@@ -10,5 +10,6 @@ namespace eKarton.Service.Services
 {
     public interface ITerminService : ICRUDService<Model.Models.Termin, TerminSearchObject, TerminInsertRequest, TerminUpdateRequest>
     {
+        Task AcceptServiceRequest(int terminId);
     }
 }
