@@ -40,6 +40,7 @@ namespace eKarton.Controllers
         public IActionResult SendConfirmationEmail([FromBody] EmailModel emailModel)
         {
             _mailProducer.SendEmail(emailModel);
+
             Thread.Sleep(TimeSpan.FromSeconds(15));
             return Ok();
         }
