@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,8 +12,28 @@ namespace eKarton.Services.Database
 {
     public static class Data
     {
+        public static string GenerateSalt()
+        {
+            var buf = new byte[16];
+            (new RNGCryptoServiceProvider()).GetBytes(buf);
+            return Convert.ToBase64String(buf);
+        }
+        public static string GenerateHash(string salt, string password)
+        {
+            byte[] src = Convert.FromBase64String(salt);
+            byte[] bytes = Encoding.Unicode.GetBytes(password);
+            byte[] dst = new byte[src.Length + bytes.Length];
+
+            System.Buffer.BlockCopy(src, 0, dst, 0, src.Length);
+            System.Buffer.BlockCopy(bytes, 0, dst, src.Length, bytes.Length);
+
+            HashAlgorithm algorithm = HashAlgorithm.Create("SHA1");
+            byte[] inArray = algorithm.ComputeHash(dst);
+            return Convert.ToBase64String(inArray);
+        }
         public static void Seed(this ModelBuilder modelBuilder)
         {
+
             List<string> Salt = new List<string>();
             for (int i = 0; i < 5; i++)
             {
@@ -26,7 +47,7 @@ namespace eKarton.Services.Database
 
 
             #region Dodavanje Korisnika
-            modelBuilder.Entity<Korisnik>().HasData(
+           /* modelBuilder.Entity<Korisnik>().HasData(
                    new Korisnik()
                    {
                        KorisnikId = 1001,
@@ -37,9 +58,9 @@ namespace eKarton.Services.Database
                        Email = "administrator@gmail.com",
                        DatumRodjenja = "1998/11/11",
                        KorisnickoIme = "admin",
-                       LozinkaSalt = Salt[1],
-                       LozinkaHash = PacijentService.GenerateHash(Salt[1], "admin"),
-                       UlogaId=1,
+                       LozinkaSalt = GenerateSalt(),
+                       LozinkaHash = GenerateHash(GenerateSalt(), "test"),
+                      // UlogaId=1,
 
                    },
                     new Korisnik()
@@ -52,11 +73,43 @@ namespace eKarton.Services.Database
                         Email = "korisnik@gmail.com",
                         DatumRodjenja = "1998/05/07",
                         KorisnickoIme = "korisnik",
-                        LozinkaSalt = Salt[2],
-                        LozinkaHash = PacijentService.GenerateHash(Salt[2], "korisnik"),
-                        UlogaId=2
+                        LozinkaSalt = GenerateSalt(),
+                        LozinkaHash = GenerateHash(GenerateSalt(), "korisnik"),
+                       // UlogaId =2
 
-                    });
+                    });*/
+            Service.Databases.Korisnik korisnik = new Service.Databases.Korisnik()
+            {
+                KorisnikId = 1001,
+                Ime = "Arijana",
+                Prezime = "Husic",
+                Spol = "Z",
+                Telefon = "063 222 333",
+                Email = "administrator@gmail.com",
+                DatumRodjenja = "1998/11/11",
+                KorisnickoIme = "admin",
+
+
+            };
+            korisnik.LozinkaSalt = GenerateSalt();
+            korisnik.LozinkaHash = GenerateHash(korisnik.LozinkaSalt, "test");
+            modelBuilder.Entity<Korisnik>().HasData(korisnik);
+
+            Service.Databases.Korisnik korisnik2 = new Service.Databases.Korisnik()
+            {
+                KorisnikId = 1002,
+                Ime = "Medisa",
+                Prezime = "Satara",
+                Spol = "Z",
+                Telefon = "063 111 333",
+                Email = "korisnik@gmail.com",
+                DatumRodjenja = "1998/05/07",
+                KorisnickoIme = "korisnik",
+
+            };
+            korisnik2.LozinkaSalt = GenerateSalt();
+            korisnik2.LozinkaHash = GenerateHash(korisnik2.LozinkaSalt, "test");
+            modelBuilder.Entity<Korisnik>().HasData(korisnik2);
             #endregion
 
             #region Dodavanje Uloga
@@ -77,7 +130,7 @@ namespace eKarton.Services.Database
             #endregion
 
             #region Dodavanje KorisnikUloga
-            /*modelBuilder.Entity<KorisnikUloga>().HasData(
+            modelBuilder.Entity<KorisnikUloga>().HasData(
                 new KorisnikUloga()
                 {
                     KorisnikUlogaId = 1,
@@ -91,7 +144,7 @@ namespace eKarton.Services.Database
                       KorisnikId = 1002,
                       UlogaId = 2,
                       DatumIzmjene = DateTime.Now
-                  });*/
+                  });
             #endregion
 
 
@@ -373,7 +426,7 @@ namespace eKarton.Services.Database
                     Ocjena = 4,
                     Razlog = "Vrlo dobar",
                     Anonimno = true,
-                    KorisnikId=1002,
+                    KorisnikId = 1002,
                     DoktorId = 3001
                 },
                   new OcjenaDoktor()

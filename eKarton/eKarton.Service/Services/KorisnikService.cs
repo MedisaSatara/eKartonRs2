@@ -84,7 +84,7 @@ namespace eKarton.Service.Services
 
         public Model.Models.Korisnik Login(string username, string password)
         {
-            var entity = _context.Korisniks.FirstOrDefault(x => x.KorisnickoIme == username);
+            var entity = _context.Korisniks.Include(x=>x.KorisnikUlogas).ThenInclude(y=>y.Uloga).FirstOrDefault(x => x.KorisnickoIme == username);
 
             if (entity == null)
             {

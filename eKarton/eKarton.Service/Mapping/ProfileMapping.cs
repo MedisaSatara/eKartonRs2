@@ -21,7 +21,7 @@ namespace eKarton.Service.Mapping
             CreateMap<KorisnikSearchObject, Databases.Korisnik>();
             CreateMap<KorisnikInsertRequest, Databases.Korisnik>();
             CreateMap<KorisnikUpdateRequest, Databases.Korisnik>();
-            //CreateMap<Databases.KorisnikUloga, Model.Models.KorisnikUloga>();
+            CreateMap<Databases.KorisnikUloga, Model.Models.KorisnikUloga>();
             CreateMap<Databases.Uloga, Model.Models.Uloga>();
 
             CreateMap<Databases.Doktor, Model.Models.Doktor>();

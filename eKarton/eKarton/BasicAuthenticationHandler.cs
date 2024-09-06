@@ -31,26 +31,29 @@ namespace eKarton
             var password = credentials[1];
 
             var user = _korisnikService.Login(username, password);
-
             if (user == null)
             {
                 return AuthenticateResult.Fail("Auth failed");
             }
             else
             {
-                var claims = new List<Claim>()
-                {
+                var claims = new List<Claim>() { 
                     new Claim(ClaimTypes.Name, user.Ime),
-                    new Claim(ClaimTypes.NameIdentifier, user.KorisnickoIme)
+                    new Claim(ClaimTypes.NameIdentifier, user.KorisnikId.ToString())
                 };
+                foreach(var role in user.KorisnikUlogas)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role.Uloga.Naziv));
+                }
 
                 var identity = new ClaimsIdentity(claims, Scheme.Name);
-
                 var principal = new ClaimsPrincipal(identity);
 
                 var ticket = new AuthenticationTicket(principal, Scheme.Name);
                 return AuthenticateResult.Success(ticket);
             }
+
+
         }
     }
 }

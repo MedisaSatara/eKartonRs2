@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eKarton.Service.Databases;
 
@@ -11,9 +12,10 @@ using eKarton.Service.Databases;
 namespace eKarton.Service.Migrations
 {
     [DbContext(typeof(eKartonContext))]
-    partial class eKartonContextModelSnapshot : ModelSnapshot
+    [Migration("20240906134455_DateSourceChanged")]
+    partial class DateSourceChanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -457,8 +459,8 @@ namespace eKarton.Service.Migrations
                             Email = "administrator@gmail.com",
                             Ime = "Arijana",
                             KorisnickoIme = "admin",
-                            LozinkaHash = "V8HYjW6R4eXd1YERVpYDxjGpIXQ=",
-                            LozinkaSalt = "1OHtB2+h0331Qpoyujq+Jg==",
+                            LozinkaHash = "NXpeWYkBB0JKUeEUJIKEMU7WdTQ=",
+                            LozinkaSalt = "N53yFDPHPCqw9oGpVSrajA==",
                             Prezime = "Husic",
                             Spol = "Z",
                             Telefon = "063 222 333"
@@ -470,8 +472,8 @@ namespace eKarton.Service.Migrations
                             Email = "korisnik@gmail.com",
                             Ime = "Medisa",
                             KorisnickoIme = "korisnik",
-                            LozinkaHash = "c0CHfrx40VPzDtq40L8awZnN+no=",
-                            LozinkaSalt = "fRJjjjh8OSV2eZOhiCmbuQ==",
+                            LozinkaHash = "3GUJpeVfHI2lk0ES1GUMwCbsDBI=",
+                            LozinkaSalt = "lajrr9vZoqGCSIgyiSKF4g==",
                             Prezime = "Satara",
                             Spol = "Z",
                             Telefon = "063 111 333"
@@ -507,14 +509,14 @@ namespace eKarton.Service.Migrations
                         new
                         {
                             KorisnikUlogaId = 1,
-                            DatumIzmjene = new DateTime(2024, 9, 6, 16, 26, 27, 952, DateTimeKind.Local).AddTicks(9798),
+                            DatumIzmjene = new DateTime(2024, 9, 6, 15, 44, 50, 913, DateTimeKind.Local).AddTicks(9038),
                             KorisnikId = 1001,
                             UlogaId = 1
                         },
                         new
                         {
                             KorisnikUlogaId = 2,
-                            DatumIzmjene = new DateTime(2024, 9, 6, 16, 26, 27, 952, DateTimeKind.Local).AddTicks(9870),
+                            DatumIzmjene = new DateTime(2024, 9, 6, 15, 44, 50, 913, DateTimeKind.Local).AddTicks(9175),
                             KorisnikId = 1002,
                             UlogaId = 2
                         });

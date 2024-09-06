@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eKarton.Service.Databases;
 
@@ -11,9 +12,10 @@ using eKarton.Service.Databases;
 namespace eKarton.Service.Migrations
 {
     [DbContext(typeof(eKartonContext))]
-    partial class eKartonContextModelSnapshot : ModelSnapshot
+    [Migration("20240905204032_korisnikinitial")]
+    partial class korisnikinitial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -445,7 +447,12 @@ namespace eKarton.Service.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UlogaId")
+                        .HasColumnType("int");
+
                     b.HasKey("KorisnikId");
+
+                    b.HasIndex("UlogaId");
 
                     b.ToTable("Korisnik", (string)null);
 
@@ -457,11 +464,12 @@ namespace eKarton.Service.Migrations
                             Email = "administrator@gmail.com",
                             Ime = "Arijana",
                             KorisnickoIme = "admin",
-                            LozinkaHash = "V8HYjW6R4eXd1YERVpYDxjGpIXQ=",
-                            LozinkaSalt = "1OHtB2+h0331Qpoyujq+Jg==",
+                            LozinkaHash = "BE4CyLHz1oXyZT2MO6x9vNGauzc=",
+                            LozinkaSalt = "YkaZ6TRmma0m5gzKV7V7iA==",
                             Prezime = "Husic",
                             Spol = "Z",
-                            Telefon = "063 222 333"
+                            Telefon = "063 222 333",
+                            UlogaId = 1
                         },
                         new
                         {
@@ -470,52 +478,11 @@ namespace eKarton.Service.Migrations
                             Email = "korisnik@gmail.com",
                             Ime = "Medisa",
                             KorisnickoIme = "korisnik",
-                            LozinkaHash = "c0CHfrx40VPzDtq40L8awZnN+no=",
-                            LozinkaSalt = "fRJjjjh8OSV2eZOhiCmbuQ==",
+                            LozinkaHash = "1rg4dAwyHaHbbfZC3ezZBp2ibcI=",
+                            LozinkaSalt = "zZ3YUkvwvsFuu6e0YxBelw==",
                             Prezime = "Satara",
                             Spol = "Z",
-                            Telefon = "063 111 333"
-                        });
-                });
-
-            modelBuilder.Entity("eKarton.Service.Databases.KorisnikUloga", b =>
-                {
-                    b.Property<int>("KorisnikUlogaId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("KorisnikUlogaId"), 1L, 1);
-
-                    b.Property<DateTime?>("DatumIzmjene")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("KorisnikId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UlogaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("KorisnikUlogaId");
-
-                    b.HasIndex("KorisnikId");
-
-                    b.HasIndex("UlogaId");
-
-                    b.ToTable("KorisnikUloga");
-
-                    b.HasData(
-                        new
-                        {
-                            KorisnikUlogaId = 1,
-                            DatumIzmjene = new DateTime(2024, 9, 6, 16, 26, 27, 952, DateTimeKind.Local).AddTicks(9798),
-                            KorisnikId = 1001,
-                            UlogaId = 1
-                        },
-                        new
-                        {
-                            KorisnikUlogaId = 2,
-                            DatumIzmjene = new DateTime(2024, 9, 6, 16, 26, 27, 952, DateTimeKind.Local).AddTicks(9870),
-                            KorisnikId = 1002,
+                            Telefon = "063 111 333",
                             UlogaId = 2
                         });
                 });
@@ -1746,17 +1713,11 @@ namespace eKarton.Service.Migrations
                     b.Navigation("Odjel");
                 });
 
-            modelBuilder.Entity("eKarton.Service.Databases.KorisnikUloga", b =>
+            modelBuilder.Entity("eKarton.Service.Databases.Korisnik", b =>
                 {
-                    b.HasOne("eKarton.Service.Databases.Korisnik", "Korisnik")
-                        .WithMany("KorisnikUlogas")
-                        .HasForeignKey("KorisnikId");
-
                     b.HasOne("eKarton.Service.Databases.Uloga", "Uloga")
                         .WithMany()
                         .HasForeignKey("UlogaId");
-
-                    b.Navigation("Korisnik");
 
                     b.Navigation("Uloga");
                 });
@@ -1954,8 +1915,6 @@ namespace eKarton.Service.Migrations
 
             modelBuilder.Entity("eKarton.Service.Databases.Korisnik", b =>
                 {
-                    b.Navigation("KorisnikUlogas");
-
                     b.Navigation("Pacijents");
                 });
 

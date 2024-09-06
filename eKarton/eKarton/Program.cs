@@ -52,22 +52,26 @@ builder.Services.AddControllers(x =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.AddSecurityDefinition("basicAuth", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
+    c.AddSecurityDefinition("Basic", new OpenApiSecurityScheme
     {
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Type = SecuritySchemeType.Http,
         Scheme = "basic"
     });
 
-    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement()
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
     {
         {
             new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference{Type = ReferenceType.SecurityScheme, Id = "basicAuth"}
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Basic"
+                }
             },
-            new string[]{}
-    } });
-
+            new string[] {}
+        }
+    });
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
