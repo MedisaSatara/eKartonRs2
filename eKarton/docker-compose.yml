@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=st123
+      - SA_PASSWORD=st123W!a
       - MSSQL_PID=Developer
     ports:
       - 1401:1433
@@ -34,7 +34,7 @@ services:
     build:
       context: .
     environment:
-      - ConnectionStrings:DefaultConnection=Server=ekarton-sql,1433;Database=eKarton;User=sa;Password=st123;ConnectRetryCount=0; TrustServerCertificate=True
+      - ConnectionStrings:DefaultConnection=Server=ekarton-sql,1433;Database=eKarton;User=sa;Password=st123W!a;ConnectRetryCount=0; TrustServerCertificate=True
       - ASPNETCORE_ENVIRONMENT=Development
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
