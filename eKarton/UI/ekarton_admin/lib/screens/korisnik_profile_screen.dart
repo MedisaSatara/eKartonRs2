@@ -22,15 +22,24 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _korisnikProvider = context.read<KorisnikProvider>();
-    _fetchKorisnici(); 
+    _ulogaProvider = context.read<UlogaProvider>();
+    _fetchKorisnici();
   }
 
   Future<void> _fetchKorisnici() async {
-    var data = await _korisnikProvider.get();
-    setState(() {
-      korisnikResult =
-          data.result.where((korisnik) => korisnik.ulogaId == 1).toList();
-    });
+    try {
+      var data = await _korisnikProvider.get(); // Dobavlja sve korisnike
+      setState(() {
+        // Pretpostavljam da ti podaci uključuju korisnikUloga, pa koristi ulogaId za filtriranje
+        korisnikResult = data.result.where((korisnik) {
+          return korisnik.korisnikUlogas.any((uloga) =>
+              uloga.ulogaId ==
+              1); // Pretpostavljam da je ulogaId = 1 za "admin"
+        }).toList();
+      });
+    } catch (e) {
+      print('Error fetching korisnici: $e');
+    }
   }
 
   @override
@@ -41,7 +50,7 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
       title_widget: Text(
         "Hello, Admin! Welcome to your profile!",
         style: TextStyle(
-          color: Colors.white, 
+          color: Colors.white,
         ),
       ),
       child: korisnik != null
@@ -72,8 +81,7 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                  width: 16), 
+                              SizedBox(width: 16),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -106,8 +114,8 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
                               "Telefon", korisnik.telefon ?? "", Icons.phone),
                           _buildProfileDetail(
                               "Spol", korisnik.spol ?? "", Icons.person),
-                          _buildProfileDetail(
-                              "Uloga", korisnik.ulogaId.toString(), Icons.work),
+                          /*_buildProfileDetail(
+                              "Uloga", korisnik.ulogaId.toString(), Icons.work),*/
                         ],
                       ),
                     ),
@@ -124,13 +132,13 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[200], 
-          borderRadius: BorderRadius.circular(10.0), 
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(10.0),
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
               blurRadius: 8.0,
-              offset: Offset(0, 4), 
+              offset: Offset(0, 4),
             ),
           ],
         ),

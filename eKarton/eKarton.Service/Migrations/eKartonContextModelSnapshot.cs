@@ -457,8 +457,8 @@ namespace eKarton.Service.Migrations
                             Email = "administrator@gmail.com",
                             Ime = "Arijana",
                             KorisnickoIme = "admin",
-                            LozinkaHash = "V8HYjW6R4eXd1YERVpYDxjGpIXQ=",
-                            LozinkaSalt = "1OHtB2+h0331Qpoyujq+Jg==",
+                            LozinkaHash = "7YaEJif3pBtDmN/T7A2OJyRZkrA=",
+                            LozinkaSalt = "dDC201MWwZRS+iVQjvIVww==",
                             Prezime = "Husic",
                             Spol = "Z",
                             Telefon = "063 222 333"
@@ -470,8 +470,8 @@ namespace eKarton.Service.Migrations
                             Email = "korisnik@gmail.com",
                             Ime = "Medisa",
                             KorisnickoIme = "korisnik",
-                            LozinkaHash = "c0CHfrx40VPzDtq40L8awZnN+no=",
-                            LozinkaSalt = "fRJjjjh8OSV2eZOhiCmbuQ==",
+                            LozinkaHash = "VrCaoA+2bgamoC0rnpTlvAPrHkk=",
+                            LozinkaSalt = "BWDv46P0YRWxNEm1bCy9Tg==",
                             Prezime = "Satara",
                             Spol = "Z",
                             Telefon = "063 111 333"
@@ -507,14 +507,14 @@ namespace eKarton.Service.Migrations
                         new
                         {
                             KorisnikUlogaId = 1,
-                            DatumIzmjene = new DateTime(2024, 9, 6, 16, 26, 27, 952, DateTimeKind.Local).AddTicks(9798),
+                            DatumIzmjene = new DateTime(2024, 9, 8, 18, 9, 56, 190, DateTimeKind.Local).AddTicks(5014),
                             KorisnikId = 1001,
                             UlogaId = 1
                         },
                         new
                         {
                             KorisnikUlogaId = 2,
-                            DatumIzmjene = new DateTime(2024, 9, 6, 16, 26, 27, 952, DateTimeKind.Local).AddTicks(9870),
+                            DatumIzmjene = new DateTime(2024, 9, 8, 18, 9, 56, 190, DateTimeKind.Local).AddTicks(5075),
                             KorisnikId = 1002,
                             UlogaId = 2
                         });
@@ -616,6 +616,12 @@ namespace eKarton.Service.Migrations
                             OboljenjeId = 8020,
                             Dijagnoza = "Astma",
                             Terapija = "Pumpica"
+                        },
+                        new
+                        {
+                            OboljenjeId = 8021,
+                            Dijagnoza = "Upala pluca",
+                            Terapija = "Tablete"
                         });
                 });
 
@@ -985,9 +991,9 @@ namespace eKarton.Service.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("DatumRodjenja")
+                    b.Property<DateTime?>("DatumRodjenja")
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -1056,7 +1062,7 @@ namespace eKarton.Service.Migrations
                             PacijentId = 5001,
                             Alergija = "Ne",
                             BrojKartona = "14B579",
-                            DatumRodjenja = "1998-12-11",
+                            DatumRodjenja = new DateTime(1998, 12, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "josip@gmail.com",
                             HronicneBolesti = "Nema",
                             Ime = "Josip",
@@ -1075,7 +1081,7 @@ namespace eKarton.Service.Migrations
                             PacijentId = 5002,
                             Alergija = "Antibiotik",
                             BrojKartona = "19378A",
-                            DatumRodjenja = "1980-05-08",
+                            DatumRodjenja = new DateTime(1980, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "helena@gmail.com",
                             HronicneBolesti = "Nema",
                             Ime = "Helena",
@@ -1094,7 +1100,7 @@ namespace eKarton.Service.Migrations
                             PacijentId = 5003,
                             Alergija = "Ne",
                             BrojKartona = "8537C",
-                            DatumRodjenja = "1992-11-12",
+                            DatumRodjenja = new DateTime(1992, 11, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "melita@gmail.com",
                             HronicneBolesti = "Nema",
                             Ime = "Melita",
@@ -1148,11 +1154,38 @@ namespace eKarton.Service.Migrations
                         new
                         {
                             PacijentOboljenjaId = 10,
+                            NesposobanZaRad = "Da",
+                            NesposobanZaRadDo = "12-05-2023",
+                            NesposobanZaRadOd = "12-05-2022",
+                            OboljenjeId = 8010,
+                            PacijentId = 5002
+                        },
+                        new
+                        {
+                            PacijentOboljenjaId = 11,
                             NesposobanZaRad = "Ne",
                             NesposobanZaRadDo = " ",
                             NesposobanZaRadOd = " ",
                             OboljenjeId = 8010,
-                            PacijentId = 5002
+                            PacijentId = 5001
+                        },
+                        new
+                        {
+                            PacijentOboljenjaId = 12,
+                            NesposobanZaRad = "Da",
+                            NesposobanZaRadDo = "22-02-2024",
+                            NesposobanZaRadOd = "12-01-2024",
+                            OboljenjeId = 8020,
+                            PacijentId = 5001
+                        },
+                        new
+                        {
+                            PacijentOboljenjaId = 13,
+                            NesposobanZaRad = "Ne",
+                            NesposobanZaRadDo = " ",
+                            NesposobanZaRadOd = " ",
+                            OboljenjeId = 8021,
+                            PacijentId = 5003
                         });
                 });
 
@@ -1265,10 +1298,9 @@ namespace eKarton.Service.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PregledId"), 1L, 1);
 
-                    b.Property<string>("Datum")
-                        .IsRequired()
+                    b.Property<DateTime?>("Datum")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Dijagnoza")
                         .IsRequired()
@@ -1308,7 +1340,7 @@ namespace eKarton.Service.Migrations
                         new
                         {
                             PregledId = 6110,
-                            Datum = "05.05.2022",
+                            Datum = new DateTime(2022, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Dijagnoza = "Upala srednjeg uha",
                             DoktorId = 3001,
                             PacijentId = 5001,
@@ -1319,7 +1351,7 @@ namespace eKarton.Service.Migrations
                         new
                         {
                             PregledId = 6111,
-                            Datum = "05.05.2022",
+                            Datum = new DateTime(2022, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Dijagnoza = "Moguca alergijska reakcija",
                             DoktorId = 3001,
                             PacijentId = 5001,
@@ -1330,7 +1362,7 @@ namespace eKarton.Service.Migrations
                         new
                         {
                             PregledId = 6112,
-                            Datum = "05.05.2022",
+                            Datum = new DateTime(2022, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Dijagnoza = "Upala srednjeg uha",
                             DoktorId = 3001,
                             PacijentId = 5001,
@@ -1341,7 +1373,7 @@ namespace eKarton.Service.Migrations
                         new
                         {
                             PregledId = 6113,
-                            Datum = "05.05.2022",
+                            Datum = new DateTime(2022, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Dijagnoza = "Sum na srcu",
                             DoktorId = 3001,
                             PacijentId = 5001,
@@ -1574,6 +1606,42 @@ namespace eKarton.Service.Migrations
                             Datum = "22.05.2022",
                             DoktorId = 3009,
                             PacijentId = 5001,
+                            Razlog = "rutinska kontrola",
+                            Vrijeme = "09:15:00"
+                        },
+                        new
+                        {
+                            TerminId = 7116,
+                            Datum = "22.05.2024",
+                            DoktorId = 3010,
+                            PacijentId = 5002,
+                            Razlog = "rutinska kontrola",
+                            Vrijeme = "09:15:00"
+                        },
+                        new
+                        {
+                            TerminId = 7117,
+                            Datum = "15.07.2024",
+                            DoktorId = 3007,
+                            PacijentId = 5003,
+                            Razlog = "rutinska kontrola",
+                            Vrijeme = "09:15:00"
+                        },
+                        new
+                        {
+                            TerminId = 7118,
+                            Datum = "12.12.2023",
+                            DoktorId = 3009,
+                            PacijentId = 5001,
+                            Razlog = "rutinska kontrola",
+                            Vrijeme = "09:15:00"
+                        },
+                        new
+                        {
+                            TerminId = 7119,
+                            Datum = "11.02.2024",
+                            DoktorId = 3007,
+                            PacijentId = 5002,
                             Razlog = "rutinska kontrola",
                             Vrijeme = "09:15:00"
                         });

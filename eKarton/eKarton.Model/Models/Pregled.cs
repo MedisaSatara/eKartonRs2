@@ -9,7 +9,7 @@ namespace eKarton.Model.Models
     public class Pregled
     {
         public int PregledId { get; set; }
-        public string Datum { get; set; } = null!;
+        public DateTime? Datum { get; set; } = null!;
         public string RazlogPosjete { get; set; } = null!;
         public string Dijagnoza { get; set; } = null!;
         public int TerapijaId { get; set; }

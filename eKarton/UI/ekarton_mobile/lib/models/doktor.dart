@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:json_annotation/json_annotation.dart';
 
 /// This allows the `User` class to access private members in
@@ -19,7 +21,8 @@ class Doktor {
       this.email,
       this.grad,
       this.telefon,
-      this.odjelId});
+      this.odjelId,
+      this.averageRating});
 
   int? doktorId;
   String? ime;
@@ -31,6 +34,7 @@ class Doktor {
   String? email;
   String? datumRodjenja;
   int? odjelId;
+  double? averageRating;
 
   factory Doktor.fromJson(Map<String, dynamic> json) => _$DoktorFromJson(json);
 

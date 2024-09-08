@@ -4,6 +4,7 @@ import 'package:ekarton_mobile/screens/home_screen.dart';
 import 'package:ekarton_mobile/screens/korisnik_profile_screen.dart';
 import 'package:ekarton_mobile/screens/online_pay_screen.dart';
 import 'package:ekarton_mobile/screens/pacijent_list_screen.dart';
+import 'package:ekarton_mobile/screens/preporuceni_doktori.dart';
 import 'package:ekarton_mobile/screens/test.dart';
 import 'package:flutter/material.dart';
 
@@ -90,6 +91,15 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => TerminScreen()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text("Preporuceni doktori"),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => RecommendedDoctorsScreen()),
                 );
               },
             ),

@@ -1,3 +1,4 @@
+import 'package:ekarton_mobile/models/korisnik_uloga.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 /// This allows the `User` class to access private members in
@@ -5,30 +6,32 @@ import 'package:json_annotation/json_annotation.dart';
 /// the star denotes the source file name.
 part 'korisnik.g.dart';
 
+/// An annotation for the code generator to know that this class needs the
+/// JSON serialization logic to be generated.
 @JsonSerializable()
 class Korisnik {
-  int? korisnikId;
-  String? ime;
-  String? prezime;
-  String? korisnickoIme;
-  String? datumRodjenja;
-  String? telefon;
-  String? email;
-  String? lozinka;
-  String? spol;
-  int? ulogaId;
-
   Korisnik(
       {this.korisnikId,
       this.ime,
       this.prezime,
-      this.korisnickoIme,
-      this.telefon,
       this.datumRodjenja,
-      this.email,
+      this.korisnickoIme,
       this.spol,
-      this.ulogaId,
-      this.lozinka});
+      this.email,
+      this.lozinka,
+      this.telefon,
+      required this.korisnikUlogas});
+
+  int? korisnikId;
+  String? ime;
+  String? prezime;
+  String? korisnickoIme;
+  String? telefon;
+  String? spol;
+  String? email;
+  String? lozinka;
+  String? datumRodjenja;
+  List<KorisnikUloga> korisnikUlogas;
 
   factory Korisnik.fromJson(Map<String, dynamic> json) =>
       _$KorisnikFromJson(json);

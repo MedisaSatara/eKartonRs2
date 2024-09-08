@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:ekarton_admin/models/bolesti_po_godistu_report.dart';
+import 'package:ekarton_admin/models/doktori_pregled_report.dart';
+import 'package:ekarton_admin/models/odabrani_doktori.dart';
 import 'package:ekarton_admin/models/search_result.dart';
 import 'package:ekarton_admin/utils/util.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +11,12 @@ import 'package:http/http.dart';
 abstract class BaseProvider<T> with ChangeNotifier {
   static String? _baseUrl;
   String _endpoint;
+  String? totalUrl;
 
   BaseProvider(String endpoint) : _endpoint = endpoint {
     _baseUrl = const String.fromEnvironment("baseUrl",
         defaultValue: "https://localhost:7285/");
+    totalUrl = "$_baseUrl$_endpoint";
   }
 
   Future<SearchResult<T>> get({dynamic filter}) async {
@@ -136,12 +141,98 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
     print("Passed credentials: $username, $password");
 
-    String basicAuth =
-        "Basic ${base64Encode(utf8.encode('$username:$password'))}";
+    String Basic = "Basic ${base64Encode(utf8.encode('$username:$password'))}";
 
     return {
       "Content-Type": "application/json",
-      "Authorization": basicAuth,
+      "Authorization": Basic,
     };
+  }
+
+  Future<List<OdabraniDoktori>> fetchTop3Doktora() async {
+    var url = totalUrl ?? "$_baseUrl$_endpoint";
+
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    try {
+      var response = await http.get(uri, headers: headers);
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+
+        List<OdabraniDoktori> doktorReports =
+            body.map((dynamic item) => OdabraniDoktori.fromJson(item)).toList();
+
+        return doktorReports;
+      } else {
+        throw Exception('Failed to load report data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print("Error fetching report data: $e");
+      throw Exception('Failed to load report data');
+    }
+  }
+
+  Future<List<DoktoriPregledReport>> fetchPreglediPoDoktoru({
+    DateTime? startDate,
+    DateTime? endDate,
+    int? month,
+    int? year,
+  }) async {
+    var url = totalUrl ?? "$_baseUrl$_endpoint";
+
+    if (startDate != null || endDate != null || month != null || year != null) {
+      var queryString = getQueryString({
+        'startDate': startDate?.toIso8601String(),
+        'endDate': endDate?.toIso8601String(),
+        'month': month,
+        'year': year,
+      });
+      url = "$url?$queryString";
+    }
+
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    try {
+      var response = await http.get(uri, headers: headers);
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        List<DoktoriPregledReport> reportList = body
+            .map((dynamic item) => DoktoriPregledReport.fromJson(item))
+            .toList();
+        return reportList;
+      } else {
+        throw Exception('Failed to load PreglediPoDoktoruReport data');
+      }
+    } catch (e) {
+      print("Error fetching report data: $e");
+      throw Exception('Failed to load PreglediPoDoktoruReport data');
+    }
+  }
+
+  Future<List<BolestiPoGodistuReport>> fetchBolestiPoGodistuReport() async {
+    var url = totalUrl ?? "$_baseUrl$_endpoint";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    try {
+      var response = await http.get(uri, headers: headers);
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        List<BolestiPoGodistuReport> reportList = body
+            .map((dynamic item) => BolestiPoGodistuReport.fromJson(item))
+            .toList();
+        return reportList;
+      } else {
+        throw Exception('Failed to load BolestiPoGodistuReport data');
+      }
+    } catch (e) {
+      print("Error fetching report data: $e");
+      throw Exception('Failed to load BolestiPoGodistuReport data');
+    }
   }
 }

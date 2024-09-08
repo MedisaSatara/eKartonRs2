@@ -1,8 +1,10 @@
-import 'package:ekarton_mobile/models/korisnik.dart';
-import 'package:ekarton_mobile/providers/korisnik_provider.dart';
+import 'package:ekarton_mobile/providers/uloga_provider.dart';
 import 'package:ekarton_mobile/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'package:ekarton_mobile/providers/korisnik_provider.dart';
+import 'package:ekarton_mobile/models/korisnik.dart';
 
 class KorisnikProfileScreen extends StatefulWidget {
   const KorisnikProfileScreen({Key? key}) : super(key: key);
@@ -13,21 +15,31 @@ class KorisnikProfileScreen extends StatefulWidget {
 
 class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
   late KorisnikProvider _korisnikProvider;
+  late UlogaProvider _ulogaProvider;
   List<Korisnik>? korisnikResult;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _korisnikProvider = context.read<KorisnikProvider>();
+    _ulogaProvider = context.read<UlogaProvider>();
     _fetchKorisnici();
   }
 
   Future<void> _fetchKorisnici() async {
-    var data = await _korisnikProvider.get();
-    setState(() {
-      korisnikResult =
-          data.result.where((korisnik) => korisnik.ulogaId == 2).toList();
-    });
+    try {
+      var data = await _korisnikProvider.get(); // Dobavlja sve korisnike
+      setState(() {
+        // Pretpostavljam da ti podaci uključuju korisnikUloga, pa koristi ulogaId za filtriranje
+        korisnikResult = data.result.where((korisnik) {
+          return korisnik.korisnikUlogas.any((uloga) =>
+              uloga.ulogaId ==
+              2); // Pretpostavljam da je ulogaId = 1 za "admin"
+        }).toList();
+      });
+    } catch (e) {
+      print('Error fetching korisnici: $e');
+    }
   }
 
   @override
@@ -102,8 +114,8 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
                               "Telefon", korisnik.telefon ?? "", Icons.phone),
                           _buildProfileDetail(
                               "Spol", korisnik.spol ?? "", Icons.person),
-                          _buildProfileDetail(
-                              "Uloga", korisnik.ulogaId.toString(), Icons.work),
+                          /*_buildProfileDetail(
+                              "Uloga", korisnik.ulogaId.toString(), Icons.work),*/
                         ],
                       ),
                     ),

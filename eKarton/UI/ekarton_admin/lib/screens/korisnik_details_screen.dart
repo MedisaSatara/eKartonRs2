@@ -25,6 +25,10 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
       'ime': widget.korisnik?.ime,
       'prezime': widget.korisnik?.prezime,
       'korisnickoIme': widget.korisnik?.korisnickoIme,
+      'email': widget.korisnik?.email,
+      'telefon': widget.korisnik?.telefon,
+      'datumRodjenja': widget.korisnik?.datumRodjenja,
+      'korisnikUlogas': widget.korisnik?.korisnikUlogas,
     };
   }
 
@@ -101,6 +105,30 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                   border: OutlineInputBorder(),
                 ),
                 name: "korisnickoIme",
+              ),
+              SizedBox(height: 16),
+              FormBuilderTextField(
+                decoration: InputDecoration(
+                  labelText: "Email",
+                  border: OutlineInputBorder(),
+                ),
+                name: "email",
+              ),
+              SizedBox(height: 16),
+              FormBuilderTextField(
+                decoration: InputDecoration(
+                  labelText: "Telefon",
+                  border: OutlineInputBorder(),
+                ),
+                name: "telefon",
+              ),
+              SizedBox(height: 16),
+              FormBuilderTextField(
+                decoration: InputDecoration(
+                  labelText: "Datum rodjenja",
+                  border: OutlineInputBorder(),
+                ),
+                name: "datumRodjenja",
               ),
               SizedBox(height: 24),
               ElevatedButton(

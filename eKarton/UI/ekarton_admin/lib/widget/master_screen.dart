@@ -9,6 +9,7 @@ import 'package:ekarton_admin/screens/osiguranje_screen.dart';
 import 'package:ekarton_admin/screens/pacijent_details_screen.dart';
 import 'package:ekarton_admin/screens/pacijent_list_screen.dart';
 import 'package:ekarton_admin/screens/pacijent_osiguranje_screen.dart';
+import 'package:ekarton_admin/screens/report_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -56,23 +57,25 @@ Widget _buildNavbar(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _buildNavButton(context, "", HomeScreen(), Icons.home),
-        SizedBox(width: 50.0),
+        SizedBox(width: 30.0),
         _buildNavButton(context, "Korisnici", KorisnikScreen(), Icons.person),
-        SizedBox(width: 20.0),
+        SizedBox(width: 10.0),
         _buildNavButton(context, "Pacijenti", PacijentiScreen(), Icons.people),
-        SizedBox(width: 20.0),
+        SizedBox(width: 10.0),
         _buildNavButton(
             context, "Doktori", DoktorScreen(), Icons.local_hospital),
-        SizedBox(width: 20.0),
+        SizedBox(width: 10.0),
         _buildNavButton(context, "Odjeli", OdjelScreen(), Icons.business),
-        SizedBox(width: 20.0),
+        SizedBox(width: 10.0),
         /* _buildNavButton(
             context, "Termini", PacijentiDetailsScreen(), Icons.schedule),*/
         _buildNavButton(
             context, "Osiguranja", OsiguranjeScreen(), Icons.security),
-        SizedBox(width: 20.0),
+        SizedBox(width: 10.0),
         _buildNavButton(context, "Osiguranja pacijenata",
             PacijentOsiguranjeScreen(), Icons.person),
+        SizedBox(width: 10.0),
+        _buildNavButton(context, "Izvjestaji", ReportScreen(), Icons.person),
         SizedBox(width: 20.0),
         _buildNavButton(context, "", KorisnikProfileScreen(), Icons.person),
       ],

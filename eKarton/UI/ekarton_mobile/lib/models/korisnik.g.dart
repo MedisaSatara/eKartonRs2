@@ -10,13 +10,15 @@ Korisnik _$KorisnikFromJson(Map<String, dynamic> json) => Korisnik(
       korisnikId: (json['korisnikId'] as num?)?.toInt(),
       ime: json['ime'] as String?,
       prezime: json['prezime'] as String?,
-      korisnickoIme: json['korisnickoIme'] as String?,
-      telefon: json['telefon'] as String?,
       datumRodjenja: json['datumRodjenja'] as String?,
-      email: json['email'] as String?,
+      korisnickoIme: json['korisnickoIme'] as String?,
       spol: json['spol'] as String?,
-      ulogaId: (json['ulogaId'] as num?)?.toInt(),
+      email: json['email'] as String?,
       lozinka: json['lozinka'] as String?,
+      telefon: json['telefon'] as String?,
+      korisnikUlogas: (json['korisnikUlogas'] as List<dynamic>)
+          .map((e) => KorisnikUloga.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$KorisnikToJson(Korisnik instance) => <String, dynamic>{
@@ -24,10 +26,10 @@ Map<String, dynamic> _$KorisnikToJson(Korisnik instance) => <String, dynamic>{
       'ime': instance.ime,
       'prezime': instance.prezime,
       'korisnickoIme': instance.korisnickoIme,
-      'datumRodjenja': instance.datumRodjenja,
       'telefon': instance.telefon,
+      'spol': instance.spol,
       'email': instance.email,
       'lozinka': instance.lozinka,
-      'spol': instance.spol,
-      'ulogaId': instance.ulogaId,
+      'datumRodjenja': instance.datumRodjenja,
+      'korisnikUlogas': instance.korisnikUlogas,
     };

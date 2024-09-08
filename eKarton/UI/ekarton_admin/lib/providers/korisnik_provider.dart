@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:ekarton_admin/models/korisnik.dart';
 import 'package:ekarton_admin/providers/base_provider.dart';
+
+import 'package:http/http.dart' as http;
 
 class KorisnikProvider extends BaseProvider<Korisnik> {
   KorisnikProvider() : super("korisnik");
@@ -11,15 +15,42 @@ class KorisnikProvider extends BaseProvider<Korisnik> {
 
   Future<Korisnik?> login(String username, String password) async {
     try {
-      var response =
-          await get(filter: {'username': username, 'password': password});
+      // Making a request to authenticate the user using username and password
+      var url = "$totalUrl/Authenticate";
+      var uri = Uri.parse(url);
 
-      if (response.result.isNotEmpty) {
-        return response.result.first;
+      var headers = createHeaders();
+      var body = jsonEncode({'username': username, 'password': password});
+
+      var response = await http.post(uri, headers: headers, body: body);
+
+      if (isValidResponse(response)) {
+        var data = jsonDecode(response.body);
+        Korisnik user = fromJson(data);
+        return user;
+      } else {
+        print("Invalid credentials");
+        return null;
       }
     } catch (e) {
       print("Error during login: $e");
+      return null;
     }
-    return null; // Return null if no user is found or on error
+  }
+
+  Future<Korisnik> Authenticate({dynamic filter}) async {
+    var url = "$totalUrl/Authenticate";
+
+    var uri = Uri.parse(url);
+
+    var headers = createHeaders();
+    var response = await http.get(uri, headers: headers);
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      Korisnik user = fromJson(data) as Korisnik;
+      return user;
+    } else {
+      throw Exception("Pogrešno korisničko ime ili lozinka");
+    }
   }
 }

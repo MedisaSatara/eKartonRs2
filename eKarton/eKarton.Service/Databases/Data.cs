@@ -640,7 +640,7 @@ namespace eKarton.Services.Database
                     Ime = "Josip",
                     Prezime = "Bojcic",
                     Spol = "M",
-                    DatumRodjenja = "1998-12-11",
+                    DatumRodjenja =new DateTime(1998,12,11),
                     Telefon = "061 201 022",
                     MjestoRodjenja = "Mostar",
                     Jmbg = "1211998796541",
@@ -663,7 +663,7 @@ namespace eKarton.Services.Database
                     Ime = "Helena",
                     Prezime = "Radic",
                     Spol = "Z",
-                    DatumRodjenja = "1980-05-08",
+                    DatumRodjenja =new DateTime(1980,05,08),
                     Telefon = "062 201 022",
                     MjestoRodjenja = "Mostar",
                     Jmbg = "5089801236547",
@@ -686,7 +686,7 @@ namespace eKarton.Services.Database
                     Ime = "Melita",
                     Prezime = "Golubica",
                     Spol = "Z",
-                    DatumRodjenja = "1992-11-12",
+                    DatumRodjenja =new DateTime(1992,11,12),
                     Telefon = "063 991 022",
                     MjestoRodjenja = "Stolac",
                     Jmbg = "5089801236547",
@@ -816,7 +816,7 @@ namespace eKarton.Services.Database
                 {
                     PregledId = 6110,
                     RazlogPosjete = "Bol  uhu i glava",
-                    Datum = "05.05.2022",
+                    Datum = new DateTime(2022, 5, 5),
                     Dijagnoza = "Upala srednjeg uha",
                     TerapijaId = 6001,
                     UputnicaId = 6100,
@@ -828,7 +828,7 @@ namespace eKarton.Services.Database
                                 {
                                     PregledId = 6111,
                                     RazlogPosjete = "Moguca alergijska reakcija",
-                                    Datum = "05.05.2022",
+                                    Datum = new DateTime(2022, 5, 5),
                                     Dijagnoza = "Moguca alergijska reakcija",
                                     TerapijaId = 6001,
                                     UputnicaId = 6101,
@@ -840,7 +840,7 @@ namespace eKarton.Services.Database
                                                 {
                                                     PregledId = 6112,
                                                     RazlogPosjete = "Bol  uhu i glava",
-                                                    Datum = "05.05.2022",
+                                                    Datum = new DateTime(2022, 5, 5),
                                                     Dijagnoza = "Upala srednjeg uha",
                                                     TerapijaId = 6001,
                                                     UputnicaId = 6102,
@@ -852,7 +852,7 @@ namespace eKarton.Services.Database
                                                                 {
                                                                     PregledId = 6113,
                                                                     RazlogPosjete = "Otezano kretanje",
-                                                                    Datum = "05.05.2022",
+                                                                    Datum = new DateTime(2022, 5, 5),
                                                                     Dijagnoza = "Sum na srcu",
                                                                     TerapijaId = 6001,
                                                                     UputnicaId = 6103,
@@ -874,7 +874,52 @@ namespace eKarton.Services.Database
                     PacijentId = 5001,
                     DoktorId = 3009
 
-                });
+                },
+
+                 new Termin()
+                 {
+                     TerminId = 7116,
+                     Razlog = "rutinska kontrola",
+                     Datum = "22.05.2024",
+                     Vrijeme = "09:15:00",
+                     PacijentId = 5002,
+                     DoktorId = 3010
+
+                 },
+
+                  new Termin()
+                  {
+                      TerminId = 7117,
+                      Razlog = "rutinska kontrola",
+                      Datum = "15.07.2024",
+                      Vrijeme = "09:15:00",
+                      PacijentId = 5003,
+                      DoktorId = 3007
+
+                  },
+                   new Termin()
+                   {
+                       TerminId = 7118,
+                       Razlog = "rutinska kontrola",
+                       Datum = "12.12.2023",
+                       Vrijeme = "09:15:00",
+                       PacijentId = 5001,
+                       DoktorId = 3009
+
+                   },
+
+                                      new Termin()
+                                      {
+                                          TerminId = 7119,
+                                          Razlog = "rutinska kontrola",
+                                          Datum = "11.02.2024",
+                                          Vrijeme = "09:15:00",
+                                          PacijentId = 5002,
+                                          DoktorId = 3007
+
+                                      }
+
+                );
             #endregion
 
             #region Dodavanje Vakcina
@@ -949,7 +994,14 @@ namespace eKarton.Services.Database
                    OboljenjeId = 8020,
                    Dijagnoza = "Astma",
                    Terapija = "Pumpica"
-               });
+               },
+                              new Oboljenje()
+                              {
+                                  OboljenjeId = 8021,
+                                  Dijagnoza = "Upala pluca",
+                                  Terapija = "Tablete"
+                              }
+               );
             #endregion
 
             #region Dodavanje Oboljenja PAcijenta
@@ -959,10 +1011,42 @@ namespace eKarton.Services.Database
                    PacijentOboljenjaId = 10,
                    OboljenjeId = 8010,
                    PacijentId = 5002,
-                   NesposobanZaRad = "Ne",
-                   NesposobanZaRadOd = " ",
-                   NesposobanZaRadDo = " "
-               });
+                   NesposobanZaRad = "Da",
+                   NesposobanZaRadOd = "12-05-2022",
+                   NesposobanZaRadDo = "12-05-2023"
+
+               },
+                              new PacijentOboljenja()
+                              {
+                                  PacijentOboljenjaId = 11,
+                                  OboljenjeId = 8010,
+                                  PacijentId = 5001,
+                                  NesposobanZaRad = "Ne",
+                                  NesposobanZaRadOd = " ",
+                                  NesposobanZaRadDo = " "
+
+                              },
+                                             new PacijentOboljenja()
+                                             {
+                                                 PacijentOboljenjaId = 12,
+                                                 OboljenjeId = 8020,
+                                                 PacijentId = 5001,
+                                                 NesposobanZaRad = "Da",
+                                                 NesposobanZaRadOd = "12-01-2024",
+                                                 NesposobanZaRadDo = "22-02-2024"
+
+                                             },
+                                                            new PacijentOboljenja()
+                                                            {
+                                                                PacijentOboljenjaId = 13,
+                                                                OboljenjeId = 8021,
+                                                                PacijentId = 5003,
+                                                                NesposobanZaRad = "Ne",
+                                                                NesposobanZaRadOd = " ",
+                                                                NesposobanZaRadDo = " "
+
+                                                            }
+               );
             #endregion
 
             #region Dodavanje Preventivnih mjera
