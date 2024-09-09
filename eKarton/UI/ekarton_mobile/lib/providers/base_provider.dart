@@ -13,7 +13,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
   BaseProvider(String endpoint) : _endpoint = endpoint {
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "http://localhost:7073/");
+        defaultValue: "http://192.168.0.106:7073/");
     totalUrl = "$_baseUrl$_endpoint";
   }
 
@@ -148,7 +148,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     };
   }
 
-  final String apiUrl = 'http://localhost:7073/Doktor/preporuceni';
+  final String apiUrl = 'http://192.168.0.106:7073/Doktor/preporuceni';
 
   Future<List<Doktor>> fetchRecommendedDoctors() async {
     final response = await http.get(Uri.parse(apiUrl));
@@ -163,7 +163,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
   Future<Map<String, dynamic>> fetchRecommendedDoctor() async {
     final response = await http.get(
-      Uri.parse('http://localhost:7073/Doktor/preporuceni'),
+      Uri.parse('http://192.168.0.106:7073/Doktor/preporuceni'),
       headers: {
         'Authorization': 'Basic YWRtaW46dGVzdA==',
       },
