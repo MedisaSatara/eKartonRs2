@@ -21,7 +21,7 @@ class KorisnikProvider extends BaseProvider<Korisnik> {
   Future<Korisnik?> login(String username, String password) async {
     try {
       // Making a request to authenticate the user using username and password
-      var url = "$totalUrl/Authenticate";
+      var url = "$totalUrl/login";
       var uri = Uri.parse(url);
 
       var headers = createHeaders();

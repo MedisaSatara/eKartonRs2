@@ -86,88 +86,111 @@ namespace eKarton.Service.Services
                 {
                     mlContext = new MLContext();
 
-                    // Load data from the database
-                    var doktorData = _context.Doktors.Include(d => d.OcjenaDoktors).ToList();
+                    var tmpData = _context.Doktors.Include(o => o.OcjenaDoktors).ToList();
 
-                    var data = new List<DestinationEntry>();
-
-                    // Prepare data for training
-                    foreach (var doktor in doktorData)
+                    if (!tmpData.Any())
                     {
-                        if (doktor.OcjenaDoktors != null && doktor.OcjenaDoktors.Count > 1)
+                        throw new InvalidOperationException("No doktor found in the database.");
+                    }
+
+                    var data = new List<DoktorEntry>();
+
+
+                    foreach (var x in tmpData)
+                    {
+                        if (x.OcjenaDoktors.Count > 1)
                         {
-                            var doktorUserIDs = doktor.OcjenaDoktors.Select(o => o.KorisnikId).Distinct().ToList();
+                            var distinctItemId = x.OcjenaDoktors.Select(y => y.DoktorId).Distinct().ToList();
 
-                            foreach (var userId in doktorUserIDs)
+                            distinctItemId.ForEach(y =>
                             {
-                                var preporukaDoktora = doktor.OcjenaDoktors
-                                    .Where(o => o.KorisnikId != userId)
-                                    .ToList();
-
-                                foreach (var preporuceniDoktor in preporukaDoktora)
+                                var relatedItems = x.OcjenaDoktors.Where(z => z.OcjenaId != y).Select(oi => oi.DoktorId).Distinct();
+                                foreach (var z in relatedItems)
                                 {
-                                    data.Add(new DestinationEntry()
+                                    data.Add(new DoktorEntry()
                                     {
-                                        DestinationID = (uint)doktor.DoktorId,
-                                        CoRatedDestinationID = (uint)preporuceniDoktor.DoktorId,
-                                        Label = 1 // Rating exists
+                                        DoktorID = (uint)y,
+                                        CoPurchaseDoktorID = (uint)z,
+                                        Label = 1.0f
                                     });
                                 }
-                            }
+                            });
                         }
                     }
 
-                    if (!data.Any())
+                    if (data.Count == 0)
                     {
-                        throw new InvalidOperationException("No valid data available for training.");
+                        throw new InvalidOperationException("No valid data found for training.");
                     }
+
+                    Console.WriteLine($"Data count: {data.Count}");
 
                     var traindata = mlContext.Data.LoadFromEnumerable(data);
 
-                    // Set up training options
-                    var options = new MatrixFactorizationTrainer.Options
-                    {
-                        MatrixColumnIndexColumnName = nameof(DestinationEntry.DestinationID),
-                        MatrixRowIndexColumnName = nameof(DestinationEntry.CoRatedDestinationID),
-                        LabelColumnName = nameof(DestinationEntry.Label),
-                        LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass,
-                        Alpha = 0.01,
-                        Lambda = 0.025,
-                        NumberOfIterations = 100,
-                        C = 0.00001
-                    };
+                    //STEP 3: Your data is already encoded so all you need to do is specify options for MatrxiFactorizationTrainer with a few extra hyperparameters
+                    //        LossFunction, Alpa, Lambda and a few others like K and C as shown below and call the trainer.
+                    MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
+                    options.MatrixColumnIndexColumnName = nameof(DoktorEntry.DoktorID);
+                    options.MatrixRowIndexColumnName = nameof(DoktorEntry.CoPurchaseDoktorID);
+                    options.LabelColumnName = "Label";
+                    options.LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass;
+                    options.Alpha = 0.01;
+                    options.Lambda = 0.025;
+                    // For better results use the following parameters
+                    options.NumberOfIterations = 100;
+                    options.C = 0.00001;
 
-                    // Train the model
-                    var estimator = mlContext.Recommendation().Trainers.MatrixFactorization(options);
-                    model = estimator.Fit(traindata);
+                    var est = mlContext.Recommendation().Trainers.MatrixFactorization(options);
+
+                    model = est.Fit(traindata);
+
                 }
             }
 
-            // Prediction phase
-            var doktori = _context.Doktors.Where(x => x.DoktorId != id).ToList();
 
-            var predictionResult = new List<Tuple<Databases.Doktor, float>>();
 
-            foreach (var doktor in doktori)
+
+            //prediction
+
+            var doktors = _context.Doktors.Where(x => x.DoktorId != id);
+
+            var predictionResult = new List<Tuple<Doktor, float>>();
+
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<DoktorEntry, Copurchase_prediction>(model);
+
+            foreach (var doktor in doktors)
             {
-                var predictionEngine = mlContext.Model.CreatePredictionEngine<DestinationEntry, CoRatedDestinationPrediction>(model);
-                var prediction = predictionEngine.Predict(
-                                     new DestinationEntry()
-                                     {
-                                         DestinationID = (uint)id,
-                                         CoRatedDestinationID = (uint)doktor.DoktorId
-                                     });
 
-                predictionResult.Add(new Tuple<Databases.Doktor, float>(doktor, prediction.Score));
+                var prediction = predictionEngine.Predict(
+                                         new DoktorEntry()
+                                         {
+                                             DoktorID = (uint)id,
+                                             CoPurchaseDoktorID = (uint)doktor.DoktorId,
+                                         });
+
+
+                predictionResult.Add(new Tuple<Doktor, float>(doktor, prediction.Score));
             }
 
-            var finalResult = predictionResult
-                              .OrderByDescending(x => x.Item2)
-                              .Select(x => x.Item1)
-                              .Take(3)
-                              .ToList();
 
-            return _mapper.Map<List<Model.Models.Doktor>>(finalResult);
+            var finalResult = predictionResult.OrderByDescending(x => x.Item2).Select(x => x.Item1).Take(3).ToList();
+
+            return _mapper.Map<List<eKarton.Model.Models.Doktor>>(finalResult);
+        }
+        public class Copurchase_prediction
+        {
+            public float Score { get; set; }
+        }
+
+        public class DoktorEntry
+        {
+            [KeyType(count: 10)]
+            public uint DoktorID { get; set; }
+
+            [KeyType(count: 10)]
+            public uint CoPurchaseDoktorID { get; set; }
+
+            public float Label { get; set; }
         }
 
 
@@ -175,21 +198,6 @@ namespace eKarton.Service.Services
         static object isLocked = new object();
         static ITransformer model = null;
 
-        public class CoRatedDestinationPrediction
-        {
-            public float Score { get; set; }
-        }
-
-        public class DestinationEntry
-        {
-            [KeyType(count: 100)] // Adjust count based on the number of unique IDs
-            public uint DestinationID { get; set; }
-
-            [KeyType(count: 100)] // Adjust count based on the number of unique IDs
-            public uint CoRatedDestinationID { get; set; }
-
-            public float Label { get; set; }
-        }
         public List<Model.Models.Doktor> GetRecommendedDoctors()
         {
             var doktorRatings = _context.OcjenaDoktors
