@@ -8,7 +8,7 @@ namespace eKarton.Service.Report
 {
     public class BolestiPoGodistuReport
     {
-        public string Decade { get; set; } // Dekada npr. "20-29"
+        public string Decade { get; set; } 
         public List<BolestStatistika> NajcesceBolesti { get; set; }
     }
 }

@@ -12,6 +12,8 @@ import 'package:http/http.dart';
 class DoktorProvider extends BaseProvider<Doktor> {
   DoktorProvider() : super("Doktor");
 
+  
+
   @override
   Doktor fromJson(data) {
     return Doktor.fromJson(data);

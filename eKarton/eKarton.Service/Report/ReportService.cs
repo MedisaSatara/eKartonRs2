@@ -51,7 +51,7 @@ namespace eKarton.Service.Report
 
             var pregledi = _context.Pregleds
                 .Include(p => p.Pacijent)  
-                .Where(p => p.Pacijent != null && p.Pacijent.DatumRodjenja.HasValue)  // Filtriraj da pacijent i datum rođenja postoje
+                .Where(p => p.Pacijent != null && p.Pacijent.DatumRodjenja.HasValue)  
                 .ToList();
 
             var report = pregledi
@@ -88,13 +88,13 @@ namespace eKarton.Service.Report
                 .Where(t =>
                     (!startDate.HasValue || DateTime.Parse(t.Datum) >= startDate) && 
                     (!endDate.HasValue || DateTime.Parse(t.Datum) <= endDate))      
-                .GroupBy(t => new { t.Doktor.DoktorId, t.Doktor.Ime, t.Doktor.Odjel.Naziv })
+                .GroupBy(t => new { t.Doktor.DoktorId, t.Doktor.Ime, t.Doktor.Odjel.Naziv, t.Doktor.Prezime,t.Doktor.Telefon, t.Doktor.DatumRodjenja })
                 .Select(g => new
                 {
                     DoktorId = g.Key.DoktorId,
                     ImeDoktora = g.Key.Ime,
                     Specijalizacija = g.Key.Naziv,
-                    BrojZakazanihTermina = g.Count()
+                    BrojZakazanihTermina = g.Count(),
                 })
                 .OrderByDescending(d => d.BrojZakazanihTermina) 
                 .Take(3) 

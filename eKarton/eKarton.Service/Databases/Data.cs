@@ -522,7 +522,7 @@ namespace eKarton.Services.Database
                                                                                           new OcjenaDoktor()
                                                                                           {
                                                                                               OcjenaId = 3303,
-                                                                                              Ocjena = 8,
+                                                                                              Ocjena = 4,
                                                                                               Razlog = "Vrlo dobar",
                                                                                               Anonimno = true,
                                                                                               KorisnikId = 1002,

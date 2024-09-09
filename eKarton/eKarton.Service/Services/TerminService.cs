@@ -30,16 +30,21 @@ namespace eKarton.Service.Services
 
             base.BeforeInsert(insert, entity);
 
-            // Get the patient details for the email
-            var user = _context.Pacijents.Find(insert.PacijentId);
+            SendEmailOnTerminInsert(entity.PacijentId, entity.Datum, entity.Vrijeme);
+        }
+
+        private void SendEmailOnTerminInsert(int pacijentId, string? datum, string vrijeme)
+        {
+            var user = _context.Pacijents.Find(pacijentId);
             if (user != null)
             {
+               
                 var emailMessage = new
                 {
-                    Sender = "tt8915119@gmail.com", // You can customize this
-                    Recipient = user.Email,
+                    Sender = "tt8915119@gmail.com", 
+                    Recipient = user.Email,         
                     Subject = "Novi Termin Zakazan",
-                    Content = $"Poštovani {user.Ime}, vaš termin je zakazan za {entity.Datum} u {entity.Vrijeme}."
+                    Content = $"Poštovani {user.Ime}, vaš termin je zakazan za {datum} u {vrijeme}." 
                 };
 
                 _mailProducer.SendEmail(emailMessage);
@@ -94,9 +99,6 @@ namespace eKarton.Service.Services
             }
             catch (Exception ex)
             {
-                // Log the error details for further investigation
-
-                // Optionally rethrow the exception or return a specific error response
                 throw new InvalidOperationException("An error occurred while processing the request.", ex);
             }
         }

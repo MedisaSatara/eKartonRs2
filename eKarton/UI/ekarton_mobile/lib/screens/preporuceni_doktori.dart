@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:ekarton_mobile/models/doktor.dart';
 import 'package:ekarton_mobile/providers/doktor_provider.dart';
-import 'package:flutter/material.dart';
 
 class RecommendedDoctorsScreen extends StatelessWidget {
   final DoktorProvider doktorProvider = DoktorProvider();
@@ -9,7 +9,7 @@ class RecommendedDoctorsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Recommended Doctors'),
+        title: Text('Preporuceni doktori'),
       ),
       body: FutureBuilder<List<Doktor>>(
         future: doktorProvider.fetchRecommendedDoctors(),
@@ -21,19 +21,27 @@ class RecommendedDoctorsScreen extends StatelessWidget {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(child: Text('No recommended doctors found'));
           } else {
+            final doctorsByRating = groupDoctorsByRating(snapshot.data!);
             return ListView.builder(
-              itemCount: snapshot.data!.length,
+              itemCount: doctorsByRating.length,
               itemBuilder: (context, index) {
-                final doktor = snapshot.data![index];
-                return ListTile(
-                  title: Text('${doktor.ime} ${doktor.prezime}'),
-                  subtitle: doktor.averageRating != null
-                      ? Text(
-                          'Rating: ${doktor.averageRating!.toStringAsFixed(1)}')
-                      : Text('No rating available'),
-                  onTap: () {
-                    // Handle tap
-                  },
+                final ratingGroup = doctorsByRating[index];
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Prosjecna ocjena doktora: ${ratingGroup.rating.toStringAsFixed(1)}',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      ...ratingGroup.doctors.map((doktor) => ListTile(
+                            title: Text('${doktor.ime} ${doktor.prezime}'),
+                            subtitle: Text('Doktor ID: ${doktor.doktorId}'),
+                          )),
+                    ],
+                  ),
                 );
               },
             );
@@ -42,4 +50,27 @@ class RecommendedDoctorsScreen extends StatelessWidget {
       ),
     );
   }
+
+  List<RatingGroup> groupDoctorsByRating(List<Doktor> doctors) {
+    Map<double, List<Doktor>> grouped = {};
+    for (var doktor in doctors) {
+      final rating = doktor.averageRating ?? 0;
+      if (!grouped.containsKey(rating)) {
+        grouped[rating] = [];
+      }
+      grouped[rating]!.add(doktor);
+    }
+
+    return grouped.entries
+        .map((entry) => RatingGroup(rating: entry.key, doctors: entry.value))
+        .toList()
+      ..sort((a, b) => b.rating.compareTo(a.rating));
+  }
+}
+
+class RatingGroup {
+  final double rating;
+  final List<Doktor> doctors;
+
+  RatingGroup({required this.rating, required this.doctors});
 }

@@ -8,7 +8,7 @@ namespace eKarton.Service.Report
 {
     public class BolestStatistika
     {
-        public string Dijagnoza { get; set; } // Naziv bolesti
+        public string Dijagnoza { get; set; } 
         public int BrojPacijenata { get; set; }
     }
 }

@@ -45,7 +45,6 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
       preventivneMjereResult = preventivneMjereData;
     });
 
-    // Debugging prints
     print("Pacijenti: ${result?.result.map((p) => p.pacijentId).toList()}");
     print(
         "Preventivne Mjere: ${preventivneMjereResult?.result.map((m) => m.pacijentId).toList()}");

@@ -16,6 +16,6 @@ namespace eKarton.Model.Models
         public int? KorisnikId { get; set; }
        // public virtual Korisnik Korisnik { get; set; }
 
-       // public virtual Doktor Doktor { get; set; } = null!;
+        public virtual Doktor Doktor { get; set; } = null!;
     }
 }

@@ -30,7 +30,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             Text(
               widget.title ?? "",
               style: TextStyle(
-                color: Colors.black, // Promijenjena boja teksta na crnu
+                color: Colors.black,
               ),
             ),
         leading: Builder(
@@ -111,13 +111,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 );
               },
             ),
-            // Dodajte druge opcije navigacije ovdje
           ],
         ),
       ),
       body: widget.child!,
-      drawerEnableOpenDragGesture:
-          true, // Omogućava otvaranje Drawer povlačenjem
+      drawerEnableOpenDragGesture: true,
     );
   }
 }

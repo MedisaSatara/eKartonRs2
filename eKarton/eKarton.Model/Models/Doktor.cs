@@ -20,7 +20,7 @@ namespace eKarton.Model.Models
         public string? StateMachine { get; set; }
 
         public int OdjelId { get; set; }
-
+        public double? AverageRating { get; set; }
         public virtual Odjel Odjel { get; set; } = null!;
        // public virtual ICollection<DodjeljeniDoktor> DodjeljeniDoktors { get; set; }
         public virtual ICollection<OcjenaDoktor> OcjenaDoktors { get; set; }

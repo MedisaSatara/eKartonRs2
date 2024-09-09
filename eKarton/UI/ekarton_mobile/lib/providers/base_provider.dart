@@ -13,7 +13,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
   BaseProvider(String endpoint) : _endpoint = endpoint {
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "https://localhost:7285/");
+        defaultValue: "http://localhost:7073/");
     totalUrl = "$_baseUrl$_endpoint";
   }
 
@@ -148,7 +148,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     };
   }
 
-  final String apiUrl = 'https://localhost:7285/Doktor/preporuceni';
+  final String apiUrl = 'http://localhost:7073/Doktor/preporuceni';
 
   Future<List<Doktor>> fetchRecommendedDoctors() async {
     final response = await http.get(Uri.parse(apiUrl));
@@ -156,6 +156,30 @@ abstract class BaseProvider<T> with ChangeNotifier {
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data.map((json) => Doktor.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load recommended doctors');
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchRecommendedDoctor() async {
+    final response = await http.get(
+      Uri.parse('http://localhost:7073/Doktor/preporuceni'),
+      headers: {
+        'Authorization': 'Basic YWRtaW46dGVzdA==',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final averageRating = data['averageRating'];
+      final doctors = (data['doctors'] as List)
+          .map((item) => Doktor.fromJson(item))
+          .toList();
+
+      return {
+        'averageRating': averageRating,
+        'doctors': doctors,
+      };
     } else {
       throw Exception('Failed to load recommended doctors');
     }

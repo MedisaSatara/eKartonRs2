@@ -1,3 +1,4 @@
+import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ekarton_admin/models/bolesti_po_godistu_report.dart';
 import 'package:ekarton_admin/models/doktori_pregled_report.dart';
@@ -18,6 +19,8 @@ class _ReportScreen extends State<ReportScreen> {
   late Future<List<DoktoriPregledReport>> futurePreglediReports;
   late Future<List<BolestiPoGodistuReport>> futureBolestiReports;
 
+  String currentReport = '';
+
   @override
   void initState() {
     super.initState();
@@ -28,51 +31,92 @@ class _ReportScreen extends State<ReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Reports'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildReportSection(
-              title: 'Top 3 Najposećenija Doktora',
-              future: futureDoktorReports,
-              itemBuilder: (context, doktor) => ListTile(
-                title: Text(doktor.imeDoktora ?? ""),
-                subtitle: Text('Specijalizacija: ${doktor.specijalizacija}'),
-                trailing:
-                    Text('Zakazani termini: ${doktor.brojZakazanihTermina}'),
+    return MasterScreenWidget(
+      title: 'Izvještaji',
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    currentReport = 'doktor';
+                  });
+                },
+                child: const Text('Top 3 Doktora'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    currentReport = 'pregledi';
+                  });
+                },
+                child: const Text('Pregledi Po Doktoru'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    currentReport = 'bolesti';
+                  });
+                },
+                child: const Text('Bolesti Po Godištu'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  if (currentReport == 'doktor')
+                    _buildReportSection(
+                      title: 'Top 3 Najposećenija Doktora',
+                      future: futureDoktorReports,
+                      itemBuilder: (context, doktor) => ListTile(
+                        title: Text(doktor.imeDoktora ?? ""),
+                        subtitle:
+                            Text('Specijalizacija: ${doktor.specijalizacija}'),
+                        trailing: Text(
+                            'Zakazani termini: ${doktor.brojZakazanihTermina}'),
+                      ),
+                    ),
+                  if (currentReport == 'pregledi')
+                    _buildReportSection(
+                      title: 'Pregledi Po Doktoru',
+                      future: futurePreglediReports,
+                      itemBuilder: (context, pregled) => ListTile(
+                        title: Text(pregled.imeDoktora ?? ""),
+                        subtitle:
+                            Text('Broj pregleda: ${pregled.brojPregleda}'),
+                        trailing: Text('Pacijenata: ${pregled.brojPacijenata}'),
+                      ),
+                    ),
+                  if (currentReport == 'bolesti')
+                    _buildReportSection(
+                      title: 'Bolesti Po Godištu',
+                      future: futureBolestiReports,
+                      itemBuilder: (context, bolest) => ListTile(
+                        title: Text('Godina: ${bolest.decade}'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (var bolestDetail in bolest.najcesceBolesti)
+                              Text(
+                                  '${bolestDetail.dijagnoza}: ${bolestDetail.brojPacijenata} pacijenata'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  if (currentReport.isEmpty)
+                    const Center(
+                      child: Text('Odaberite izvještaj za prikaz.'),
+                    ),
+                ],
               ),
             ),
-            const SizedBox(height: 20),
-            _buildReportSection(
-              title: 'Pregledi Po Doktoru',
-              future: futurePreglediReports,
-              itemBuilder: (context, pregled) => ListTile(
-                title: Text(pregled.imeDoktora ?? ""),
-                subtitle: Text('Broj pregleda: ${pregled.brojPregleda}'),
-                trailing: Text('Pacijenata: ${pregled.brojPacijenata}'),
-              ),
-            ),
-            const SizedBox(height: 20),
-            _buildReportSection(
-              title: 'Bolesti Po Godištu',
-              future: futureBolestiReports,
-              itemBuilder: (context, bolest) => ListTile(
-                title: Text('Godina: ${bolest.decade}'),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (var bolestDetail in bolest.najcesceBolesti)
-                      Text(
-                          '${bolestDetail.dijagnoza}: ${bolestDetail.brojPacijenata} pacijenata'),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
