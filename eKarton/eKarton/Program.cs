@@ -113,10 +113,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-/*using (var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<eKartonContext>();
     dataContext.Database.Migrate();
-}*/
+}
 
 app.Run();
