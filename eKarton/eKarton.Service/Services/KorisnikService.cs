@@ -68,15 +68,15 @@ namespace eKarton.Service.Services
 
             if (!string.IsNullOrWhiteSpace(search?.Ime))
             {
-                filteredQuery = filteredQuery.Where(x => x.Ime == search.Ime);
+                filteredQuery = filteredQuery.Where(x => x.Ime.Contains(search.Ime.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(search?.Prezime))
             {
-                filteredQuery = filteredQuery.Where(x => x.Prezime == search.Prezime);
+                filteredQuery = filteredQuery.Where(x => x.Prezime.Contains(search.Prezime.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(search?.KorisnickoIme))
             {
-                filteredQuery = filteredQuery.Where(x => x.KorisnickoIme == search.KorisnickoIme);
+                filteredQuery = filteredQuery.Where(x => x.KorisnickoIme.Contains(search.KorisnickoIme.ToLower()));
             }
 
             return filteredQuery;

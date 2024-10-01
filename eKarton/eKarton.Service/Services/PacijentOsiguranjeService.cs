@@ -32,15 +32,15 @@ namespace eKarton.Service.Services
 
             if (!string.IsNullOrWhiteSpace(search?.ImePacijenta))
             {
-                filteredQuery = filteredQuery.Where(x => x.Pacijent.Ime == search.ImePacijenta);
+                filteredQuery = filteredQuery.Where(x => x.Pacijent.Ime.Contains(search.ImePacijenta.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(search?.PrezimePacijenta))
             {
-                filteredQuery = filteredQuery.Where(x => x.Pacijent.Prezime == search.PrezimePacijenta);
+                filteredQuery = filteredQuery.Where(x => x.Pacijent.Prezime.Contains(search.PrezimePacijenta.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(search?.BrojKartona))
             {
-                filteredQuery = filteredQuery.Where(x => x.Pacijent.BrojKartona == search.BrojKartona);
+                filteredQuery = filteredQuery.Where(x => x.Pacijent.BrojKartona.Contains(search.BrojKartona.ToLower()));
             }
 
 

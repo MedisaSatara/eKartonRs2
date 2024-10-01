@@ -110,9 +110,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
                 labelText: 'Odjel',
               ),
               items: [
-                DropdownMenuItem(
-                    value: null,
-                    child: Text("Svi odjeli")), // Opcija za sve odjele
+                DropdownMenuItem(value: null, child: Text("Svi odjeli")),
                 ...?odjelResult?.result
                     .map((item) => DropdownMenuItem<String>(
                           value: item.odjelId.toString(),
@@ -125,8 +123,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
                 setState(() {
                   _selectedOdjelId = value;
                 });
-                print(
-                    "Odabrani odjelId: $_selectedOdjelId"); 
+                print("Odabrani odjelId: $_selectedOdjelId");
               },
             ),
           ),
@@ -162,11 +159,18 @@ class _DoktorScreenState extends State<DoktorScreen> {
       filter['odjelId'] = _selectedOdjelId!;
     }
 
-    print("Filter: $filter"); 
+    print("Filter: $filter");
 
     var data = await _doktorProvider.get(filter: filter);
 
-    print("Data: ${data.result}");
+    var filteredData = data.result.where((doktor) {
+      var imeMatch =
+          doktor.ime!.toLowerCase().contains(_imeController.text.toLowerCase());
+      var prezimeMatch = doktor.prezime!
+          .toLowerCase()
+          .contains(_prezimeController.text.toLowerCase());
+      return imeMatch && prezimeMatch;
+    }).toList();
 
     setState(() {
       doktorResult = data;
@@ -242,7 +246,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
                                       orElse: () =>
                                           Odjel(odjelId: 0, naziv: "N/A"))
                                   .naziv ??
-                              "")), 
+                              "")),
                         ],
                       ))
                   .toList() ??

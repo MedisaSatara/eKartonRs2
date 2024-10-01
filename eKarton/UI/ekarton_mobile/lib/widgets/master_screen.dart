@@ -2,6 +2,7 @@ import 'package:ekarton_mobile/screens/bolnica_screen.dart';
 import 'package:ekarton_mobile/screens/ekarton_screen.dart';
 import 'package:ekarton_mobile/screens/home_screen.dart';
 import 'package:ekarton_mobile/screens/korisnik_profile_screen.dart';
+import 'package:ekarton_mobile/screens/ocjena_doktor_screen.dart';
 import 'package:ekarton_mobile/screens/online_pay_screen.dart';
 import 'package:ekarton_mobile/screens/pacijent_list_screen.dart';
 import 'package:ekarton_mobile/screens/preporuceni_doktori.dart';
@@ -56,12 +57,12 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       drawer: Drawer(
         child: ListView(
           children: [
-            ListTile(
+            /* ListTile(
               title: Text("<-"),
               onTap: () {
                 Navigator.of(context).pop();
               },
-            ),
+            ),*/
             ListTile(
               title: Text("Home"),
               onTap: () {
@@ -100,6 +101,14 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                       builder: (context) => RecommendedDoctorsScreen()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text("Ocjene doktora"),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => OcjenaDoktorScreen()),
                 );
               },
             ),

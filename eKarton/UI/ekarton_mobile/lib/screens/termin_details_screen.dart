@@ -4,6 +4,7 @@ import 'package:ekarton_mobile/models/termin.dart';
 import 'package:ekarton_mobile/providers/doktor_provider.dart';
 import 'package:ekarton_mobile/providers/pacijent_provider.dart';
 import 'package:ekarton_mobile/providers/termin_provider.dart';
+import 'package:ekarton_mobile/screens/preporuceni_doktori.dart';
 import 'package:ekarton_mobile/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -108,98 +109,156 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
     }
   }
 
+  bool _showRecommendedDoctors = false;
+
+  void _toggleRecommendedDoctors() {
+    setState(() {
+      _showRecommendedDoctors = !_showRecommendedDoctors;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: FormBuilder(
-          key: _formKey,
-          initialValue: _initialValue,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Dodavanje novog termina',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
+        child: SingleChildScrollView(
+          child: FormBuilder(
+            key: _formKey,
+            initialValue: _initialValue,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Dodavanje novog termina',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                  ),
                 ),
-              ),
-              SizedBox(height: 16.0),
-              FormBuilderTextField(
-                decoration: InputDecoration(
-                  labelText: "Datum",
-                  border: OutlineInputBorder(),
+                SizedBox(height: 16.0),
+                FormBuilderTextField(
+                    decoration: InputDecoration(
+                      labelText: "Datum",
+                      border: OutlineInputBorder(),
+                    ),
+                    name: "datum",
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Ovo polje je obavezno!Datum u formatu yyyy-mm-dd';
+                      }
+                      return null;
+                    }),
+                SizedBox(height: 16),
+                FormBuilderTextField(
+                    decoration: InputDecoration(
+                      labelText: "Vrijeme",
+                      border: OutlineInputBorder(),
+                    ),
+                    name: "vrijeme",
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Ovo polje je obavezno!';
+                      }
+                      return null;
+                    }),
+                SizedBox(height: 16),
+                FormBuilderTextField(
+                    decoration: InputDecoration(
+                      labelText: "Razlog",
+                      border: OutlineInputBorder(),
+                    ),
+                    name: "razlog",
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Ovo polje je obavezno!';
+                      }
+                      return null;
+                    }),
+                SizedBox(height: 16),
+                FormBuilderDropdown<String>(
+                    name: 'pacijentId',
+                    decoration: InputDecoration(
+                      labelText: 'Pacijent',
+                    ),
+                    items: _pacijenti
+                            ?.map((pacijent) => DropdownMenuItem<String>(
+                                  value: pacijent.pacijentId.toString(),
+                                  child: Text(pacijent.ime ?? ""),
+                                ))
+                            .toList() ??
+                        [],
+                    initialValue: _initialValue['pacijentId']?.toString(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedPacijentId = value;
+                      });
+                      print("Odabrani pacijentId: $_selectedPacijentId");
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Ovo polje je obavezno!';
+                      }
+                      return null;
+                    }),
+                SizedBox(height: 16),
+                FormBuilderDropdown<String>(
+                    name: 'doktorId',
+                    decoration: InputDecoration(
+                      labelText: 'Doktor',
+                    ),
+                    items: _doktori
+                            ?.map((doktor) => DropdownMenuItem<String>(
+                                  value: doktor.doktorId.toString(),
+                                  child: Text(doktor.ime ?? ""),
+                                ))
+                            .toList() ??
+                        [],
+                    initialValue: _initialValue['doktorId']?.toString(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedDoktorId = value;
+                      });
+                      print("Odabrani doktorId: $_selectedDoktorId");
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Ovo polje je obavezno!';
+                      }
+                      return null;
+                    }),
+                SizedBox(height: 16),
+                Text(
+                  'Pogledaj listu preporučenih doktora, na osnovu dosadašnjih ocjena koje su dobili od strane pacijenata.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.black,
+                  ),
                 ),
-                name: "datum",
-              ),
-              SizedBox(height: 16),
-              FormBuilderTextField(
-                decoration: InputDecoration(
-                  labelText: "Vrijeme",
-                  border: OutlineInputBorder(),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _toggleRecommendedDoctors,
+                  child: Text(_showRecommendedDoctors
+                      ? 'Sakrij preporučene doktore'
+                      : 'Prikaži preporučene doktore'),
                 ),
-                name: "vrijeme",
-              ),
-              SizedBox(height: 16),
-              FormBuilderTextField(
-                decoration: InputDecoration(
-                  labelText: "Razlog",
-                  border: OutlineInputBorder(),
+                if (_showRecommendedDoctors)
+                  Container(
+                    width: double.infinity,
+                    height: 300,
+                    child: RecommendedDoctorsScreen(),
+                  ),
+                SizedBox(
+                  height: 16,
                 ),
-                name: "razlog",
-              ),
-              SizedBox(height: 16),
-              FormBuilderDropdown<String>(
-                name: 'pacijentId',
-                decoration: InputDecoration(
-                  labelText: 'Pacijent',
+                ElevatedButton(
+                  onPressed: _submitForm,
+                  child:
+                      Text(widget.termin == null ? 'Dodaj' : 'Uredi podatke'),
                 ),
-                items: _pacijenti
-                        ?.map((pacijent) => DropdownMenuItem<String>(
-                              value: pacijent.pacijentId
-                                  .toString(), // Ensure this is a string
-                              child: Text(pacijent.ime ?? ""),
-                            ))
-                        .toList() ??
-                    [],
-                initialValue: _initialValue['pacijentId']?.toString(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedPacijentId = value;
-                  });
-                  print("Odabrani pacijentId: $_selectedPacijentId");
-                },
-              ),
-              SizedBox(height: 16),
-              FormBuilderDropdown<String>(
-                name: 'doktorId',
-                decoration: InputDecoration(
-                  labelText: 'Doktor',
-                ),
-                items: _doktori
-                        ?.map((doktor) => DropdownMenuItem<String>(
-                              value: doktor.doktorId
-                                  .toString(), // Ensure this is a string
-                              child: Text(doktor.ime ?? ""),
-                            ))
-                        .toList() ??
-                    [],
-                initialValue: _initialValue['doktorId']?.toString(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedDoktorId = value;
-                  });
-                  print("Odabrani doktorId: $_selectedDoktorId");
-                },
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: Text(widget.termin == null ? 'Dodaj' : 'Uredi podatke'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

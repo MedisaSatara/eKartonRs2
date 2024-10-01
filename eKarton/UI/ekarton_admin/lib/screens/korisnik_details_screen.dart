@@ -42,23 +42,32 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
     if (_formKey.currentState!.saveAndValidate()) {
       final formData = _formKey.currentState!.value;
 
-      // Convert odjelId to integer if it's not null
-      if (formData['odjelId'] != null) {
-        formData['odjelId'] = int.parse(formData['odjelId']);
-      }
-
       try {
         if (widget.korisnik == null) {
           await _korisnikProvider.insert(Korisnik.fromJson(formData));
+          Navigator.of(context).pop('success');
         } else {
           await _korisnikProvider.update(
               widget.korisnik!.korisnikId!, Korisnik.fromJson(formData));
+          Navigator.of(context).pop('updated');
         }
-        Navigator.of(context).pop();
       } catch (e) {
         print('Error: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save user. Please try again.')),
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text("Error"),
+            content:
+                Text("Failed to save user. Please try again: ${e.toString()}"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              )
+            ],
+          ),
         );
       }
     }
@@ -89,6 +98,20 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                   border: OutlineInputBorder(),
                 ),
                 name: "ime",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ovo polje je obavezno!';
+                  } else if (!RegExp(r'^[a-zA-ZšđčćžŠĐČĆŽ\s]+$')
+                      .hasMatch(value)) {
+                    return 'Ime može sadržavati samo slova.';
+                  } else if (value.length < 3) {
+                    return 'Morate unijeti najmanje 3 karaktera.';
+                  } else if (value.length > 50) {
+                    return 'Premašili ste maksimalan broj karaktera (50).';
+                  }
+
+                  return null;
+                },
               ),
               SizedBox(height: 16),
               FormBuilderTextField(
@@ -97,6 +120,20 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                   border: OutlineInputBorder(),
                 ),
                 name: "prezime",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ovo polje je obavezno!';
+                  } else if (!RegExp(r'^[a-zA-ZšđčćžŠĐČĆŽ\s]+$')
+                      .hasMatch(value)) {
+                    return 'Prezime može sadržavati samo slova.';
+                  } else if (value.length < 3) {
+                    return 'Morate unijeti najmanje 3 karaktera.';
+                  } else if (value.length > 50) {
+                    return 'Premašili ste maksimalan broj karaktera (50).';
+                  }
+
+                  return null;
+                },
               ),
               SizedBox(height: 16),
               FormBuilderTextField(
@@ -105,6 +142,12 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                   border: OutlineInputBorder(),
                 ),
                 name: "korisnickoIme",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ovo polje je obavezno!';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 16),
               FormBuilderTextField(
@@ -113,6 +156,12 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                   border: OutlineInputBorder(),
                 ),
                 name: "email",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ovo polje je obavezno!';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 16),
               FormBuilderTextField(
@@ -121,6 +170,12 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                   border: OutlineInputBorder(),
                 ),
                 name: "telefon",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ovo polje je obavezno!';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 16),
               FormBuilderTextField(
@@ -129,6 +184,12 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                   border: OutlineInputBorder(),
                 ),
                 name: "datumRodjenja",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ovo polje je obavezno! Datum u formatu yyyy-mm-dd';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 24),
               ElevatedButton(

@@ -63,10 +63,8 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
 
       try {
         if (widget.pacijent == null) {
-          // Insert new patient
           await _pacijentProvider.insert(Pacijent.fromJson(formData));
         } else {
-          // Update existing patient
           final patientId = widget.pacijent?.pacijentId;
           if (patientId == null) {
             throw Exception('Patient ID is null');

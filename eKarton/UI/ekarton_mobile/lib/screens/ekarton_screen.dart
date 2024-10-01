@@ -268,8 +268,8 @@ class _EkartonScreen extends State<EkartonScreen> {
           DataColumn(label: Text('Datum')),
           DataColumn(label: Text('Razlog posjete')),
           DataColumn(label: Text('Dijagnoza')),
-          DataColumn(label: Text('TerapijaId')),
-          DataColumn(label: Text('DoktorId')),
+          DataColumn(label: Text('Terapija')),
+          DataColumn(label: Text('Ime doktora')),
         ],
         rows: filteredPregled!.map((pregled) {
           return DataRow(

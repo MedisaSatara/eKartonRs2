@@ -72,12 +72,13 @@ class _PreventivneMjereDetailsScreen
         if (widget.preventivneMjere == null) {
           await _preventivneMjereProvider
               .insert(PreventivneMjere.fromJson(mutableFormData));
+          Navigator.of(context).pop('Preventivne mjere uspješno dodane.');
         } else {
           await _preventivneMjereProvider.update(
               widget.preventivneMjere!.preventivneMjereId!,
               PreventivneMjere.fromJson(mutableFormData));
+          Navigator.of(context).pop('Preventine mjere uspjesno uredjene.');
         }
-        Navigator.of(context).pop();
       } catch (e) {
         print('Error: $e');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -114,6 +115,12 @@ class _PreventivneMjereDetailsScreen
                   border: OutlineInputBorder(),
                 ),
                 name: "stanje",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ovo polje je obavezno!';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 16),
               Expanded(
@@ -122,10 +129,15 @@ class _PreventivneMjereDetailsScreen
                   decoration: InputDecoration(
                     labelText: 'Pacijent',
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ovo polje je obavezno!';
+                    }
+                    return null;
+                  },
                   items: _pacijenti
                           ?.map((pacijent) => DropdownMenuItem<String>(
-                                value: pacijent.pacijentId
-                                    .toString(), // Ensure this is a string
+                                value: pacijent.pacijentId.toString(),
                                 child: Text(pacijent.ime ?? ""),
                               ))
                           .toList() ??

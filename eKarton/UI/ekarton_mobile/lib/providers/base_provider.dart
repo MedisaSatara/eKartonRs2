@@ -16,7 +16,8 @@ abstract class BaseProvider<T> with ChangeNotifier {
         defaultValue: "http://192.168.0.106:7073/");
     totalUrl = "$_baseUrl$_endpoint";
   }
-
+  //http://192.168.0.106:7073/
+  //https://localhost:7285/
   Future<SearchResult<T>> get({dynamic filter}) async {
     var url = "$_baseUrl$_endpoint";
 
@@ -149,6 +150,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   final String apiUrl = 'http://192.168.0.106:7073/Doktor/preporuceni';
+  //final String apiUrl = 'https://localhost:7285/Doktor/preporuceni';
 
   Future<List<Doktor>> fetchRecommendedDoctors() async {
     final response = await http.get(Uri.parse(apiUrl));

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ekarton_admin/main.dart';
 import 'package:ekarton_admin/models/pacijent.dart';
 import 'package:ekarton_admin/models/preventivne_mjere.dart';
@@ -28,7 +30,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
   TextEditingController _imeController = TextEditingController();
   TextEditingController _prezimeController = TextEditingController();
   TextEditingController _brojkartonaController = TextEditingController();
-
+  Timer? _debounce;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -66,12 +68,19 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
             _buildDataListView(),
             ElevatedButton(
               onPressed: () async {
-                Navigator.of(context).push(
+                final result = await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) =>
                         PacijentiDetailsScreen(pacijent: null),
                   ),
                 );
+
+                if (result != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(result.toString())),
+                  );
+                  _fetchInitialData();
+                }
               },
               child: Text("Dodaj novog pacijenta"),
             ),
@@ -80,11 +89,18 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                Navigator.of(context).push(
+                final result = await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => PreventivneMjereDetailsScreen(),
                   ),
                 );
+
+                if (result != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(result.toString())),
+                  );
+                  _fetchInitialData();
+                }
               },
               child: Text("Dodaj preventivne mjere pacijenta"),
             ),
@@ -113,6 +129,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
               labelText: "Ime",
             ),
             controller: _imeController,
+            //onChanged: (value) => _onSearchChanged(),
           ),
           SizedBox(height: 8.0),
           TextField(
@@ -120,6 +137,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
               labelText: "Prezime",
             ),
             controller: _prezimeController,
+            // onChanged: (value) => _onSearchChanged(),
           ),
           SizedBox(height: 8.0),
           TextField(
@@ -127,14 +145,16 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
               labelText: "Broj kartona",
             ),
             controller: _brojkartonaController,
+            // onChanged: (value) => _onSearchChanged(),
           ),
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () async {
               var data = await _pacijentiProvider.get(filter: {
-                'imePacijenta': _imeController.text,
-                'prezimePacijenta': _prezimeController.text,
-                'brojKartona': _brojkartonaController.text,
+                'imePacijenta': _imeController.text.trim().toLowerCase(),
+                'prezimePacijenta':
+                    _prezimeController.text.trim().toLowerCase(),
+                'brojKartona': _brojkartonaController.text.trim(),
               });
               setState(() {
                 result = data;
@@ -159,6 +179,20 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
         ],
       ),
     );
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () async {
+      var data = await _pacijentiProvider.get(filter: {
+        'imePacijenta': _imeController.text.trim().toLowerCase(),
+        'prezimePacijenta': _prezimeController.text.trim().toLowerCase(),
+        'brojKartona': _brojkartonaController.text.trim(),
+      });
+      setState(() {
+        result = data;
+      });
+    });
   }
 
   Expanded _buildDataListView() {
@@ -220,14 +254,24 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
                         : "/";
 
                 return DataRow(
-                  onSelectChanged: (selected) {
+                  onSelectChanged: (selected) async {
                     if (selected == true) {
-                      Navigator.of(context).push(
+                      final result = await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) =>
                               PacijentiDetailsScreen(pacijent: e),
                         ),
                       );
+
+                      if (result != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(result),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                        _fetchInitialData();
+                      }
                     }
                   },
                   cells: [

@@ -3,6 +3,7 @@ import 'package:ekarton_mobile/providers/bolnica_provider.dart';
 import 'package:ekarton_mobile/providers/doktor_provider.dart';
 import 'package:ekarton_mobile/providers/korisnik_provider.dart';
 import 'package:ekarton_mobile/providers/nalaz_provider.dart';
+import 'package:ekarton_mobile/providers/ocjena_doktor_provider.dart';
 import 'package:ekarton_mobile/providers/pacijent_oboljenja_provider.dart';
 import 'package:ekarton_mobile/providers/pacijent_provider.dart';
 import 'package:ekarton_mobile/providers/pregled_provider.dart';
@@ -33,6 +34,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => KorisnikProvider()),
       ChangeNotifierProvider(create: (_) => TerminProvider()),
       ChangeNotifierProvider(create: (_) => UlogaProvider()),
+      ChangeNotifierProvider(create: (_) => OcjenaDoktorProvider()),
     ],
     child: MyApp(),
   ));

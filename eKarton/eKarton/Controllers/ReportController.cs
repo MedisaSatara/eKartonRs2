@@ -1,11 +1,13 @@
 ﻿using eKarton.Model.Request.SearchObject;
 using eKarton.Service.Report;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eKarton.Controllers
 {
     [Route("[controller]")]
+    [Authorize]
     public class ReportController : ControllerBase
     {
         private readonly IReportService _reportService;

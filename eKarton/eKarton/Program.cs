@@ -27,6 +27,8 @@ builder.Services.AddTransient<INalazService, NalazService>();
 builder.Services.AddTransient<IUputnicaService, UputnicaService>();
 builder.Services.AddTransient<IPregledService, PregledService>();
 builder.Services.AddTransient<ITerapijaService, TerapijaService>();
+builder.Services.AddTransient<IOcjenaDoktorService, OcjenaDoktorService>();
+
 builder.Services.AddSingleton<IMailProducer, MailProducer>();
 builder.Services.AddScoped<IReportService, ReportService>();
 
@@ -111,10 +113,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<eKartonContext>();
     dataContext.Database.Migrate();
-}
+}*/
 
 app.Run();

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ekarton_mobile/models/pacijent.dart';
 import 'package:ekarton_mobile/models/search_result.dart';
 import 'package:ekarton_mobile/providers/pacijent_provider.dart';
@@ -22,6 +24,14 @@ class _PacijentListScreen extends State<PacijentListScreen> {
   TextEditingController _brojKartonaController = TextEditingController();
   bool searchExecuted = false;
 
+  Timer? _debounce;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInitialData(); // Load all patients when the screen loads
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -35,13 +45,21 @@ class _PacijentListScreen extends State<PacijentListScreen> {
       child: Container(
         child: Column(children: [
           _buildSearch(),
-          if (searchExecuted &&
-              pacijentResult != null &&
-              pacijentResult!.result.isNotEmpty)
+          if (pacijentResult != null && pacijentResult!.result.isNotEmpty)
             _buildDataListView(),
         ]),
       ),
     );
+  }
+
+  // Function to load initial data (fetch all patients)
+  Future<void> _loadInitialData() async {
+    var data =
+        await _pacijentProvider.get(); // Fetch all patients without filters
+    setState(() {
+      pacijentResult = data;
+      searchExecuted = true; // Mark search as executed for initial display
+    });
   }
 
   Widget _buildSearch() {
@@ -53,6 +71,7 @@ class _PacijentListScreen extends State<PacijentListScreen> {
             child: TextField(
               decoration: InputDecoration(labelText: "Broj kartona"),
               controller: _brojKartonaController,
+              onChanged: (value) => _onSearchChanged(),
             ),
           ),
           SizedBox(width: 8),
@@ -65,6 +84,7 @@ class _PacijentListScreen extends State<PacijentListScreen> {
     );
   }
 
+  // Search function to search by 'broj kartona'
   Future<void> _searchData() async {
     var filter = {
       'brojKartona': _brojKartonaController.text,
@@ -72,11 +92,21 @@ class _PacijentListScreen extends State<PacijentListScreen> {
 
     var data = await _pacijentProvider.get(filter: filter);
 
-    print("Data: ${data.result}");
-
     setState(() {
       pacijentResult = data;
       searchExecuted = true;
+    });
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () async {
+      var data = await _pacijentProvider.get(filter: {
+        'brojKartona': _brojKartonaController.text.trim(),
+      });
+      setState(() {
+        pacijentResult = data;
+      });
     });
   }
 

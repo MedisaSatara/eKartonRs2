@@ -121,9 +121,10 @@ class _PacijentOsiguranjeScreen extends State<PacijentOsiguranjeScreen> {
           ElevatedButton(
             onPressed: () async {
               var data = await _pacijentOsiguranjeProvider.get(filter: {
-                'imePacijenta': _imeController.text,
-                'prezimePacijenta': _prezimeController.text,
-                'brojKartona': _brojkartonaController.text,
+                'imePacijenta': _imeController.text.trim().toLowerCase(),
+                'prezimePacijenta':
+                    _prezimeController.text.trim().toLowerCase(),
+                'brojKartona': _brojkartonaController.text.trim().toLowerCase(),
               });
               setState(() {
                 result = data;

@@ -75,6 +75,11 @@ namespace eKarton.Service.Mapping
 
             CreateMap<Databases.Terapija, Model.Models.Terapija>();
 
+            CreateMap<Databases.OcjenaDoktor, Model.Models.OcjenaDoktor>();
+            CreateMap<DoktorSearchObject, Databases.OcjenaDoktor>();
+            CreateMap<OcjenaDoktorInsertRequest, Databases.OcjenaDoktor>();
+            CreateMap<OcjenaDoktorUpdateRequest, Databases.OcjenaDoktor>();
+
 
 
 

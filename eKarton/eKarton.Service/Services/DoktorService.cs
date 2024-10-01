@@ -29,11 +29,11 @@ namespace eKarton.Service.Services
         {
             if (!string.IsNullOrWhiteSpace(search?.ImeDoktora))
             {
-                query = query.Where(x => x.Ime.StartsWith(search.ImeDoktora));
+                query = query.Where(x => x.Ime.ToLower().Contains(search.ImeDoktora.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(search?.PrezimeDoktora))
             {
-                query = query.Where(x => x.Prezime.StartsWith(search.PrezimeDoktora));
+                query = query.Where(x => x.Prezime.ToLower().Contains(search.PrezimeDoktora.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(search?.NazivOdjela))
             {
@@ -50,6 +50,7 @@ namespace eKarton.Service.Services
 
             return base.AddFilter(query, search);
         }
+
 
         public override async Task<Model.Models.Doktor> Insert(DoktorInsertRequest insert)
         {

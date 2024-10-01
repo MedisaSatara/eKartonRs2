@@ -19,23 +19,42 @@ class _KorisnikScreen extends State<KorisnikScreen> {
   TextEditingController _imeController = TextEditingController();
   TextEditingController _prezimeController = TextEditingController();
   TextEditingController _korisnickoImeController = TextEditingController();
+  String? _successMessage;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _korisnikProvider = context.read<KorisnikProvider>();
-    _fetchKorisnici(); 
+    _fetchKorisnici();
   }
 
   Future<void> _fetchKorisnici() async {
     var data = await _korisnikProvider.get(filter: {
-      'ime': _imeController.text,
-      'prezime': _prezimeController.text,
-      'korisnickoIme': _korisnickoImeController.text,
+      'ime': _imeController.text.trim().toLowerCase(),
+      'prezime': _prezimeController.text.trim().toLowerCase(),
+      'korisnickoIme': _korisnickoImeController.text.trim().toLowerCase(),
     });
     setState(() {
       result = data;
     });
+  }
+
+  Future<void> _navigateToAddUser() async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => KorisniciDetailsScreen()),
+    );
+
+    if (result == 'success') {
+      setState(() {
+        _successMessage = 'Korisnik uspješno dodan!';
+      });
+    } else if (result == 'updated') {
+      setState(() {
+        _successMessage = 'Korisnik uspješno ažuriran!';
+      });
+    }
+
+    await _fetchKorisnici();
   }
 
   @override
@@ -47,6 +66,18 @@ class _KorisnikScreen extends State<KorisnikScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (_successMessage != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Text(
+                  _successMessage!,
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             _buildSearch(),
             Expanded(child: _buildDataListView()),
             _buildButton(),
@@ -121,15 +152,10 @@ class _KorisnikScreen extends State<KorisnikScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Center(
         child: ElevatedButton(
-          onPressed: () async {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => KorisniciDetailsScreen()),
-            );
-          },
+          onPressed: _navigateToAddUser,
           child: Text("Dodaj novi korisnik"),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(
-                255, 236, 233, 233), 
+            backgroundColor: const Color.fromARGB(255, 236, 233, 233),
             padding:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
             shape: RoundedRectangleBorder(
