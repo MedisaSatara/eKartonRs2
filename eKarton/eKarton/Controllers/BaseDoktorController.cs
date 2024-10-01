@@ -1,11 +1,13 @@
 ﻿using eKarton.Model;
 using eKarton.Service.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eKarton.Controllers
 {
     [Route("[controller]")]
+    [Authorize]
     public class BaseDoktorController<T, TSearch> : ControllerBase where T : class where TSearch : class
     {
         protected readonly IServiceDoktor<T, TSearch> _service;
