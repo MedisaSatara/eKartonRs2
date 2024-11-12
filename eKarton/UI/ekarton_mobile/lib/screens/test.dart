@@ -29,7 +29,6 @@ class _TerminScreen extends State<TerminScreen> {
   SearchResult<Termin>? terminResult;
   SearchResult<Pacijent>? pacijentResult;
   SearchResult<Doktor>? doktorResult;
-  TextEditingController _brojKartonaController = TextEditingController();
   TextEditingController _imeDoktoraController = TextEditingController();
   TextEditingController _prezimeDoktoraController = TextEditingController();
 
@@ -124,15 +123,13 @@ class _TerminScreen extends State<TerminScreen> {
                 TextButton(
                   child: Text('Odustani'),
                   onPressed: () {
-                    Navigator.of(context)
-                        .pop(false); // User cancels the deletion
+                    Navigator.of(context).pop(false);
                   },
                 ),
                 TextButton(
                   child: Text('Obriši'),
                   onPressed: () {
-                    Navigator.of(context)
-                        .pop(true); // User confirms the deletion
+                    Navigator.of(context).pop(true);
                   },
                 ),
               ],

@@ -162,7 +162,7 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
       backgroundColor: Colors.blueAccent,
       backgroundImage: profilnaSlika != null
           ? (profilnaSlika.startsWith('http')
-              ? NetworkImage(profilnaSlika) // For URL
+              ? NetworkImage(profilnaSlika)
               : MemoryImage(base64Decode(profilnaSlika))) as ImageProvider
           : null,
       child: profilnaSlika == null

@@ -47,8 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       var korisniciData = await _korisnikProvider.get();
       setState(() {
-        _korisnici = korisniciData; // Lista korisnika
-        _brojKorisnika = korisniciData.count; // Ukupan broj korisnika
+        _korisnici = korisniciData;
+        _brojKorisnika = korisniciData.count;
       });
     } catch (e) {
       print("Error fetching users: $e");
@@ -164,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildWelcomeCard() {
     return Center(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.6, // 80% of screen width
+        width: MediaQuery.of(context).size.width * 0.6,
         child: Card(
           color: Colors.white.withOpacity(0.8),
           elevation: 4,
@@ -199,9 +199,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildHospitalInfoCard() {
     return Center(
-      // Ensures the card is centered and doesn't take the full width
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.4, // 80% of screen width
+        width: MediaQuery.of(context).size.width * 0.4,
         child: Card(
           color: Colors.white.withOpacity(0.8),
           elevation: 4,

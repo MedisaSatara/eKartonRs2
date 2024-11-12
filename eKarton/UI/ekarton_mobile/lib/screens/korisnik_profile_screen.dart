@@ -30,13 +30,10 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
 
   Future<void> _fetchKorisnici() async {
     try {
-      var data = await _korisnikProvider.get(); // Dobavlja sve korisnike
+      var data = await _korisnikProvider.get();
       setState(() {
-        // Pretpostavljam da ti podaci uključuju korisnikUloga, pa koristi ulogaId za filtriranje
         korisnikResult = data.result.where((korisnik) {
-          return korisnik.korisnikUlogas.any((uloga) =>
-              uloga.ulogaId ==
-              2); // Pretpostavljam da je ulogaId = 1 za "admin"
+          return korisnik.korisnikUlogas.any((uloga) => uloga.ulogaId == 2);
         }).toList();
       });
     } catch (e) {
@@ -165,7 +162,7 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
       backgroundColor: Colors.blueAccent,
       backgroundImage: profilnaSlika != null
           ? (profilnaSlika.startsWith('http')
-              ? NetworkImage(profilnaSlika) // For URL
+              ? NetworkImage(profilnaSlika)
               : MemoryImage(base64Decode(profilnaSlika))) as ImageProvider
           : null,
       child: profilnaSlika == null

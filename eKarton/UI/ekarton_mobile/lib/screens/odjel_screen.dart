@@ -36,14 +36,11 @@ class _OdjelScreen extends State<OdjelScreen> {
 
     setState(() {
       odjelResult = data;
-      doktorResult = doktorData
-          .result; // Pristup listi doktora unutar SearchResult objekta
+      doktorResult = doktorData.result;
     });
 
-    // Grupisanje doktora prema odjelId
     for (var doktor in doktorResult!) {
       if (doktor.odjelId != null) {
-        // Dodavanje doktora u mapu prema odjelId
         doktorMap.putIfAbsent(doktor.odjelId!, () => []).add(doktor);
       }
     }
@@ -66,10 +63,9 @@ class _OdjelScreen extends State<OdjelScreen> {
   Expanded _buildDataListView() {
     return Expanded(
       child: SingleChildScrollView(
-        // Omogućava skrolanje ako je potrebno
         scrollDirection: Axis.vertical,
         child: DataTable(
-          columnSpacing: 20, // Razmak između kolona
+          columnSpacing: 20,
           dataRowMinHeight: 150.0,
           dataRowMaxHeight: 150.0,
           columns: const <DataColumn>[
@@ -117,8 +113,7 @@ class _OdjelScreen extends State<OdjelScreen> {
                     ),
                     DataCell(
                       Container(
-                        height:
-                            400.0, // Povećaj visinu reda (odnosno visinu ćelije)
+                        height: 400.0,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: doktori.isNotEmpty

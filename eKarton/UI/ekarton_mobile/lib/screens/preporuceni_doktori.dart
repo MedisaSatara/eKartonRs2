@@ -3,8 +3,8 @@ import 'package:ekarton_mobile/models/search_result.dart';
 import 'package:flutter/material.dart';
 import 'package:ekarton_mobile/models/doktor.dart';
 import 'package:ekarton_mobile/providers/doktor_provider.dart';
-import 'package:ekarton_mobile/providers/ocjena_doktor_provider.dart'; // Import the provider
-import 'package:ekarton_mobile/widgets/master_screen.dart'; // Import your MasterScreenWidget
+import 'package:ekarton_mobile/providers/ocjena_doktor_provider.dart';
+import 'package:ekarton_mobile/widgets/master_screen.dart';
 
 class RecommendedDoctorsScreen extends StatefulWidget {
   @override

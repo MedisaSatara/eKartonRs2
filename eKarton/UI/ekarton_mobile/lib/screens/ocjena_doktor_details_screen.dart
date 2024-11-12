@@ -1,13 +1,9 @@
 import 'package:ekarton_mobile/models/doktor.dart';
 import 'package:ekarton_mobile/models/korisnik.dart';
 import 'package:ekarton_mobile/models/ocjene_doktor.dart';
-import 'package:ekarton_mobile/models/pacijent.dart';
-import 'package:ekarton_mobile/models/termin.dart';
 import 'package:ekarton_mobile/providers/doktor_provider.dart';
 import 'package:ekarton_mobile/providers/korisnik_provider.dart';
 import 'package:ekarton_mobile/providers/ocjena_doktor_provider.dart';
-import 'package:ekarton_mobile/providers/pacijent_provider.dart';
-import 'package:ekarton_mobile/providers/termin_provider.dart';
 import 'package:ekarton_mobile/screens/preporuceni_doktori.dart';
 import 'package:ekarton_mobile/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
@@ -131,7 +127,6 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
           successMessage = 'Ocjena uspješno uređena.';
         }
 
-        // Prikaz popup-a
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -140,15 +135,14 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Closes the dialog
-                  Navigator.of(context)
-                      .pop(); // Returns to the previous screen with all doctor reviews
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
                 },
                 child: Text('Uredu'),
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Closes the dialog
+                  Navigator.of(context).pop();
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => RecommendedDoctorsScreen(),
@@ -207,8 +201,7 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
                     border: OutlineInputBorder(),
                   ),
                   name: "ocjena",
-                  keyboardType:
-                      TextInputType.number, // Set keyboard type to number
+                  keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Ovo polje je obavezno!';

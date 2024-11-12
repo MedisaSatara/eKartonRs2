@@ -17,20 +17,6 @@ class _BolnicaScreenState extends State<BolnicaScreen> {
   late BolnicaProvider _bolnicaProvider;
   SearchResult<Bolnica>? result;
 
-  /*@override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _bolnicaProvider = context.read<BolnicaProvider>();
-    _fetchInitialData();
-  }
-
-  Future<void> _fetchInitialData() async {
-    var data = await _bolnicaProvider.get();
-    setState(() {
-      result = data;
-    });
-  }*/
-
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(

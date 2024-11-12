@@ -29,7 +29,7 @@ class _PacijentListScreen extends State<PacijentListScreen> {
   @override
   void initState() {
     super.initState();
-    _loadInitialData(); // Load all patients when the screen loads
+    _loadInitialData();
   }
 
   @override
@@ -53,11 +53,10 @@ class _PacijentListScreen extends State<PacijentListScreen> {
   }
 
   Future<void> _loadInitialData() async {
-    var data =
-        await _pacijentProvider.get(); // Fetch all patients without filters
+    var data = await _pacijentProvider.get();
     setState(() {
       pacijentResult = data;
-      searchExecuted = true; // Mark search as executed for initial display
+      searchExecuted = true;
     });
   }
 
