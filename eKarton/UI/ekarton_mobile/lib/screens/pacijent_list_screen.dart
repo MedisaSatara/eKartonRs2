@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:ekarton_mobile/models/pacijent.dart';
 import 'package:ekarton_mobile/models/search_result.dart';
 import 'package:ekarton_mobile/providers/pacijent_provider.dart';
@@ -36,6 +37,7 @@ class _PacijentListScreen extends State<PacijentListScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _pacijentProvider = context.read<PacijentProvider>();
+    _loadInitialData();
   }
 
   @override
@@ -108,64 +110,92 @@ class _PacijentListScreen extends State<PacijentListScreen> {
   }
 
   Expanded _buildDataListView() {
+    final _verticalScrollController = ScrollController();
+    final _horizontalScrollController = ScrollController();
     return Expanded(
-      child: SingleChildScrollView(
-        child: DataTable(
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Ime',
-                  style: TextStyle(fontStyle: FontStyle.italic),
+      child: Container(
+        child: Card(
+          child: AdaptiveScrollbar(
+            underColor: Colors.blueGrey.withOpacity(0.3),
+            sliderDefaultColor: Colors.grey.withOpacity(0.7),
+            sliderActiveColor: Colors.grey,
+            controller: _verticalScrollController,
+            child: AdaptiveScrollbar(
+              controller: _horizontalScrollController,
+              position: ScrollbarPosition.bottom,
+              underColor: Colors.blueGrey.withOpacity(0.3),
+              sliderDefaultColor: Colors.grey.withOpacity(0.7),
+              sliderActiveColor: Colors.grey,
+              child: SingleChildScrollView(
+                controller: _verticalScrollController,
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  controller: _horizontalScrollController,
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0, bottom: 16.0),
+                    child: DataTable(
+                      columns: const <DataColumn>[
+                        DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Ime',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Prezime',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Datum rodjenja',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Broj kartona',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                        ),
+                      ],
+                      rows: pacijentResult?.result
+                              .map((Pacijent e) => DataRow(
+                                    onSelectChanged: (selected) {
+                                      if (selected == true) {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                EkartonScreen(pacijent: e),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    cells: [
+                                      DataCell(Text(e.ime ?? "")),
+                                      DataCell(Text(e.prezime ?? "")),
+                                      DataCell(Text(e.datumRodjenja ?? "")),
+                                      DataCell(Text(e.brojKartona ?? "")),
+                                    ],
+                                  ))
+                              .toList() ??
+                          [],
+                    ),
+                  ),
                 ),
               ),
             ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Prezime',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Datum rodjenja',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Broj kartona',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-          ],
-          rows: pacijentResult?.result
-                  .map((Pacijent e) => DataRow(
-                        onSelectChanged: (selected) {
-                          if (selected == true) {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    EkartonScreen(pacijent: e),
-                              ),
-                            );
-                          }
-                        },
-                        cells: [
-                          DataCell(Text(e.ime ?? "")),
-                          DataCell(Text(e.prezime ?? "")),
-                          DataCell(Text(e.datumRodjenja ?? "")),
-                          DataCell(Text(e.brojKartona ?? "")),
-                        ],
-                      ))
-                  .toList() ??
-              [],
+          ),
         ),
       ),
     );

@@ -41,6 +41,7 @@ dependencies:
   flutter_form_builder: ^9.4.1
   flutter_stripe: ^11.0.0
   dio: ^5.6.0
+  adaptive_scrollbar: ^2.1.2
 
 dev_dependencies:
   json_serializable: ^6.7.0

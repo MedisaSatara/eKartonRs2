@@ -176,6 +176,19 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                       return null;
                     }),
                 SizedBox(height: 16),
+                FormBuilderTextField(
+                    decoration: InputDecoration(
+                      labelText: "State machine",
+                      border: OutlineInputBorder(),
+                    ),
+                    name: "stateMachine",
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Ovo polje je obavezno!';
+                      }
+                      return null;
+                    }),
+                SizedBox(height: 16),
                 FormBuilderDropdown<String>(
                     name: 'pacijentId',
                     decoration: InputDecoration(

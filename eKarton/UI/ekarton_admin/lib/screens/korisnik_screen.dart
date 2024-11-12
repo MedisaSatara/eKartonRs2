@@ -45,16 +45,22 @@ class _KorisnikScreen extends State<KorisnikScreen> {
     );
 
     if (result == 'success') {
-      setState(() {
-        _successMessage = 'Korisnik uspješno dodan!';
-      });
+      _showSnackbar('Korisnik uspješno dodan!');
     } else if (result == 'updated') {
-      setState(() {
-        _successMessage = 'Korisnik uspješno ažuriran!';
-      });
+      _showSnackbar('Korisnik uspješno ažuriran!');
     }
 
     await _fetchKorisnici();
+  }
+
+  void _showSnackbar(String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.grey,
+      duration: Duration(seconds: 3),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override

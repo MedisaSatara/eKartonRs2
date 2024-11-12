@@ -154,6 +154,7 @@ class _TerminScreen extends State<TerminScreen> {
                   builder: (context) => TerminDetailsScreen(),
                 ),
               );
+              _fetchTermini();
             },
             child: Text("Dodaj novi termin!"),
           ),
@@ -210,6 +211,14 @@ class _TerminScreen extends State<TerminScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
+                  'State machine',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Expanded(
+                child: Text(
                   'Obrisi',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
@@ -249,6 +258,7 @@ class _TerminScreen extends State<TerminScreen> {
                     DataCell(Text(e.razlog ?? "")),
                     DataCell(Text(pacijentName?.ime ?? "")),
                     DataCell(Text(doktorName?.ime ?? "")),
+                    DataCell(Text(e?.stateMachine ?? "")),
                     DataCell(
                       IconButton(
                         icon: Icon(Icons.delete, color: Colors.red),

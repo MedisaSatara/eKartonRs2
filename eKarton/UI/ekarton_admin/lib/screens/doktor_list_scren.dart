@@ -49,6 +49,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
     _doktorProvider = context.read<DoktorProvider>();
     _odjelProvider = context.read<OdjelProvider>();
     initForm();
+    _searchData();
   }
 
   @override
@@ -126,17 +127,6 @@ class _DoktorScreenState extends State<DoktorScreen> {
                 print("Odabrani odjelId: $_selectedOdjelId");
               },
             ),
-          ),
-          SizedBox(width: 8),
-          ElevatedButton(
-            onPressed: () async {
-              /*Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => DoktorDetailsScreen(doktor: null),
-                ),
-              );*/
-            },
-            child: Text("Dodaj"),
           ),
           SizedBox(width: 8),
           ElevatedButton(
