@@ -14,6 +14,7 @@ namespace eKarton.Model.Request
         public string? Razlog { get; set; }
         public int PacijentId { get; set; }
         public int DoktorId { get; set; }
+        public string? StateMachine { get; set; }
 
     }
 }

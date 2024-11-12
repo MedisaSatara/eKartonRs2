@@ -18,9 +18,11 @@ class Korisnik {
       this.korisnickoIme,
       this.spol,
       this.email,
-      this.lozinka,
+      this.password,
+      this.potvrdaPassworda,
       this.telefon,
-      required this.korisnikUlogas});
+      this.slika,
+      this.korisnikUlogas = const []});
 
   int? korisnikId;
   String? ime;
@@ -29,8 +31,10 @@ class Korisnik {
   String? telefon;
   String? spol;
   String? email;
-  String? lozinka;
+  String? password;
+  String? potvrdaPassworda;
   String? datumRodjenja;
+  String? slika;
   List<KorisnikUloga> korisnikUlogas;
 
   factory Korisnik.fromJson(Map<String, dynamic> json) =>

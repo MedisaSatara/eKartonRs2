@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ekarton_admin/providers/uloga_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,13 +30,10 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
 
   Future<void> _fetchKorisnici() async {
     try {
-      var data = await _korisnikProvider.get(); // Dobavlja sve korisnike
+      var data = await _korisnikProvider.get();
       setState(() {
-        // Pretpostavljam da ti podaci uključuju korisnikUloga, pa koristi ulogaId za filtriranje
         korisnikResult = data.result.where((korisnik) {
-          return korisnik.korisnikUlogas.any((uloga) =>
-              uloga.ulogaId ==
-              1); // Pretpostavljam da je ulogaId = 1 za "admin"
+          return korisnik.korisnikUlogas.any((uloga) => uloga.ulogaId == 1);
         }).toList();
       });
     } catch (e) {
@@ -70,17 +69,7 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
                         children: [
                           Row(
                             children: [
-                              CircleAvatar(
-                                radius: 60,
-                                backgroundColor: Colors.blueAccent,
-                                child: Text(
-                                  korisnik.ime?[0] ?? '',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 48,
-                                  ),
-                                ),
-                              ),
+                              _buildProfilePicture(korisnik.slika),
                               SizedBox(width: 16),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,6 +153,27 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildProfilePicture(String? profilnaSlika) {
+    return CircleAvatar(
+      radius: 60,
+      backgroundColor: Colors.blueAccent,
+      backgroundImage: profilnaSlika != null
+          ? (profilnaSlika.startsWith('http')
+              ? NetworkImage(profilnaSlika) // For URL
+              : MemoryImage(base64Decode(profilnaSlika))) as ImageProvider
+          : null,
+      child: profilnaSlika == null
+          ? Text(
+              "N/A",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 48,
+              ),
+            )
+          : null,
     );
   }
 }

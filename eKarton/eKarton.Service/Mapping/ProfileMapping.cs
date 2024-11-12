@@ -40,6 +40,8 @@ namespace eKarton.Service.Mapping
             CreateMap<Databases.PreventivneMjere, Model.Models.PreventivneMjere>();
 
             CreateMap<Databases.Odjel, Model.Models.Odjel>();
+            CreateMap<Databases.TehnickaPodrska, Model.Models.TehnickaPodrska>();
+
 
             CreateMap<PacijentSearchObject, Databases.PreventivneMjere>();
             CreateMap<PreventivneMjereInsertRequest, Databases.PreventivneMjere>();

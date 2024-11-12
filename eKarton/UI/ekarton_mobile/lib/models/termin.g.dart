@@ -13,6 +13,7 @@ Termin _$TerminFromJson(Map<String, dynamic> json) => Termin(
       json['razlog'] as String?,
       (json['pacijentId'] as num?)?.toInt(),
       (json['doktorId'] as num?)?.toInt(),
+      json['stateMachine'] as String?,
     );
 
 Map<String, dynamic> _$TerminToJson(Termin instance) => <String, dynamic>{
@@ -22,4 +23,5 @@ Map<String, dynamic> _$TerminToJson(Termin instance) => <String, dynamic>{
       'razlog': instance.razlog,
       'pacijentId': instance.pacijentId,
       'doktorId': instance.doktorId,
+      'stateMachine': instance.stateMachine,
     };

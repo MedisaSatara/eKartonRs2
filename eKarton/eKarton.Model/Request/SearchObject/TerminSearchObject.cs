@@ -8,7 +8,9 @@ namespace eKarton.Model.Request.SearchObject
 {
     public class TerminSearchObject:BaseSearchObject
     {
-        public string? BrojKartona { get; set; }
+        public string? ImeDoktora { get; set; }
+        public string? PrezimeDoktora { get; set; }
+
 
     }
 }

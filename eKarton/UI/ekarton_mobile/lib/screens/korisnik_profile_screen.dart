@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ekarton_mobile/providers/uloga_provider.dart';
 import 'package:ekarton_mobile/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
@@ -70,17 +72,7 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
                         children: [
                           Row(
                             children: [
-                              CircleAvatar(
-                                radius: 60,
-                                backgroundColor: Colors.blueAccent,
-                                child: Text(
-                                  korisnik.ime?[0] ?? '',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 48,
-                                  ),
-                                ),
-                              ),
+                              _buildProfilePicture(korisnik.slika),
                               SizedBox(width: 16),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,6 +156,27 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildProfilePicture(String? profilnaSlika) {
+    return CircleAvatar(
+      radius: 60,
+      backgroundColor: Colors.blueAccent,
+      backgroundImage: profilnaSlika != null
+          ? (profilnaSlika.startsWith('http')
+              ? NetworkImage(profilnaSlika) // For URL
+              : MemoryImage(base64Decode(profilnaSlika))) as ImageProvider
+          : null,
+      child: profilnaSlika == null
+          ? Text(
+              "N/A",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 48,
+              ),
+            )
+          : null,
     );
   }
 }

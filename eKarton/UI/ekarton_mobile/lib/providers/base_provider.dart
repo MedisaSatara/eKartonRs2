@@ -100,6 +100,22 @@ abstract class BaseProvider<T> with ChangeNotifier {
     }
   }
 
+  Future<T> delete(int? id) async {
+    var url = "$_baseUrl$_endpoint/$id";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    Response response = await http.delete(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      notifyListeners();
+      return fromJson(data);
+    } else {
+      throw Exception("Unknown error");
+    }
+  }
+
   String getQueryString(Map params,
       {String prefix = '&', bool inRecursion = false}) {
     String query = '';

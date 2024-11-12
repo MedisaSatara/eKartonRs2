@@ -10,7 +10,7 @@ part 'termin.g.dart';
 @JsonSerializable()
 class Termin {
   Termin(this.terminId, this.datum, this.vrijeme, this.razlog, this.pacijentId,
-      this.doktorId);
+      this.doktorId, this.stateMachine);
 
   int? terminId;
   String? datum;
@@ -18,6 +18,7 @@ class Termin {
   String? razlog;
   int? pacijentId;
   int? doktorId;
+  String? stateMachine;
 
   factory Termin.fromJson(Map<String, dynamic> json) => _$TerminFromJson(json);
 

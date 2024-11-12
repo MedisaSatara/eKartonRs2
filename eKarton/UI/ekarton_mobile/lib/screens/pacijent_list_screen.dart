@@ -52,7 +52,6 @@ class _PacijentListScreen extends State<PacijentListScreen> {
     );
   }
 
-  // Function to load initial data (fetch all patients)
   Future<void> _loadInitialData() async {
     var data =
         await _pacijentProvider.get(); // Fetch all patients without filters
@@ -84,7 +83,6 @@ class _PacijentListScreen extends State<PacijentListScreen> {
     );
   }
 
-  // Search function to search by 'broj kartona'
   Future<void> _searchData() async {
     var filter = {
       'brojKartona': _brojKartonaController.text,

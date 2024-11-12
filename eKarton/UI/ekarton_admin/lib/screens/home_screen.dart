@@ -1,6 +1,11 @@
 import 'package:ekarton_admin/main.dart';
 import 'package:ekarton_admin/models/bolnica.dart';
+import 'package:ekarton_admin/models/korisnik.dart';
+import 'package:ekarton_admin/models/search_result.dart';
+import 'package:ekarton_admin/models/tehnicka_podrska.dart';
 import 'package:ekarton_admin/providers/bolnica_provider.dart';
+import 'package:ekarton_admin/providers/korisnik_provider.dart';
+import 'package:ekarton_admin/providers/tehnicka_podrska_provider.dart';
 import 'package:ekarton_admin/screens/korisnik_profile_screen.dart';
 import 'package:ekarton_admin/screens/doktor_list_scren.dart';
 import 'package:ekarton_admin/screens/korisnik_screen.dart';
@@ -17,13 +22,37 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late BolnicaProvider _bolnicaProvider;
+  late KorisnikProvider _korisnikProvider;
+  late TehnickaPodrskaProvider _tehnickaPodrskaProvider;
+
   Bolnica? _bolnicaDetails;
+  int? _brojKorisnika;
+  SearchResult<Korisnik>? _korisnici;
+  SearchResult<TehnickaPodrska>? _tehnickaPodrskaData;
+  int? _brojPoziva;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _bolnicaProvider = context.read<BolnicaProvider>();
+    _korisnikProvider = context.read<KorisnikProvider>();
+    _tehnickaPodrskaProvider = context.read<TehnickaPodrskaProvider>();
+
     _fetchBolnicaDetails();
+    _fetchKorisnici();
+    _fetchTehnickaPodrska();
+  }
+
+  Future<void> _fetchKorisnici() async {
+    try {
+      var korisniciData = await _korisnikProvider.get();
+      setState(() {
+        _korisnici = korisniciData; // Lista korisnika
+        _brojKorisnika = korisniciData.count; // Ukupan broj korisnika
+      });
+    } catch (e) {
+      print("Error fetching users: $e");
+    }
   }
 
   Future<void> _fetchBolnicaDetails() async {
@@ -31,6 +60,18 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _bolnicaDetails = data.result?.first;
     });
+  }
+
+  Future<void> _fetchTehnickaPodrska() async {
+    try {
+      var tehnickaPodrskaData = await _tehnickaPodrskaProvider.get();
+      setState(() {
+        _tehnickaPodrskaData = tehnickaPodrskaData;
+        _brojPoziva = tehnickaPodrskaData.count;
+      });
+    } catch (e) {
+      print("Error fetching users: $e");
+    }
   }
 
   @override
@@ -59,6 +100,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? _buildHospitalInfoCard()
                           : Center(child: CircularProgressIndicator()),
                       SizedBox(height: 16),
+                      _buildBrojKorisnikaCard(),
+                      SizedBox(height: 16),
+                      _buildTehnickaPodrskaCard(),
                     ],
                   ),
                 ),
@@ -118,61 +162,150 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildWelcomeCard() {
-    return Card(
-      color: Colors.white.withOpacity(0.8),
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Welcome to the eKarton Admin Home Page!',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+    return Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.6, // 80% of screen width
+        child: Card(
+          color: Colors.white.withOpacity(0.8),
+          elevation: 4,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Welcome to the eKarton Admin Home Page!',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'This is the central hub for managing the eKarton system. From here, you can access various sections like users, patients, doctors, and departments.',
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Total Registered Users: $_brojKorisnika',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-            SizedBox(height: 16),
-            Text(
-              'This is the central hub for managing the eKarton system. From here, you can access various sections like users, patients, doctors, and departments.',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 16),
-            SizedBox(height: 16),
-            Text(
-              'We aim to provide a seamless experience for managing medical records and ensuring the best care for patients.',
-              style: TextStyle(fontSize: 18),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildHospitalInfoCard() {
-    return Card(
-      color: Colors.white.withOpacity(0.8),
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Hospital Information',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+    return Center(
+      // Ensures the card is centered and doesn't take the full width
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.4, // 80% of screen width
+        child: Card(
+          color: Colors.white.withOpacity(0.8),
+          elevation: 4,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hospital Information',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                _buildHospitalDetailRow(
+                    'Name:', _bolnicaDetails!.naziv ?? 'N/A'),
+                SizedBox(height: 8),
+                _buildHospitalDetailRow(
+                    'Address:', _bolnicaDetails!.adresa ?? 'N/A'),
+                SizedBox(height: 8),
+                _buildHospitalDetailRow(
+                    'Phone:', _bolnicaDetails!.telefon ?? 'N/A'),
+                SizedBox(height: 8),
+                _buildHospitalDetailRow(
+                    'Email:', _bolnicaDetails!.email ?? 'N/A'),
+              ],
             ),
-            SizedBox(height: 16),
-            _buildHospitalDetailRow('Name:', _bolnicaDetails!.naziv ?? 'N/A'),
-            SizedBox(height: 8),
-            _buildHospitalDetailRow(
-                'Address:', _bolnicaDetails!.adresa ?? 'N/A'),
-            SizedBox(height: 8),
-            _buildHospitalDetailRow(
-                'Phone:', _bolnicaDetails!.telefon ?? 'N/A'),
-            SizedBox(height: 8),
-            _buildHospitalDetailRow('Email:', _bolnicaDetails!.email ?? 'N/A'),
-          ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBrojKorisnikaCard() {
+    return Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.2,
+        child: Card(
+          color: Colors.white.withOpacity(0.8),
+          elevation: 4,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Broj korisnika aplikacije:',
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  '$_brojKorisnika',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTehnickaPodrskaCard() {
+    return Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.4,
+        child: Card(
+          color: Colors.white.withOpacity(0.8),
+          elevation: 4,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Zahtjevi i pozivi tehnickoj podrsci:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                if (_tehnickaPodrskaData != null)
+                  Column(
+                    children: _tehnickaPodrskaData!.result.map((e) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              'Broj obrađenih zahtjeva: ${e.brojPozivaDoSada ?? 'N/A'}'),
+                          SizedBox(height: 8),
+                          Text(
+                              'Najčešći problemi: ${e.najcesciProblemi ?? 'N/A'}'),
+                        ],
+                      );
+                    }).toList(),
+                  )
+                else
+                  Center(child: CircularProgressIndicator()),
+              ],
+            ),
+          ),
         ),
       ),
     );

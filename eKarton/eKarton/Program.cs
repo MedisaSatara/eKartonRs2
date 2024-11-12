@@ -28,6 +28,8 @@ builder.Services.AddTransient<IUputnicaService, UputnicaService>();
 builder.Services.AddTransient<IPregledService, PregledService>();
 builder.Services.AddTransient<ITerapijaService, TerapijaService>();
 builder.Services.AddTransient<IOcjenaDoktorService, OcjenaDoktorService>();
+builder.Services.AddTransient<ITehnickaPodrska, TehnickaPodrskaService>();
+
 
 builder.Services.AddSingleton<IMailProducer, MailProducer>();
 builder.Services.AddScoped<IReportService, ReportService>();
@@ -38,6 +40,11 @@ builder.Services.AddTransient<BaseDoktorState>();
 builder.Services.AddTransient<InitialDoktorState>();
 builder.Services.AddTransient<DraftDoktorState>();
 builder.Services.AddTransient<ActiveDoktorState>();
+
+builder.Services.AddTransient<BaseTerminState>();
+builder.Services.AddTransient<InitialTerminState>();
+builder.Services.AddTransient<DraftTerminState>();
+builder.Services.AddTransient<ActiveTerminState>();
 
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -113,10 +120,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<eKartonContext>();
     dataContext.Database.Migrate();
-}
+}*/
 
 app.Run();

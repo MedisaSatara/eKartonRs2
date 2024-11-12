@@ -29,6 +29,8 @@ class _EkartonScreen extends State<EkartonScreen> {
   bool showPeriodicniPregledScreen = false;
   bool showPreventivneMjereScreen = false;
   bool showPregledScreen = false;
+  bool showLicniPodaci = false;
+
   late NalazProvider _nalazProvider;
   late PreventivneMjereProvider _preventivneMjereProvider;
   late PregledProvider _pregledProvider;
@@ -113,6 +115,16 @@ class _EkartonScreen extends State<EkartonScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    _buildButton("LICNI PODACI", Icons.person, () {
+                      setState(() {
+                        showLicniPodaci = true;
+                        showOboljenjeScreen = false;
+                        showNalazScreen = false;
+                        showPeriodicniPregledScreen = false;
+                        showPreventivneMjereScreen = false;
+                        showPregledScreen = false;
+                      });
+                    }),
                     _buildButton("OBOLJENJA", Icons.history, () {
                       setState(() {
                         showOboljenjeScreen = true;
@@ -120,6 +132,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                         showPeriodicniPregledScreen = false;
                         showPreventivneMjereScreen = false;
                         showPregledScreen = false;
+                        showLicniPodaci = false;
                       });
                     }),
                     _buildButton("NALAZI", Icons.history, () {
@@ -129,6 +142,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                         showPeriodicniPregledScreen = false;
                         showPreventivneMjereScreen = false;
                         showPregledScreen = false;
+                        showLicniPodaci = false;
                       });
                     }),
                     _buildButton("PERIODICNI PREGLED", Icons.healing, () {
@@ -138,6 +152,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                         showPeriodicniPregledScreen = true;
                         showPreventivneMjereScreen = false;
                         showPregledScreen = false;
+                        showLicniPodaci = false;
                       });
                     }),
                     _buildButton("PREVENTIVNE MJERE", Icons.healing, () {
@@ -147,6 +162,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                         showPeriodicniPregledScreen = false;
                         showPreventivneMjereScreen = true;
                         showPregledScreen = false;
+                        showLicniPodaci = false;
                       });
                     }),
                     _buildButton("DATUM PREGLEDA", Icons.healing, () {
@@ -156,6 +172,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                         showPeriodicniPregledScreen = false;
                         showPreventivneMjereScreen = false;
                         showPregledScreen = true;
+                        showLicniPodaci = false;
                       });
                     }),
                   ],
@@ -200,6 +217,14 @@ class _EkartonScreen extends State<EkartonScreen> {
                     padding: EdgeInsets.all(16.0),
                     color: Colors.white,
                     child: _buildPregledTable(),
+                  ),
+                ),
+                Visibility(
+                  visible: showLicniPodaci,
+                  child: Container(
+                    padding: EdgeInsets.all(16.0),
+                    color: Colors.white,
+                    child: _buildLicniPodaciTable(),
                   ),
                 ),
               ],
@@ -282,6 +307,52 @@ class _EkartonScreen extends State<EkartonScreen> {
             ],
           );
         }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildLicniPodaciTable() {
+    if (widget.pacijent == null) {
+      return Center(child: Text("Nema ličnih podataka za ovog pacijenta."));
+    }
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: DataTable(
+        columns: const [
+          DataColumn(label: Text('Ime')),
+          DataColumn(label: Text('Prezime')),
+          DataColumn(label: Text('Spol')),
+          DataColumn(label: Text('Datum rodjenja')),
+          DataColumn(label: Text('JMBG')),
+          DataColumn(label: Text('Mjesto rodjenja')),
+          DataColumn(label: Text('Prebivaliste')),
+          DataColumn(label: Text('Telefon')),
+          DataColumn(label: Text('Krvna grupa')),
+          DataColumn(label: Text('Rh Faktor')),
+          DataColumn(label: Text('Hronicne bolesti')),
+          DataColumn(label: Text('Alergija')),
+          DataColumn(label: Text('Broj kartona')),
+        ],
+        rows: [
+          DataRow(
+            cells: [
+              DataCell(Text(widget.pacijent!.ime ?? 'N/A')),
+              DataCell(Text(widget.pacijent!.prezime ?? 'N/A')),
+              DataCell(Text(widget.pacijent!.spol ?? 'N/A')),
+              DataCell(
+                  Text(widget.pacijent!.datumRodjenja?.toString() ?? 'N/A')),
+              DataCell(Text(widget.pacijent!.jmbg ?? 'N/A')),
+              DataCell(Text(widget.pacijent!.mjestoRodjenja ?? 'N/A')),
+              DataCell(Text(widget.pacijent!.prebivaliste ?? 'N/A')),
+              DataCell(Text(widget.pacijent!.telefon ?? 'N/A')),
+              DataCell(Text(widget.pacijent!.krvnaGrupa ?? 'N/A')),
+              DataCell(Text(widget.pacijent!.rhFaktor ?? 'N/A')),
+              DataCell(Text(widget.pacijent!.hronicneBolesti ?? 'N/A')),
+              DataCell(Text(widget.pacijent!.alergija ?? 'N/A')),
+              DataCell(Text(widget.pacijent!.brojKartona?.toString() ?? 'N/A')),
+            ],
+          ),
+        ],
       ),
     );
   }

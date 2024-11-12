@@ -79,7 +79,7 @@ class _OcjenaDoktorScreenState extends State<OcjenaDoktorScreen> {
                           builder: (context) => OcjenaDoktorDetailsScreen(),
                         ),
                       );
-                      _fetchOcjene(); // Refresh data after adding new ocjena
+                      _fetchOcjene();
                     },
                     child: Text("Dodaj ocjenu!"),
                   ),

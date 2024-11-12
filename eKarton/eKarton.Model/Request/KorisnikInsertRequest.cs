@@ -14,6 +14,10 @@ namespace eKarton.Model.Request
         public string Prezime { get; set; } = null!;
 
         public string KorisnickoIme { get; set; } = null!;
+        public string Spol { get; set; } = null!;
+        public string Telefon { get; set; } = null!;
+        public string Email { get; set; } = null!;
+        public string DatumRodjenja { get; set; } = null!;
 
         [Compare("PasswordPotvrda", ErrorMessage = "Passwords do not match.")]
         public string Password { get; set; }

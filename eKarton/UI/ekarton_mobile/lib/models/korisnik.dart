@@ -20,6 +20,7 @@ class Korisnik {
       this.email,
       this.lozinka,
       this.telefon,
+      this.slika,
       required this.korisnikUlogas});
 
   int? korisnikId;
@@ -31,6 +32,7 @@ class Korisnik {
   String? email;
   String? lozinka;
   String? datumRodjenja;
+  String? slika;
   List<KorisnikUloga> korisnikUlogas;
 
   factory Korisnik.fromJson(Map<String, dynamic> json) =>

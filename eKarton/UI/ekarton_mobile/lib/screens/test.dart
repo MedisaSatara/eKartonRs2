@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ekarton_mobile/models/doktor.dart';
 import 'package:ekarton_mobile/models/pacijent.dart';
 import 'package:ekarton_mobile/models/search_result.dart';
@@ -28,7 +30,11 @@ class _TerminScreen extends State<TerminScreen> {
   SearchResult<Pacijent>? pacijentResult;
   SearchResult<Doktor>? doktorResult;
   TextEditingController _brojKartonaController = TextEditingController();
+  TextEditingController _imeDoktoraController = TextEditingController();
+  TextEditingController _prezimeDoktoraController = TextEditingController();
+
   bool searchExecuted = false;
+  Timer? _debounce;
 
   @override
   void didChangeDependencies() {
@@ -51,12 +57,98 @@ class _TerminScreen extends State<TerminScreen> {
     });
   }
 
+  Future<void> _searchData() async {
+    var filter = {
+      'imeDoktora': _imeDoktoraController.text,
+      'prezimeDoktora': _prezimeDoktoraController.text,
+    };
+
+    var data = await _terminProvider.get(filter: filter);
+
+    setState(() {
+      terminResult = data;
+      searchExecuted = true;
+    });
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () async {
+      var data = await _terminProvider.get(filter: {
+        'imeDoktora': _imeDoktoraController.text.trim(),
+        'prezimeDoktora': _prezimeDoktoraController.text.trim(),
+      });
+      setState(() {
+        terminResult = data;
+      });
+    });
+  }
+
+  Widget _buildSearch() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(labelText: "Ime doktora"),
+              controller: _imeDoktoraController,
+              onChanged: (value) => _onSearchChanged(),
+            ),
+          ),
+          SizedBox(width: 8),
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(labelText: "Prezime doktora"),
+              controller: _prezimeDoktoraController,
+              onChanged: (value) => _onSearchChanged(),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: _searchData,
+            child: Text("Pretraga"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<bool> _showConfirmationDialog() async {
+    return await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Potvrdi brisanje'),
+              content: Text('Jeste li sigurni da želite obrisati ovaj termin?'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Odustani'),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pop(false); // User cancels the deletion
+                  },
+                ),
+                TextButton(
+                  child: Text('Obriši'),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pop(true); // User confirms the deletion
+                  },
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title_widget: Text("Pogledaj listu zakazanih termina"),
       child: Container(
         child: Column(children: [
+          _buildSearch(),
           _buildDataListView(),
           ElevatedButton(
             onPressed: () async {
@@ -118,6 +210,14 @@ class _TerminScreen extends State<TerminScreen> {
                 ),
               ),
             ),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  'Obrisi',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
           ],
           rows: terminResult?.result.map((Termin e) {
                 var pacijentName = pacijentResult?.result
@@ -127,12 +227,43 @@ class _TerminScreen extends State<TerminScreen> {
                     .firstWhere((d) => d.doktorId == e.doktorId);
 
                 return DataRow(
+                  onSelectChanged: (selected) async {
+                    if (selected == true) {
+                      final result = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => TerminDetailsScreen(termin: e),
+                        ),
+                      );
+
+                      if (result != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(result),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                        _fetchTermini();
+                      }
+                    }
+                  },
                   cells: [
                     DataCell(Text(e.datum ?? "")),
                     DataCell(Text(e.vrijeme ?? "")),
                     DataCell(Text(e.razlog ?? "")),
                     DataCell(Text(pacijentName?.ime ?? "")),
                     DataCell(Text(doktorName?.ime ?? "")),
+                    DataCell(
+                      IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () async {
+                          bool confirmDelete = await _showConfirmationDialog();
+                          if (confirmDelete) {
+                            await _terminProvider.delete(e.terminId);
+                            _fetchTermini();
+                          }
+                        },
+                      ),
+                    ),
                   ],
                 );
               }).toList() ??

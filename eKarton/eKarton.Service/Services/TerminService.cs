@@ -9,16 +9,19 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using eKarton.Service.RabbitMQ;
+using eKarton.Service.UputniceStateMachine;
 
 namespace eKarton.Service.Services
 {
     public class TerminService : BaseCRUDService<Model.Models.Termin, Databases.Termin, TerminSearchObject, TerminInsertRequest, TerminUpdateRequest>, ITerminService
     {
         private readonly IMailProducer _mailProducer;
-        public TerminService(IMailProducer mailProducer, eKartonContext context, IMapper mapper)
+        public BaseTerminState _baseState { get; set; }
+        public TerminService(BaseTerminState baseState, IMailProducer mailProducer, eKartonContext context, IMapper mapper)
             : base(context, mapper)
         {
             _mailProducer = mailProducer;
+            _baseState = baseState;
         }
         public override void BeforeInsert(TerminInsertRequest insert, Databases.Termin entity)
         {
@@ -27,6 +30,7 @@ namespace eKarton.Service.Services
             entity.Razlog = insert.Razlog;
             entity.PacijentId = insert.PacijentId;
             entity.DoktorId = insert.DoktorId;
+            entity.StateMachine = insert.StateMachine;
 
             base.BeforeInsert(insert, entity);
 
@@ -56,9 +60,13 @@ namespace eKarton.Service.Services
         {
             var filteredQuery = base.AddFilter(query, search);
 
-            if (!string.IsNullOrWhiteSpace(search?.BrojKartona))
+            if (!string.IsNullOrWhiteSpace(search?.ImeDoktora))
             {
-                filteredQuery = filteredQuery.Where(x => x.Pacijent.BrojKartona == search.BrojKartona);
+                filteredQuery = filteredQuery.Where(x => x.Doktor.Ime.Contains(search.ImeDoktora));
+            }
+            if (!string.IsNullOrWhiteSpace(search?.PrezimeDoktora))
+            {
+                filteredQuery = filteredQuery.Where(x => x.Doktor.Prezime.Contains(search.PrezimeDoktora));
             }
             return filteredQuery;
         }
@@ -102,6 +110,55 @@ namespace eKarton.Service.Services
                 throw new InvalidOperationException("An error occurred while processing the request.", ex);
             }
         }
+        public async Task<eKarton.Model.Models.Termin> Insert(TerminInsertRequest insert)
+        {
+            var set = _context.Set<Termin>();
+
+            Termin entity = _mapper.Map<Termin>(insert);
+
+            set.Add(entity);
+            BeforeInsert(insert, entity);
+            var state = _baseState.CreateState("initial");
+            var result = await state.Insert(insert);
+
+            await _context.SaveChangesAsync();
+
+            //RabbitMQ: API - objekat - Auxiliary
+
+            var korisnik = entity.Pacijent;
+            if (korisnik != null)
+            {
+                TerminNotifier reservation = new TerminNotifier
+                {
+                    Email = korisnik.Email,
+                    Subject = "Novi termin pregleda",
+                    Content = $"Poštovani, \n\nOva poruka potvrđuje da je vaša termin za pregled zakazan uspješno. Za sve dodatne informacije ili ako imate bilo kakvih pitanja, slobodno nas kontaktirajte putem ovog emaila. \n\nLijep pozdrav!"
+                };
+                _mailProducer.SendEmail(reservation);
+            }
+
+            return result;
+
+        }
+        public async Task<Model.Models.Termin> Activate(int id)
+        {
+            var entity = await _context.Termins.FindAsync(id);
+
+            var state = _baseState.CreateState(entity.StateMachine);
+
+            return await state.Activate(id);
+        }
+
+
+        public async Task<List<string>> AllowedActions(int id)
+        {
+            var entity = await _context.Termins.FindAsync(id);
+            var state = _baseState.CreateState(entity?.StateMachine ?? "initial");
+            return await state.AllowedActions();
+        }
+
+
+
 
 
 

@@ -14,10 +14,11 @@ namespace eKarton.Model.Models
         public string Spol { get; set; } = null!;
         public string Telefon { get; set; } = null!;
         public string Email { get; set; } = null!;
-        public string DatumRodjenja { get; set; } = null!;
+        public string? DatumRodjenja { get; set; }
         public string KorisnickoIme { get; set; } = null!;
         public string? LozinkaSalt { get; set; }
         public string? LozinkaHash { get; set; }
+        public byte[]? Slika { get; set; }
        // public int? UlogaId { get; set; }
        // public virtual Uloga Uloga { get; set; } = null!;
 

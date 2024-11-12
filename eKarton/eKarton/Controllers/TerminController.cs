@@ -29,6 +29,13 @@ namespace eKarton.Controllers
                await _service.AcceptServiceRequest(terminId);
            }*/
 
+
+        [HttpGet("{id}/allowedActions")]
+        public virtual async Task<List<string>> AllowedActions(int id)
+        {
+            return await (_service as ITerminService).AllowedActions(id);
+        }
+
         public class EmailModel
         {
             public string Sender { get; set; }
@@ -36,14 +43,14 @@ namespace eKarton.Controllers
             public string Subject { get; set; }
             public string Content { get; set; }
         }
-        [HttpPost("SendConfirmationEmail")]
+       /* [HttpPost("SendConfirmationEmail")]
         public IActionResult SendConfirmationEmail([FromBody] EmailModel emailModel)
         {
             _mailProducer.SendEmail(emailModel);
 
             Thread.Sleep(TimeSpan.FromSeconds(15));
             return Ok();
-        }
+        }*/
 
     }
 }
