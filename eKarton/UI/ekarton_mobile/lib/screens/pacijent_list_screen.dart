@@ -8,6 +8,7 @@ import 'package:ekarton_mobile/screens/ekarton_screen.dart';
 import 'package:ekarton_mobile/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PacijentListScreen extends StatefulWidget {
@@ -28,22 +29,25 @@ class _PacijentListScreen extends State<PacijentListScreen> {
   Timer? _debounce;
 
   @override
-  void initState() {
-    super.initState();
-    _loadInitialData();
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _pacijentProvider = context.read<PacijentProvider>();
-    _loadInitialData();
+  }
+
+  Future<void> _fetchInitialData() async {
+    var data = await _pacijentProvider.get();
+    setState(() {
+      pacijentResult = data;
+    });
+
+    print(
+        "Pacijenti: ${pacijentResult?.result.map((p) => p.pacijentId).toList()}");
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Pronadji svoj eKarton!"),
+      title_widget: Text("Carton number search!"),
       child: Container(
         child: Column(children: [
           _buildSearch(),
@@ -69,7 +73,7 @@ class _PacijentListScreen extends State<PacijentListScreen> {
         children: [
           Expanded(
             child: TextField(
-              decoration: InputDecoration(labelText: "Broj kartona"),
+              decoration: InputDecoration(labelText: "Carton number"),
               controller: _brojKartonaController,
               onChanged: (value) => _onSearchChanged(),
             ),
@@ -77,29 +81,24 @@ class _PacijentListScreen extends State<PacijentListScreen> {
           SizedBox(width: 8),
           ElevatedButton(
             onPressed: _searchData,
-            child: Text("Pretraga"),
+            child: Text("Search"),
           ),
         ],
       ),
     );
   }
 
-  Future<void> _searchData() async {
-    var filter = {
-      'brojKartona': _brojKartonaController.text,
-    };
-
-    var data = await _pacijentProvider.get(filter: filter);
-
-    setState(() {
-      pacijentResult = data;
-      searchExecuted = true;
-    });
-  }
-
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
+
     _debounce = Timer(const Duration(milliseconds: 300), () async {
+      if (_brojKartonaController.text.trim().isEmpty) {
+        setState(() {
+          pacijentResult = null;
+        });
+        return;
+      }
+
       var data = await _pacijentProvider.get(filter: {
         'brojKartona': _brojKartonaController.text.trim(),
       });
@@ -109,9 +108,33 @@ class _PacijentListScreen extends State<PacijentListScreen> {
     });
   }
 
+  Future<void> _searchData() async {
+    if (_brojKartonaController.text.trim().isEmpty) {
+      setState(() {
+        pacijentResult = null;
+      });
+      return;
+    }
+
+    var filter = {
+      'brojKartona': _brojKartonaController.text,
+    };
+
+    var data = await _pacijentProvider.get(filter: filter);
+
+    setState(() {
+      pacijentResult = data;
+    });
+  }
+
   Expanded _buildDataListView() {
+    if (pacijentResult == null || pacijentResult!.result.isEmpty) {
+      return Expanded(child: Container());
+    }
+
     final _verticalScrollController = ScrollController();
     final _horizontalScrollController = ScrollController();
+
     return Expanded(
       child: Container(
         child: Card(
@@ -137,37 +160,17 @@ class _PacijentListScreen extends State<PacijentListScreen> {
                     child: DataTable(
                       columns: const <DataColumn>[
                         DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Ime',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
+                            label: Text('First name',
+                                style: TextStyle(fontStyle: FontStyle.italic))),
                         DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Prezime',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
+                            label: Text('Last name',
+                                style: TextStyle(fontStyle: FontStyle.italic))),
                         DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Datum rodjenja',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
+                            label: Text('Date of birth',
+                                style: TextStyle(fontStyle: FontStyle.italic))),
                         DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Broj kartona',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
+                            label: Text('Carton number',
+                                style: TextStyle(fontStyle: FontStyle.italic))),
                       ],
                       rows: pacijentResult?.result
                               .map((Pacijent e) => DataRow(
@@ -184,7 +187,10 @@ class _PacijentListScreen extends State<PacijentListScreen> {
                                     cells: [
                                       DataCell(Text(e.ime ?? "")),
                                       DataCell(Text(e.prezime ?? "")),
-                                      DataCell(Text(e.datumRodjenja ?? "")),
+                                      DataCell(Text(e.datumRodjenja != null
+                                          ? DateFormat('dd.MM.yyyy')
+                                              .format(e.datumRodjenja!)
+                                          : "")),
                                       DataCell(Text(e.brojKartona ?? "")),
                                     ],
                                   ))

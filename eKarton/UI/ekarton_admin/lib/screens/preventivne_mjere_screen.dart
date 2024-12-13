@@ -38,7 +38,7 @@ class _PreventivneMjereScreen extends State<PreventivneMjereScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Preventivne mjere pacijenata"),
+      title_widget: Text("Preventive measure of patient"),
       child: Container(
         child: Column(
           children: [
@@ -57,7 +57,7 @@ class _PreventivneMjereScreen extends State<PreventivneMjereScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Stanje',
+                  'Condition',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -65,7 +65,7 @@ class _PreventivneMjereScreen extends State<PreventivneMjereScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'PacijentId',
+                  'Patient',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),

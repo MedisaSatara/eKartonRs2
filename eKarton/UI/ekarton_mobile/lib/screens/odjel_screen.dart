@@ -49,7 +49,7 @@ class _OdjelScreen extends State<OdjelScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Odjeli"),
+      title_widget: Text("Departments"),
       child: Container(
         child: Column(
           children: [
@@ -67,29 +67,35 @@ class _OdjelScreen extends State<OdjelScreen> {
         child: DataTable(
           columnSpacing: 20,
           dataRowMinHeight: 150.0,
-          dataRowMaxHeight: 150.0,
+          dataRowMaxHeight: 300.0,
           columns: const <DataColumn>[
             DataColumn(
-              label: Expanded(
+              label: Flexible(
                 child: Text(
-                  'Naziv',
+                  'Departments name',
                   style: TextStyle(fontStyle: FontStyle.italic),
+                  softWrap: true,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
             DataColumn(
-              label: Expanded(
+              label: Flexible(
                 child: Text(
-                  'Telefon',
+                  'Phone number',
                   style: TextStyle(fontStyle: FontStyle.italic),
+                  softWrap: true,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
             DataColumn(
-              label: Expanded(
+              label: Flexible(
                 child: Text(
-                  'Doktori',
+                  'Doctors',
                   style: TextStyle(fontStyle: FontStyle.italic),
+                  softWrap: true,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -113,7 +119,7 @@ class _OdjelScreen extends State<OdjelScreen> {
                     ),
                     DataCell(
                       Container(
-                        height: 400.0,
+                        height: 600.0,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: doktori.isNotEmpty

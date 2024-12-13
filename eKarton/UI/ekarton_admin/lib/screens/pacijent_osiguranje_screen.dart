@@ -9,6 +9,7 @@ import 'package:ekarton_admin/providers/pacijent_provider.dart';
 import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:collection/collection.dart';
 
 class PacijentOsiguranjeScreen extends StatefulWidget {
   PacijentOsiguranje? pacijentOsiguranje;
@@ -59,7 +60,7 @@ class _PacijentOsiguranjeScreen extends State<PacijentOsiguranjeScreen> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title_widget: Text(
-        "Osiguranje pacijenata",
+        "Patients insurence",
         style: TextStyle(
           color: Colors.white,
         ),
@@ -85,7 +86,7 @@ class _PacijentOsiguranjeScreen extends State<PacijentOsiguranjeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Pretraži pacijenta:",
+            "Search patients:",
             style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
@@ -94,21 +95,21 @@ class _PacijentOsiguranjeScreen extends State<PacijentOsiguranjeScreen> {
           SizedBox(height: 16.0),
           TextField(
             decoration: InputDecoration(
-              labelText: "Ime",
+              labelText: "First name",
             ),
             controller: _imeController,
           ),
           SizedBox(height: 8.0),
           TextField(
             decoration: InputDecoration(
-              labelText: "Prezime",
+              labelText: "Last name",
             ),
             controller: _prezimeController,
           ),
           SizedBox(height: 8.0),
           TextField(
             decoration: InputDecoration(
-              labelText: "Broj kartona",
+              labelText: "Carton number",
             ),
             controller: _brojkartonaController,
           ),
@@ -126,7 +127,7 @@ class _PacijentOsiguranjeScreen extends State<PacijentOsiguranjeScreen> {
               });
             },
             child: Text(
-              "Pretraga",
+              "Search",
               style: TextStyle(
                 color: Colors.black,
               ),
@@ -154,7 +155,7 @@ class _PacijentOsiguranjeScreen extends State<PacijentOsiguranjeScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Pacijent',
+                  'Patient',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -162,7 +163,7 @@ class _PacijentOsiguranjeScreen extends State<PacijentOsiguranjeScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'OsiguranjeId',
+                  'Insurence name',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -170,7 +171,7 @@ class _PacijentOsiguranjeScreen extends State<PacijentOsiguranjeScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Datum osiguranja',
+                  'Date of insurence',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -178,26 +179,29 @@ class _PacijentOsiguranjeScreen extends State<PacijentOsiguranjeScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Vazece',
+                  'Valid',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
             ),
           ],
           rows: result?.result.map((PacijentOsiguranje e) {
-                var pacijent = pacijentResult?.result.firstWhere(
+                var pacijent = pacijentResult?.result.firstWhereOrNull(
                   (p) => p.pacijentId == e.pacijentId,
                 );
-                var osiguranje = osiguranjeResult?.result.firstWhere(
+
+                var osiguranje = osiguranjeResult?.result.firstWhereOrNull(
                   (o) => o.osiguranjeId == e.osiguranjeId,
                 );
+
+                String vazeceText = e.vazece! ? "Da" : "Ne";
 
                 return DataRow(
                   cells: [
                     DataCell(Text(pacijent?.ime ?? "N/A")),
                     DataCell(Text(osiguranje?.osiguranik ?? "")),
                     DataCell(Text(e.datumOsiguranja ?? "")),
-                    DataCell(Text(e.vazece.toString() ?? "")),
+                    DataCell(Text(vazeceText)),
                   ],
                 );
               }).toList() ??

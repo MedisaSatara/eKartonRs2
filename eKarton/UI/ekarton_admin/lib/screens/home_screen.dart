@@ -75,41 +75,47 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
-    return MasterScreenWidget(
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              "assets/images/ekarton1.jpg",
-              fit: BoxFit.cover,
+    return WillPopScope(
+      onWillPop: () async {
+        return Future.value(false);
+      },
+      child: MasterScreenWidget(
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                "assets/images/welcomepage.jpg",
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildWelcomeCard(),
-                      SizedBox(height: 16),
-                      _bolnicaDetails != null
-                          ? _buildHospitalInfoCard()
-                          : Center(child: CircularProgressIndicator()),
-                      SizedBox(height: 16),
-                      _buildBrojKorisnikaCard(),
-                      SizedBox(height: 16),
-                      _buildTehnickaPodrskaCard(),
-                    ],
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildWelcomeCard(),
+                        SizedBox(height: 16),
+                        _bolnicaDetails != null
+                            ? _buildHospitalInfoCard()
+                            : Center(child: CircularProgressIndicator()),
+                        SizedBox(height: 16),
+                        _buildBrojKorisnikaCard(),
+                        SizedBox(height: 16),
+                        _buildTehnickaPodrskaCard(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -250,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Broj korisnika aplikacije:',
+                  'Number of users app:',
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 8),
@@ -281,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Zahtjevi i pozivi tehnickoj podrsci:',
+                  'Requests and calls to technical support:',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
@@ -292,10 +298,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                              'Broj obrađenih zahtjeva: ${e.brojPozivaDoSada ?? 'N/A'}'),
+                              'Number of requests processed: ${e.brojPozivaDoSada ?? 'N/A'}'),
                           SizedBox(height: 8),
                           Text(
-                              'Najčešći problemi: ${e.najcesciProblemi ?? 'N/A'}'),
+                              'Most common problems: ${e.najcesciProblemi ?? 'N/A'}'),
                         ],
                       );
                     }).toList(),

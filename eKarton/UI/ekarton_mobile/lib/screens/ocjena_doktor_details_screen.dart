@@ -130,7 +130,7 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Uspjeh'),
+            title: Text('Success'),
             content: Text(successMessage),
             actions: [
               TextButton(
@@ -138,7 +138,7 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },
-                child: Text('Uredu'),
+                child: Text('OK'),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -149,7 +149,7 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
                     ),
                   );
                 },
-                child: Text('Preporučeni doktori'),
+                child: Text('Recommended doctors'),
               ),
             ],
           ),
@@ -188,7 +188,7 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Dodaj ocjenu doktoru',
+                  'Add doctors rating',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 24,
@@ -197,7 +197,7 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
                 SizedBox(height: 16.0),
                 FormBuilderTextField(
                   decoration: InputDecoration(
-                    labelText: "Ocjena",
+                    labelText: "Rating",
                     border: OutlineInputBorder(),
                   ),
                   name: "ocjena",
@@ -212,7 +212,7 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
                 SizedBox(height: 16),
                 FormBuilderTextField(
                   decoration: InputDecoration(
-                    labelText: "Razlog",
+                    labelText: "Reason",
                     border: OutlineInputBorder(),
                   ),
                   name: "razlog",
@@ -227,7 +227,7 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
                 FormBuilderDropdown<String>(
                   name: 'doktorId',
                   decoration: InputDecoration(
-                    labelText: 'Doktor',
+                    labelText: 'Doctor',
                   ),
                   items: _doktori
                           ?.map((doktor) => DropdownMenuItem<String>(
@@ -254,7 +254,7 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
                 FormBuilderDropdown<String>(
                   name: 'korisnikId',
                   decoration: InputDecoration(
-                    labelText: 'Korisnik',
+                    labelText: 'User',
                   ),
                   items: _korisnik
                           ?.map((korisnik) => DropdownMenuItem<String>(
@@ -280,7 +280,7 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: Text('Spremi'),
+                  child: Text('Save'),
                 ),
               ],
             ),

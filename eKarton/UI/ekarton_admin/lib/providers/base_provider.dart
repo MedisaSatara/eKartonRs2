@@ -19,6 +19,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     totalUrl = "$_baseUrl$_endpoint";
   }
   //https://localhost:7285/
+  //http://localhost:7073/
   Future<SearchResult<T>> get({dynamic filter}) async {
     var url = "$_baseUrl$_endpoint";
 
@@ -98,6 +99,22 @@ abstract class BaseProvider<T> with ChangeNotifier {
     } catch (e) {
       print("Error during POST request: $e");
       rethrow;
+    }
+  }
+
+  Future<T> delete(int? id) async {
+    var url = "$_baseUrl$_endpoint/$id";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    Response response = await http.delete(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      notifyListeners();
+      return fromJson(data);
+    } else {
+      throw Exception("Unknown error");
     }
   }
 

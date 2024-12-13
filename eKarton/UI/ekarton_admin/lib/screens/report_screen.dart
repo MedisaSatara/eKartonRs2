@@ -1,5 +1,9 @@
-import 'package:ekarton_admin/widget/master_screen.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:ekarton_admin/models/bolesti_po_godistu_report.dart';
 import 'package:ekarton_admin/models/doktori_pregled_report.dart';
 import 'package:ekarton_admin/models/odabrani_doktori.dart';
@@ -29,10 +33,82 @@ class _ReportScreen extends State<ReportScreen> {
     futureBolestiReports = BolestiPoGodistu().fetchBolestiPoGodistuReport();
   }
 
+  Future<void> _generatePdf(String reportName, List<dynamic> data) async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(reportName, style: pw.TextStyle(fontSize: 24)),
+              pw.SizedBox(height: 20),
+              ...data.map((item) {
+                if (item is OdabraniDoktori) {
+                  return pw.Text(
+                      'Ime: ${item.imeDoktora}, Specijalizacija: ${item.specijalizacija}');
+                } else if (item is DoktoriPregledReport) {
+                  return pw.Text(
+                      'Pregled kod: ${item.imeDoktora}, Broj pregleda: ${item.brojPregleda}');
+                } else if (item is BolestiPoGodistuReport) {
+                  return pw.Text('Godina: ${item.decade}');
+                }
+                return pw.Text(item.toString());
+              }).toList(),
+            ],
+          );
+        },
+      ),
+    );
+
+    try {
+      final outputDir = await getApplicationDocumentsDirectory();
+      final filePath = '${outputDir.path}/$reportName.pdf';
+      final file = File(filePath);
+      await file.writeAsBytes(await pdf.save());
+
+      print('PDF spremljen na $filePath');
+
+      _showReportDownloadedDialog(filePath);
+    } catch (e) {
+      print('Greška: $e');
+    }
+  }
+
+  void _showReportDownloadedDialog(String filePath) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Report Preuzet'),
+          content: Text('Report je preuzet i sačuvan na:\n$filePath'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _updateReports() {
+    setState(() {
+      futureDoktorReports = Top3Doktora().fetchTop3Doktora();
+      futurePreglediReports = DoktoriPregled().fetchPreglediPoDoktoru();
+      futureBolestiReports = BolestiPoGodistu().fetchBolestiPoGodistuReport();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title: 'Izvještaji',
+      title: 'Reports',
       child: Column(
         children: [
           Row(
@@ -44,7 +120,7 @@ class _ReportScreen extends State<ReportScreen> {
                     currentReport = 'doktor';
                   });
                 },
-                child: const Text('Top 3 Doktora'),
+                child: const Text('Top 3 Doctors'),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -52,7 +128,7 @@ class _ReportScreen extends State<ReportScreen> {
                     currentReport = 'pregledi';
                   });
                 },
-                child: const Text('Pregledi Po Doktoru'),
+                child: const Text('Doctor\'s Checkups'),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -60,7 +136,7 @@ class _ReportScreen extends State<ReportScreen> {
                     currentReport = 'bolesti';
                   });
                 },
-                child: const Text('Bolesti Po Godištu'),
+                child: const Text('Diseases by Age'),
               ),
             ],
           ),
@@ -77,8 +153,16 @@ class _ReportScreen extends State<ReportScreen> {
                         title: Text(doktor.imeDoktora ?? ""),
                         subtitle:
                             Text('Specijalizacija: ${doktor.specijalizacija}'),
-                        trailing: Text(
-                            'Zakazani termini: ${doktor.brojZakazanihTermina}'),
+                        trailing: Column(
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.download),
+                              onPressed: () async {
+                                await _generatePdf('Top 3 Doktora', [doktor]);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   if (currentReport == 'pregledi')
@@ -89,7 +173,17 @@ class _ReportScreen extends State<ReportScreen> {
                         title: Text(pregled.imeDoktora ?? ""),
                         subtitle:
                             Text('Broj pregleda: ${pregled.brojPregleda}'),
-                        trailing: Text('Pacijenata: ${pregled.brojPacijenata}'),
+                        trailing: Column(
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.download),
+                              onPressed: () async {
+                                await _generatePdf(
+                                    'Pregledi Po Doktoru', [pregled]);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   if (currentReport == 'bolesti')
@@ -100,17 +194,23 @@ class _ReportScreen extends State<ReportScreen> {
                         title: Text('Godina: ${bolest.decade}'),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          children: bolest.najcesceBolesti.map((detail) {
+                            return Text(
+                                '${detail.dijagnoza}: ${detail.brojPacijenata}');
+                          }).toList(),
+                        ),
+                        trailing: Column(
                           children: [
-                            for (var bolestDetail in bolest.najcesceBolesti)
-                              Text(
-                                  '${bolestDetail.dijagnoza}: ${bolestDetail.brojPacijenata} pacijenata'),
+                            IconButton(
+                              icon: Icon(Icons.download),
+                              onPressed: () async {
+                                await _generatePdf(
+                                    'Bolesti Po Godištu', [bolest]);
+                              },
+                            ),
                           ],
                         ),
                       ),
-                    ),
-                  if (currentReport.isEmpty)
-                    const Center(
-                      child: Text('Odaberite izvještaj za prikaz.'),
                     ),
                 ],
               ),

@@ -1,11 +1,9 @@
 import 'package:ekarton_mobile/screens/bolnica_screen.dart';
-import 'package:ekarton_mobile/screens/ekarton_screen.dart';
 import 'package:ekarton_mobile/screens/home_screen.dart';
 import 'package:ekarton_mobile/screens/korisnik_profile_screen.dart';
 import 'package:ekarton_mobile/screens/ocjena_doktor_screen.dart';
 import 'package:ekarton_mobile/screens/odjel_screen.dart';
 import 'package:ekarton_mobile/screens/online_pay_screen.dart';
-import 'package:ekarton_mobile/screens/pacijent_list_screen.dart';
 import 'package:ekarton_mobile/screens/preporuceni_doktori.dart';
 import 'package:ekarton_mobile/screens/test.dart';
 import 'package:flutter/material.dart';
@@ -31,9 +29,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         title: widget.title_widget ??
             Text(
               widget.title ?? "",
-              style: TextStyle(
-                color: Colors.black,
-              ),
+              style: TextStyle(color: Colors.black),
             ),
         leading: Builder(
           builder: (context) => IconButton(
@@ -57,83 +53,49 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       ),
       drawer: Drawer(
         child: ListView(
+          padding: EdgeInsets.zero,
           children: [
-            /* ListTile(
-              title: Text("<-"),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),*/
-            ListTile(
-              title: Text("Home"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("eKarton"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => EkartonScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("Contact"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => BolnicaScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("Odjel"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => OdjelScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("Termin"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => TerminScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("Preporuceni doktori"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) => RecommendedDoctorsScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("Ocjene doktora"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => OcjenaDoktorScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("Online payment"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => OnlinePayScreen()),
-                );
-              },
-            ),
+            _buildDrawerItem(context, "Home", HomeScreen()),
+            _buildDrawerItem(context, "Departments", OdjelScreen()),
+            _buildDrawerItem(context, "Examination", TerminScreen()),
+            _buildDrawerItem(
+                context, "Recommended doctors", RecommendedDoctorsScreen()),
+            _buildDrawerItem(context, "Doctor's ratings", OcjenaDoktorScreen()),
+            _buildDrawerItem(context, "Contact", BolnicaScreen()),
+            _buildDrawerItem(context, "Online payment", OnlinePayScreen()),
           ],
         ),
       ),
       body: widget.child!,
       drawerEnableOpenDragGesture: true,
+    );
+  }
+
+  Widget _buildDrawerItem(BuildContext context, String title, Widget screen) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ListTile(
+        title: Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => screen),
+          );
+        },
+      ),
     );
   }
 }

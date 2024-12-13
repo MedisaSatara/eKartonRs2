@@ -17,6 +17,7 @@ import 'package:ekarton_admin/screens/korisnik_profile_screen.dart';
 import 'package:ekarton_admin/screens/home_screen.dart';
 import 'package:ekarton_admin/screens/korisnik_screen.dart';
 import 'package:ekarton_admin/screens/pacijent_list_screen.dart';
+import 'package:ekarton_admin/screens/welcome_screen.dart';
 import 'package:ekarton_admin/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -76,7 +77,8 @@ class MyMaterialApp extends StatelessWidget {
     return MaterialApp(
       title: 'RS II Material app',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: LoginPage(),
+      home: WelcomeScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -295,83 +297,102 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: Text("Login admin!"),
       ),
-      body: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxHeight: 500, maxWidth: 400),
-          child: Card(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/images/logo.jpg",
-                    height: 200,
-                    width: 300,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(41, 207, 200, 200),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: "Korisničko ime",
-                        labelStyle: TextStyle(color: Colors.black),
-                        prefixIcon:
-                            Icon(Icons.account_circle, color: Colors.black),
-                        border: InputBorder.none,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                      ),
-                      controller: _usernameController,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(41, 188, 184, 192),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: "Password",
-                        labelStyle: TextStyle(color: Colors.black),
-                        prefixIcon: Icon(Icons.password, color: Colors.black),
-                        border: InputBorder.none,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                      ),
-                      controller: _passwordController,
-                      obscureText: true,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  _isLoading
-                      ? CircularProgressIndicator()
-                      : ElevatedButton(
-                          onPressed: _login,
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.black),
-                          ),
-                          child: Text(
-                            "Login",
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
-                        )
-                ],
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.9,
+              child: Image.asset(
+                "assets/images/welcomepage.jpg",
+                fit: BoxFit.cover,
               ),
             ),
           ),
-        ),
+          Center(
+            child: Container(
+              constraints: const BoxConstraints(maxHeight: 500, maxWidth: 400),
+              child: Card(
+                color: Colors.white.withOpacity(0.6),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        "assets/images/logo.jpg",
+                        height: 200,
+                        width: 300,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(41, 207, 200, 200),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            labelText: "Username",
+                            labelStyle: TextStyle(color: Colors.black),
+                            prefixIcon:
+                                Icon(Icons.account_circle, color: Colors.black),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 12),
+                          ),
+                          controller: _usernameController,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(41, 188, 184, 192),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            labelText: "Password",
+                            labelStyle: TextStyle(color: Colors.black),
+                            prefixIcon:
+                                Icon(Icons.password, color: Colors.black),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 12),
+                          ),
+                          controller: _passwordController,
+                          obscureText: true,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      _isLoading
+                          ? CircularProgressIndicator()
+                          : SizedBox(
+                              width: 300,
+                              child: ElevatedButton(
+                                onPressed: _login,
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.white),
+                                ),
+                                child: Text(
+                                  "Login",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.black),
+                                ),
+                              ),
+                            )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

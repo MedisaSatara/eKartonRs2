@@ -7,6 +7,7 @@ import 'package:ekarton_mobile/providers/pregled_provider.dart';
 import 'package:ekarton_mobile/providers/preventivne_mjere_provider.dart';
 import 'package:ekarton_mobile/providers/terapija_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:ekarton_mobile/models/nalaz.dart';
 import 'package:ekarton_mobile/models/pacijent.dart';
@@ -105,7 +106,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                 children: [
                   Text(
                     widget.pacijent != null
-                        ? "Ime i prezime pacijenta: ${widget.pacijent!.ime} ${widget.pacijent!.prezime}"
+                        ? "Patients first and last name: ${widget.pacijent!.ime} ${widget.pacijent!.prezime}"
                         : "eKarton",
                     style: TextStyle(
                       fontSize: 28,
@@ -119,7 +120,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                     runSpacing: 8.0,
                     alignment: WrapAlignment.center,
                     children: [
-                      _buildButton("LICNI PODACI", Icons.person, () {
+                      _buildButton("Personal data", Icons.person, () {
                         setState(() {
                           showLicniPodaci = true;
                           showOboljenjeScreen = false;
@@ -129,7 +130,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                           showPregledScreen = false;
                         });
                       }),
-                      _buildButton("OBOLJENJA", Icons.history, () {
+                      _buildButton("Diseases", Icons.history, () {
                         setState(() {
                           showOboljenjeScreen = true;
                           showNalazScreen = false;
@@ -139,7 +140,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                           showLicniPodaci = false;
                         });
                       }),
-                      _buildButton("NALAZI", Icons.history, () {
+                      _buildButton("Results", Icons.history, () {
                         setState(() {
                           showOboljenjeScreen = false;
                           showNalazScreen = true;
@@ -149,7 +150,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                           showLicniPodaci = false;
                         });
                       }),
-                      _buildButton("PERIODICNI PREGLED", Icons.healing, () {
+                      _buildButton("Periodic inspection", Icons.healing, () {
                         setState(() {
                           showOboljenjeScreen = false;
                           showNalazScreen = false;
@@ -159,7 +160,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                           showLicniPodaci = false;
                         });
                       }),
-                      _buildButton("PREVENTIVNE MJERE", Icons.healing, () {
+                      _buildButton("Preventive measure", Icons.healing, () {
                         setState(() {
                           showOboljenjeScreen = false;
                           showNalazScreen = false;
@@ -169,7 +170,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                           showLicniPodaci = false;
                         });
                       }),
-                      _buildButton("DATUM PREGLEDA", Icons.healing, () {
+                      _buildButton("Appointment date", Icons.healing, () {
                         setState(() {
                           showOboljenjeScreen = false;
                           showNalazScreen = false;
@@ -270,8 +271,8 @@ class _EkartonScreen extends State<EkartonScreen> {
                     padding: const EdgeInsets.only(right: 8.0, bottom: 16.0),
                     child: DataTable(
                       columns: const [
-                        DataColumn(label: Text('Nalaz ID')),
-                        DataColumn(label: Text('Datum')),
+                        DataColumn(label: Text('Results')),
+                        DataColumn(label: Text('Date')),
                       ],
                       rows: filteredNalazi!.map((nalaz) {
                         return DataRow(
@@ -320,7 +321,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                   padding: const EdgeInsets.only(right: 8.0, bottom: 16.0),
                   child: DataTable(
                     columns: const [
-                      DataColumn(label: Text('Stanje')),
+                      DataColumn(label: Text('Condition')),
                     ],
                     rows: filteredMjere!.map((mjere) {
                       return DataRow(
@@ -368,16 +369,18 @@ class _EkartonScreen extends State<EkartonScreen> {
                   padding: const EdgeInsets.only(right: 8.0, bottom: 16.0),
                   child: DataTable(
                     columns: const [
-                      DataColumn(label: Text('Datum')),
-                      DataColumn(label: Text('Razlog posjete')),
-                      DataColumn(label: Text('Dijagnoza')),
-                      DataColumn(label: Text('Terapija')),
-                      DataColumn(label: Text('Ime doktora')),
+                      DataColumn(label: Text('Date')),
+                      DataColumn(label: Text('Reason for visit')),
+                      DataColumn(label: Text('Diagnosis')),
+                      DataColumn(label: Text('Therapy')),
+                      DataColumn(label: Text('Doctors name')),
                     ],
                     rows: filteredPregled!.map((pregled) {
                       return DataRow(
                         cells: [
-                          DataCell(Text(pregled.datum.toString())),
+                          DataCell(Text(pregled.datum != null
+                              ? DateFormat('yyyy-MM-dd').format(pregled.datum!)
+                              : '')),
                           DataCell(Text(pregled.razlogPosjete.toString())),
                           DataCell(Text(pregled.dijagnoza.toString())),
                           DataCell(
@@ -425,19 +428,19 @@ class _EkartonScreen extends State<EkartonScreen> {
                 padding: const EdgeInsets.only(right: 8.0, bottom: 16.0),
                 child: DataTable(
                   columns: const [
-                    DataColumn(label: Text('Ime')),
-                    DataColumn(label: Text('Prezime')),
-                    DataColumn(label: Text('Spol')),
-                    DataColumn(label: Text('Datum rodjenja')),
+                    DataColumn(label: Text('First name')),
+                    DataColumn(label: Text('Last name')),
+                    DataColumn(label: Text('Gender')),
+                    DataColumn(label: Text('Date of birth')),
                     DataColumn(label: Text('JMBG')),
-                    DataColumn(label: Text('Mjesto rodjenja')),
-                    DataColumn(label: Text('Prebivaliste')),
-                    DataColumn(label: Text('Telefon')),
-                    DataColumn(label: Text('Krvna grupa')),
-                    DataColumn(label: Text('Rh Faktor')),
-                    DataColumn(label: Text('Hronicne bolesti')),
-                    DataColumn(label: Text('Alergija')),
-                    DataColumn(label: Text('Broj kartona')),
+                    DataColumn(label: Text('Birthplace')),
+                    DataColumn(label: Text('Residence')),
+                    DataColumn(label: Text('Phone number')),
+                    DataColumn(label: Text('Blood type')),
+                    DataColumn(label: Text('Rh Factor')),
+                    DataColumn(label: Text('Chronic diseases')),
+                    DataColumn(label: Text('Allergy')),
+                    DataColumn(label: Text('Carton number')),
                   ],
                   rows: [
                     DataRow(
@@ -446,8 +449,11 @@ class _EkartonScreen extends State<EkartonScreen> {
                         DataCell(Text(widget.pacijent!.prezime ?? 'N/A')),
                         DataCell(Text(widget.pacijent!.spol ?? 'N/A')),
                         DataCell(Text(
-                            widget.pacijent!.datumRodjenja?.toString() ??
-                                'N/A')),
+                          widget.pacijent!.datumRodjenja != null
+                              ? DateFormat('yyyy-MM-dd')
+                                  .format(widget.pacijent!.datumRodjenja!)
+                              : '',
+                        )),
                         DataCell(Text(widget.pacijent!.jmbg ?? 'N/A')),
                         DataCell(
                             Text(widget.pacijent!.mjestoRodjenja ?? 'N/A')),

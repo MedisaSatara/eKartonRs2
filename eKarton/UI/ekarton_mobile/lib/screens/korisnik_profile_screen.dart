@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:ekarton_mobile/providers/uloga_provider.dart';
+import 'package:ekarton_mobile/screens/welcome_page.dart';
+import 'package:ekarton_mobile/utils/util.dart';
 import 'package:ekarton_mobile/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,67 +46,109 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final korisnik = korisnikResult?.first;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return MasterScreenWidget(
       title_widget: Text(
-        "Hello, Admin! Welcome to your profile!",
-        style: TextStyle(
-          color: Colors.white,
-        ),
+        "Hello, User! Welcome to your profile!",
+        style: TextStyle(color: Colors.black),
       ),
       child: korisnik != null
-          ? Center(
+          ? SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 600),
+                  child: Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              _buildProfilePicture(korisnik.slika),
-                              SizedBox(width: 16),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${korisnik.ime ?? ''} ${korisnik.prezime ?? ''}",
-                                    style: TextStyle(
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.bold,
+                          screenWidth > 600
+                              ? Row(
+                                  children: [
+                                    _buildProfilePicture(korisnik.slika),
+                                    SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${korisnik.ime ?? ''} ${korisnik.prezime ?? ''}",
+                                            style: TextStyle(
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 8),
+                                          Text(
+                                            korisnik.email ?? '',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey[700]),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    korisnik.email ?? '',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.grey[700],
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    _buildProfilePicture(korisnik.slika),
+                                    SizedBox(height: 16),
+                                    Text(
+                                      "${korisnik.ime ?? ''} ${korisnik.prezime ?? ''}",
+                                      style: TextStyle(
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      korisnik.email ?? '',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.grey[700]),
+                                    ),
+                                  ],
+                                ),
                           Divider(),
                           SizedBox(height: 16),
-                          _buildProfileDetail("Korisnicko ime",
-                              korisnik.korisnickoIme ?? "", Icons.person),
-                          _buildProfileDetail("Datum rodjenja",
-                              korisnik.datumRodjenja ?? "", Icons.cake),
                           _buildProfileDetail(
-                              "Telefon", korisnik.telefon ?? "", Icons.phone),
+                            "Username",
+                            korisnik.korisnickoIme ?? '',
+                            Icons.person,
+                          ),
                           _buildProfileDetail(
-                              "Spol", korisnik.spol ?? "", Icons.person),
-                          /*_buildProfileDetail(
-                              "Uloga", korisnik.ulogaId.toString(), Icons.work),*/
+                            "Date of birth",
+                            korisnik.datumRodjenja ?? '',
+                            Icons.cake,
+                          ),
+                          _buildProfileDetail(
+                            "Phone number",
+                            korisnik.telefon ?? '',
+                            Icons.phone,
+                          ),
+                          _buildProfileDetail(
+                            "Gender",
+                            korisnik.spol ?? '',
+                            Icons.person,
+                          ),
+                          SizedBox(height: 24),
+                          ElevatedButton(
+                            onPressed: _logout,
+                            child: Text("Logout",
+                                style: TextStyle(color: Colors.white)),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.redAccent,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -113,6 +157,14 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
               ),
             )
           : Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  void _logout() {
+    Authorization.korisnik = null;
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => WelcomeScreen()),
+      (route) => false,
     );
   }
 
@@ -132,25 +184,36 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
           ],
         ),
         padding: EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            Icon(icon, color: Colors.blueAccent, size: 28),
-            SizedBox(width: 16),
-            Text(
-              "$title:",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-            SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                value,
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-          ],
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(icon, color: Colors.blueAccent, size: 28),
+                SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "$title:",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        value,
+                        style: TextStyle(fontSize: 16),
+                        softWrap: true,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

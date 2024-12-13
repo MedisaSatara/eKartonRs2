@@ -35,7 +35,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             Text(
               widget.title ?? "",
               style: TextStyle(
-                color: Colors.white, // Set the color of the title text
+                color: Colors.white,
               ),
             ),
       ),
@@ -58,24 +58,24 @@ Widget _buildNavbar(BuildContext context) {
       children: [
         _buildNavButton(context, "", HomeScreen(), Icons.home),
         SizedBox(width: 30.0),
-        _buildNavButton(context, "Korisnici", KorisnikScreen(), Icons.person),
+        _buildNavButton(context, "Users", KorisnikScreen(), Icons.person),
         SizedBox(width: 10.0),
-        _buildNavButton(context, "Pacijenti", PacijentiScreen(), Icons.people),
+        _buildNavButton(context, "Patients", PacijentiScreen(), Icons.people),
         SizedBox(width: 10.0),
         _buildNavButton(
-            context, "Doktori", DoktorScreen(), Icons.local_hospital),
+            context, "Doctors", DoktorScreen(), Icons.local_hospital),
         SizedBox(width: 10.0),
-        _buildNavButton(context, "Odjeli", OdjelScreen(), Icons.business),
+        _buildNavButton(context, "Department", OdjelScreen(), Icons.business),
         SizedBox(width: 10.0),
         /* _buildNavButton(
             context, "Termini", PacijentiDetailsScreen(), Icons.schedule),*/
         _buildNavButton(
-            context, "Osiguranja", OsiguranjeScreen(), Icons.security),
+            context, "Insurance", OsiguranjeScreen(), Icons.security),
         SizedBox(width: 10.0),
-        _buildNavButton(context, "Osiguranja pacijenata",
+        _buildNavButton(context, "Patient insurance",
             PacijentOsiguranjeScreen(), Icons.person),
         SizedBox(width: 10.0),
-        _buildNavButton(context, "Izvjestaji", ReportScreen(), Icons.person),
+        _buildNavButton(context, "Reports", ReportScreen(), Icons.person),
         SizedBox(width: 20.0),
         _buildNavButton(context, "", KorisnikProfileScreen(), Icons.person),
       ],

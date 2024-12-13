@@ -75,7 +75,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Doktori"),
+      title_widget: Text("Doctors"),
       child: Container(
         child: Column(children: [
           _buildSearch(),
@@ -92,14 +92,14 @@ class _DoktorScreenState extends State<DoktorScreen> {
         children: [
           Expanded(
             child: TextField(
-              decoration: InputDecoration(labelText: "Ime"),
+              decoration: InputDecoration(labelText: "First name"),
               controller: _imeController,
             ),
           ),
           SizedBox(width: 8),
           Expanded(
             child: TextField(
-              decoration: InputDecoration(labelText: "Prezime"),
+              decoration: InputDecoration(labelText: "Last name"),
               controller: _prezimeController,
             ),
           ),
@@ -108,10 +108,10 @@ class _DoktorScreenState extends State<DoktorScreen> {
             child: FormBuilderDropdown<String>(
               name: 'odjelId',
               decoration: InputDecoration(
-                labelText: 'Odjel',
+                labelText: 'Department',
               ),
               items: [
-                DropdownMenuItem(value: null, child: Text("Svi odjeli")),
+                DropdownMenuItem(value: null, child: Text("All departments")),
                 ...?odjelResult?.result
                     .map((item) => DropdownMenuItem<String>(
                           value: item.odjelId.toString(),
@@ -131,7 +131,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
           SizedBox(width: 8),
           ElevatedButton(
             onPressed: _searchData,
-            child: Text("Pretraga"),
+            child: Text("Search"),
           ),
         ],
       ),
@@ -175,7 +175,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Ime',
+                  'First name',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -183,7 +183,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Prezime',
+                  'Last name',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -191,7 +191,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Datum rodjenja',
+                  'Date of birth',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -199,7 +199,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Spol',
+                  'Gender',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -207,7 +207,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Odjel',
+                  'Department',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),

@@ -13,11 +13,12 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
   BaseProvider(String endpoint) : _endpoint = endpoint {
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "http://192.168.0.102:7073/");
+        defaultValue: "http://192.168.0.109:7073/");
     totalUrl = "$_baseUrl$_endpoint";
   }
   //http://192.168.0.106:7073/
   //https://localhost:7285/
+  //http://192.168.0.102:7073/ - pravi
   Future<SearchResult<T>> get({dynamic filter}) async {
     var url = "$_baseUrl$_endpoint";
 
@@ -165,41 +166,51 @@ abstract class BaseProvider<T> with ChangeNotifier {
     };
   }
 
-  final String apiUrl = 'http://192.168.0.102:7073/Doktor/preporuceni';
-  //final String apiUrl = 'https://localhost:7285/Doktor/preporuceni';
+  //http://192.168.0.102:7073/Doktor/preporuceni
 
   Future<List<Doktor>> fetchRecommendedDoctors() async {
-    final response = await http.get(Uri.parse(apiUrl));
-
-    if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
-      return data.map((json) => Doktor.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load recommended doctors');
+    try {
+      final response = await http.get(Uri.parse('$totalUrl/preporuceni'),
+          headers: createHeaders());
+      if (isValidResponse(response)) {
+        return (jsonDecode(response.body) as List)
+            .map((item) => Doktor.fromJson(item))
+            .toList();
+      } else {
+        throw Exception('Invalid response: ${response.body}');
+      }
+    } catch (e) {
+      print('Error fetching recommended doctors: $e');
+      rethrow;
     }
   }
 
-  Future<Map<String, dynamic>> fetchRecommendedDoctor() async {
+  /*Future<Map<String, dynamic>> fetchRecommendedDoctor() async {
+    //http://192.168.0.102:7073/Doktor/preporuceni
+    var apiUrl = "$_baseUrl$_endpoint";
+
     final response = await http.get(
-      Uri.parse('http://192.168.0.102:7073/Doktor/preporuceni'),
+      Uri.parse('https://localhost:7285/Doktor/preporuceni'),
       headers: {
         'Authorization': 'Basic YWRtaW46dGVzdA==',
       },
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 20octors,
+      };0) {
       final data = json.decode(response.body);
       final averageRating = data['averageRating'];
       final doctors = (data['doctors'] as List)
           .map((item) => Doktor.fromJson(item))
           .toList();
 
+      print(doctors);
+
       return {
         'averageRating': averageRating,
-        'doctors': doctors,
-      };
+        'doctors': d
     } else {
       throw Exception('Failed to load recommended doctors');
     }
-  }
+  }*/
 }

@@ -41,7 +41,7 @@ class _RecommendedDoctorsScreenState extends State<RecommendedDoctorsScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text('Preporučeni doktori'),
+      title_widget: Text('Recommended doctors'),
       child: Column(
         children: [
           Padding(
@@ -49,14 +49,14 @@ class _RecommendedDoctorsScreenState extends State<RecommendedDoctorsScreen> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: DropdownButton<double>(
-                hint: Text('Odaberite ocjenu'),
+                hint: Text('Choose a rating'),
                 value: _selectedRating,
                 items: _doctors != null
                     ? groupDoctorsByRating(_doctors!).map((group) {
                         return DropdownMenuItem<double>(
                           value: group.rating,
                           child: Text(
-                              'Ocjena: ${group.rating.toStringAsFixed(1)}'),
+                              'Rating: ${group.rating.toStringAsFixed(1)}'),
                         );
                       }).toList()
                     : [],
@@ -86,7 +86,7 @@ class _RecommendedDoctorsScreenState extends State<RecommendedDoctorsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Prosječna ocjena doktora: ${ratingGroup.rating.toStringAsFixed(1)}',
+                              'Average doctor rating: ${ratingGroup.rating.toStringAsFixed(1)}',
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),
@@ -97,7 +97,7 @@ class _RecommendedDoctorsScreenState extends State<RecommendedDoctorsScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text('Doktor ID: ${doktor.doktorId}'),
+                                      Text('Doctor: ${doktor.doktorId}'),
                                       _buildOcjeneForDoktor(doktor.doktorId),
                                     ],
                                   ),
@@ -107,7 +107,7 @@ class _RecommendedDoctorsScreenState extends State<RecommendedDoctorsScreen> {
                       );
                     },
                   )
-                : Center(child: Text('Odaberite ocjenu za prikaz doktora')),
+                : Center(child: Text('Select a rating to display the doctor')),
           ),
           if (_selectedRating != null &&
               _doctors != null &&
@@ -130,9 +130,9 @@ class _RecommendedDoctorsScreenState extends State<RecommendedDoctorsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Broj ocjena: $brojOcjena'),
+        Text('Number of ratings: $brojOcjena'),
         ...ocjeneZaDoktora.map((ocjena) {
-          return Text('Ocjena: ${ocjena.ocjena}, Razlog: ${ocjena.razlog}');
+          return Text('Rating: ${ocjena.ocjena}, Reason: ${ocjena.razlog}');
         }).toList(),
       ],
     );

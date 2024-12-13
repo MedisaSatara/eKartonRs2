@@ -23,7 +23,7 @@ class _PregledScreen extends State<PregledScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Datum',
+                  'Date',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -31,7 +31,7 @@ class _PregledScreen extends State<PregledScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Razlog posjete',
+                  'Reason',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -39,7 +39,7 @@ class _PregledScreen extends State<PregledScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Dijagnoza',
+                  'Diagnosis',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -47,7 +47,7 @@ class _PregledScreen extends State<PregledScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Terapija',
+                  'Therapy',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),

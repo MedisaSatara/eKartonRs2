@@ -2,9 +2,9 @@ import 'package:ekarton_mobile/screens/ocjena_doktor_details_screen.dart';
 import 'package:ekarton_mobile/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ekarton_mobile/models/ocjene_doktor.dart';
-import 'package:ekarton_mobile/models/doktor.dart'; // Import Doktor model
-import 'package:ekarton_mobile/providers/ocjena_doktor_provider.dart'; // Import the provider
-import 'package:ekarton_mobile/providers/doktor_provider.dart'; // Import Doktor provider
+import 'package:ekarton_mobile/models/doktor.dart';
+import 'package:ekarton_mobile/providers/ocjena_doktor_provider.dart';
+import 'package:ekarton_mobile/providers/doktor_provider.dart';
 
 class OcjenaDoktorScreen extends StatefulWidget {
   @override
@@ -36,7 +36,7 @@ class _OcjenaDoktorScreenState extends State<OcjenaDoktorScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text('Ocjene doktora'),
+      title_widget: Text('Doctors ratings'),
       child: ocjene == null || doktori == null
           ? Center(child: CircularProgressIndicator())
           : Column(
@@ -57,13 +57,13 @@ class _OcjenaDoktorScreenState extends State<OcjenaDoktorScreen> {
 
                       return ExpansionTile(
                         title: Text(
-                          'Doktor: ${doktor.ime} ${doktor.prezime}',
+                          'Doctor: ${doktor.ime} ${doktor.prezime}',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         children: ocjeneDoktora.map((ocjena) {
                           return ListTile(
-                            title: Text('Ocjena: ${ocjena.ocjena}'),
-                            subtitle: Text('Razlog: ${ocjena.razlog}'),
+                            title: Text('Rating: ${ocjena.ocjena}'),
+                            subtitle: Text('Reason: ${ocjena.razlog}'),
                           );
                         }).toList(),
                       );
@@ -81,7 +81,7 @@ class _OcjenaDoktorScreenState extends State<OcjenaDoktorScreen> {
                       );
                       _fetchOcjene();
                     },
-                    child: Text("Dodaj ocjenu!"),
+                    child: Text("Add rating!"),
                   ),
                 ),
               ],

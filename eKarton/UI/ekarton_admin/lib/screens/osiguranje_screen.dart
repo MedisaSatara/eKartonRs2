@@ -25,7 +25,7 @@ class _OsiguranjeScreen extends State<OsiguranjeScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _osiguranjeProvider = context.read<OsiguranjeProvider>();
-    _fetchKorisnici(); 
+    _fetchKorisnici();
   }
 
   Future<void> _fetchKorisnici() async {
@@ -41,7 +41,7 @@ class _OsiguranjeScreen extends State<OsiguranjeScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Lista osiguranja"),
+      title_widget: Text("Insurence list"),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -61,14 +61,14 @@ class _OsiguranjeScreen extends State<OsiguranjeScreen> {
         children: [
           Expanded(
             child: TextField(
-              decoration: InputDecoration(labelText: "Ime"),
+              decoration: InputDecoration(labelText: "First name"),
               controller: _imeController,
             ),
           ),
           SizedBox(width: 8),
           Expanded(
             child: TextField(
-              decoration: InputDecoration(labelText: "Prezime korisnika"),
+              decoration: InputDecoration(labelText: "Last name user"),
               controller: _prezimeController,
             ),
           ),
@@ -76,7 +76,7 @@ class _OsiguranjeScreen extends State<OsiguranjeScreen> {
             onPressed: () async {
               await _fetchKorisnici();
             },
-            child: Text("Pretraga"),
+            child: Text("Search"),
           ),
         ],
       ),
@@ -91,7 +91,7 @@ class _OsiguranjeScreen extends State<OsiguranjeScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Osiguranje',
+                  'Name of insurence',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),

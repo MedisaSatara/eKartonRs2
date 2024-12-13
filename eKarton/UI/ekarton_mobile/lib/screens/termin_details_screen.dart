@@ -130,7 +130,7 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Dodavanje novog termina',
+                  'Adding a new appointment',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 24,
@@ -138,21 +138,41 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                 ),
                 SizedBox(height: 16.0),
                 FormBuilderTextField(
-                    decoration: InputDecoration(
-                      labelText: "Datum",
-                      border: OutlineInputBorder(),
-                    ),
-                    name: "datum",
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Ovo polje je obavezno!Datum u formatu yyyy-mm-dd';
-                      }
-                      return null;
-                    }),
+                  decoration: InputDecoration(
+                    labelText: "Date",
+                    border: OutlineInputBorder(),
+                    suffixIcon: Icon(Icons.calendar_today),
+                  ),
+                  name: "datum",
+                  readOnly: true,
+                  initialValue: _initialValue['datum'],
+                  onTap: () async {
+                    DateTime? selectedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                    );
+
+                    if (selectedDate != null) {
+                      String formattedDate =
+                          "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
+
+                      _formKey.currentState?.fields['datum']
+                          ?.didChange(formattedDate);
+                    }
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ovo polje je obavezno! Datum u formatu yyyy-MM-dd';
+                    }
+                    return null;
+                  },
+                ),
                 SizedBox(height: 16),
                 FormBuilderTextField(
                     decoration: InputDecoration(
-                      labelText: "Vrijeme",
+                      labelText: "Time",
                       border: OutlineInputBorder(),
                     ),
                     name: "vrijeme",
@@ -165,7 +185,7 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                 SizedBox(height: 16),
                 FormBuilderTextField(
                     decoration: InputDecoration(
-                      labelText: "Razlog",
+                      labelText: "Reason",
                       border: OutlineInputBorder(),
                     ),
                     name: "razlog",
@@ -192,7 +212,7 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                 FormBuilderDropdown<String>(
                     name: 'pacijentId',
                     decoration: InputDecoration(
-                      labelText: 'Pacijent',
+                      labelText: 'Patient',
                     ),
                     items: _pacijenti
                             ?.map((pacijent) => DropdownMenuItem<String>(
@@ -218,7 +238,7 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                 FormBuilderDropdown<String>(
                     name: 'doktorId',
                     decoration: InputDecoration(
-                      labelText: 'Doktor',
+                      labelText: 'Doctor',
                     ),
                     items: _doktori
                             ?.map((doktor) => DropdownMenuItem<String>(
@@ -242,7 +262,7 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                     }),
                 SizedBox(height: 16),
                 Text(
-                  'Pogledaj listu preporučenih doktora, na osnovu dosadašnjih ocjena koje su dobili od strane pacijenata.',
+                  'View a list of recommended doctors, based on the ratings they have received from patients.',
                   style: TextStyle(
                     fontSize: 14,
                     fontStyle: FontStyle.italic,
@@ -253,8 +273,8 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                 ElevatedButton(
                   onPressed: _toggleRecommendedDoctors,
                   child: Text(_showRecommendedDoctors
-                      ? 'Sakrij preporučene doktore'
-                      : 'Prikaži preporučene doktore'),
+                      ? 'Hide recommended doctors'
+                      : 'Show recommended doctors'),
                 ),
                 if (_showRecommendedDoctors)
                   Container(
@@ -267,8 +287,7 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                 ),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child:
-                      Text(widget.termin == null ? 'Dodaj' : 'Uredi podatke'),
+                  child: Text(widget.termin == null ? 'Add' : 'Edit data'),
                 ),
               ],
             ),
@@ -276,8 +295,8 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
         ),
       ),
       title: widget.termin != null
-          ? "Termin: ${widget.termin?.pacijentId}"
-          : "Detalji termina",
+          ? "Appoitment: ${widget.termin?.pacijentId}"
+          : "Appoitment details",
     );
   }
 }

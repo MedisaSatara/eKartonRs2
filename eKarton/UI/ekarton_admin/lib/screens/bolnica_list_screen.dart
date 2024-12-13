@@ -25,7 +25,7 @@ class _BolnicaListScreenState extends State<BolnicaListScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Informacije o bolnici"),
+      title_widget: Text("Contact informations"),
       child: Container(
         child: Column(
           children: [

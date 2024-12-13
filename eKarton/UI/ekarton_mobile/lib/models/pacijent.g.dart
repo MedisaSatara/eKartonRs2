@@ -11,7 +11,11 @@ Pacijent _$PacijentFromJson(Map<String, dynamic> json) => Pacijent(
       json['ime'] as String?,
       json['prezime'] as String?,
       json['spol'] as String?,
-      json['datumRodjenja'] as String?,
+      json['datumRodjenja'] == null
+          ? null
+          : (json['datumRodjenja'] is String
+              ? DateTime.parse(json['datumRodjenja'] as String)
+              : json['datumRodjenja'] as DateTime),
       json['mjestoRodjenja'] as String?,
       json['jmbg'] as String?,
       json['telefon'] as String?,
@@ -29,7 +33,7 @@ Map<String, dynamic> _$PacijentToJson(Pacijent instance) => <String, dynamic>{
       'ime': instance.ime,
       'prezime': instance.prezime,
       'spol': instance.spol,
-      'datumRodjenja': instance.datumRodjenja,
+      'datumRodjenja': instance.datumRodjenja?.toIso8601String(),
       'mjestoRodjenja': instance.mjestoRodjenja,
       'jmbg': instance.jmbg,
       'telefon': instance.telefon,

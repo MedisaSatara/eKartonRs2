@@ -11,6 +11,7 @@ import 'package:ekarton_admin/screens/preventivne_mjere_details_screen.dart';
 import 'package:ekarton_admin/screens/preventivne_mjere_screen.dart';
 import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PacijentiScreen extends StatefulWidget {
@@ -56,7 +57,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title_widget: Text(
-        "Pacijenti",
+        "Patients",
         style: TextStyle(
           color: Colors.white,
         ),
@@ -82,7 +83,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
                   _fetchInitialData();
                 }
               },
-              child: Text("Dodaj novog pacijenta"),
+              child: Text("Add new patient"),
             ),
             SizedBox(
               height: 8.0,
@@ -102,7 +103,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
                   _fetchInitialData();
                 }
               },
-              child: Text("Dodaj preventivne mjere pacijenta"),
+              child: Text("Add patient preventive measures"),
             ),
           ],
         ),
@@ -117,7 +118,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Pretraži pacijenta:",
+            "Search patients:",
             style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
@@ -126,7 +127,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
           SizedBox(height: 16.0),
           TextField(
             decoration: InputDecoration(
-              labelText: "Ime",
+              labelText: "Name",
             ),
             controller: _imeController,
             //onChanged: (value) => _onSearchChanged(),
@@ -134,7 +135,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
           SizedBox(height: 8.0),
           TextField(
             decoration: InputDecoration(
-              labelText: "Prezime",
+              labelText: "Last name",
             ),
             controller: _prezimeController,
             // onChanged: (value) => _onSearchChanged(),
@@ -142,7 +143,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
           SizedBox(height: 8.0),
           TextField(
             decoration: InputDecoration(
-              labelText: "Broj kartona",
+              labelText: "Carton number",
             ),
             controller: _brojkartonaController,
             // onChanged: (value) => _onSearchChanged(),
@@ -161,7 +162,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
               });
             },
             child: Text(
-              "Pretraga",
+              "Search",
               style: TextStyle(
                 color: Colors.black,
               ),
@@ -203,7 +204,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Ime',
+                  'First name',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -211,7 +212,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Prezime',
+                  'Last name',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -219,7 +220,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Datum rodjenja',
+                  'Date of birth',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -227,7 +228,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Broj kartona',
+                  'Carton number',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -235,7 +236,7 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Preventivna mjera',
+                  'Preventive measure',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -277,9 +278,41 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
                   cells: [
                     DataCell(Text(e.ime ?? "")),
                     DataCell(Text(e.prezime ?? "")),
-                    DataCell(Text(e.datumRodjenja ?? "")),
+                    DataCell(Text(e.datumRodjenja != null
+                        ? DateFormat('dd.MM.yyyy').format(e.datumRodjenja!)
+                        : "")),
                     DataCell(Text(e.brojKartona ?? "")),
-                    DataCell(Text(preventiveMjereText)),
+                    DataCell(
+                      GestureDetector(
+                        onTap: () async {
+                          if (preventiveMjere != null &&
+                              preventiveMjere.isNotEmpty) {
+                            var selectedMeasure = preventiveMjere.first;
+
+                            final result = await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    PreventivneMjereDetailsScreen(
+                                        preventivneMjere: selectedMeasure),
+                              ),
+                            );
+
+                            if (result != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(result)),
+                              );
+                              _fetchInitialData();
+                            }
+                          }
+                        },
+                        child: Text(
+                          preventiveMjereText,
+                          style: TextStyle(
+                              color: Colors.black,
+                              decoration: TextDecoration.none),
+                        ),
+                      ),
+                    ),
                   ],
                 );
               }).toList() ??

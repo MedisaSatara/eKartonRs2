@@ -36,7 +36,7 @@ class _OdjelScreen extends State<OdjelScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Odjeli"),
+      title_widget: Text("Departments"),
       child: Container(
         child: Column(
           children: [
@@ -55,7 +55,7 @@ class _OdjelScreen extends State<OdjelScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Naziv',
+                  'Department name',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -63,7 +63,7 @@ class _OdjelScreen extends State<OdjelScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Telefon',
+                  'Phone number',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),

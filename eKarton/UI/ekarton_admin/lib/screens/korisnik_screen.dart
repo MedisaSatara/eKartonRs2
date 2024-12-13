@@ -66,7 +66,7 @@ class _KorisnikScreen extends State<KorisnikScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Lista korisnika"),
+      title_widget: Text("User list"),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -100,14 +100,14 @@ class _KorisnikScreen extends State<KorisnikScreen> {
         children: [
           Expanded(
             child: TextField(
-              decoration: InputDecoration(labelText: "Ime"),
+              decoration: InputDecoration(labelText: "Name"),
               controller: _imeController,
             ),
           ),
           SizedBox(width: 8),
           Expanded(
             child: TextField(
-              decoration: InputDecoration(labelText: "Prezime korisnika"),
+              decoration: InputDecoration(labelText: "Last name"),
               controller: _prezimeController,
             ),
           ),
@@ -115,7 +115,7 @@ class _KorisnikScreen extends State<KorisnikScreen> {
             onPressed: () async {
               await _fetchKorisnici();
             },
-            child: Text("Pretraga"),
+            child: Text("Search"),
           ),
         ],
       ),
@@ -159,7 +159,7 @@ class _KorisnikScreen extends State<KorisnikScreen> {
       child: Center(
         child: ElevatedButton(
           onPressed: _navigateToAddUser,
-          child: Text("Dodaj novi korisnik"),
+          child: Text("Add new user"),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromARGB(255, 236, 233, 233),
             padding:

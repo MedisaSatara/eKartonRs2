@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:ekarton_admin/providers/uloga_provider.dart';
+import 'package:ekarton_admin/screens/welcome_screen.dart';
+import 'package:ekarton_admin/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -95,16 +97,25 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
                           ),
                           Divider(),
                           SizedBox(height: 16),
-                          _buildProfileDetail("Korisnicko ime",
+                          _buildProfileDetail("Username",
                               korisnik.korisnickoIme ?? "", Icons.person),
-                          _buildProfileDetail("Datum rodjenja",
+                          _buildProfileDetail("Date of birth",
                               korisnik.datumRodjenja ?? "", Icons.cake),
+                          _buildProfileDetail("Phone number",
+                              korisnik.telefon ?? "", Icons.phone),
                           _buildProfileDetail(
-                              "Telefon", korisnik.telefon ?? "", Icons.phone),
-                          _buildProfileDetail(
-                              "Spol", korisnik.spol ?? "", Icons.person),
+                              "Gender", korisnik.spol ?? "", Icons.person),
                           /*_buildProfileDetail(
                               "Uloga", korisnik.ulogaId.toString(), Icons.work),*/
+                          SizedBox(height: 24),
+                          ElevatedButton(
+                            onPressed: _logout,
+                            child: Text("Logout",
+                                style: TextStyle(color: Colors.white)),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.redAccent,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -113,6 +124,14 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
               ),
             )
           : Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  void _logout() {
+    Authorization.korisnik = null;
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => WelcomeScreen()),
+      (route) => false,
     );
   }
 

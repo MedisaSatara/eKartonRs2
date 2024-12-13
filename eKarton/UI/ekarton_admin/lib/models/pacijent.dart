@@ -30,7 +30,7 @@ class Pacijent {
   String? ime;
   String? prezime;
   String? spol;
-  String? datumRodjenja;
+  DateTime? datumRodjenja;
   String? mjestoRodjenja;
   String? jmbg;
   String? telefon;

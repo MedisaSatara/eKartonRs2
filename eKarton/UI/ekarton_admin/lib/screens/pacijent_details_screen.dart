@@ -6,6 +6,7 @@ import 'package:ekarton_admin/providers/preventivne_mjere_provider.dart';
 import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PacijentiDetailsScreen extends StatefulWidget {
@@ -22,6 +23,15 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
   late Map<String, dynamic> _initialValue;
   late PreventivneMjereProvider _preventivneMjereProvider;
   SearchResult<PreventivneMjere>? preventivneMjereResult;
+  List<PreventivneMjere> preventiveMjereForPacijent = [];
+  Future<void> testDeserialization() async {
+    Map<String, dynamic> sampleJson = {
+      'datumRodjenja': '1990-08-15T00:00:00.000Z'
+    };
+
+    Pacijent pacijent = Pacijent.fromJson(sampleJson);
+    print('Parsed Date of Birth: ${pacijent.datumRodjenja}');
+  }
 
   @override
   void initState() {
@@ -47,7 +57,27 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _preventivneMjereProvider = context.read<PreventivneMjereProvider>();
     _pacijentProvider = context.read<PacijentProvider>();
+
+    if (widget.pacijent != null) {
+      _loadPreventivneMjere();
+    }
+  }
+
+  Future<void> _loadPreventivneMjere() async {
+    try {
+      final result = await _preventivneMjereProvider.get();
+      if (result != null && result.result.isNotEmpty) {
+        setState(() {
+          preventiveMjereForPacijent = result.result
+              .where((mj) => mj.pacijentId == widget.pacijent!.pacijentId)
+              .toList();
+        });
+      }
+    } catch (e) {
+      print('Greška pri dohvaćanju preventivnih mjera: $e');
+    }
   }
 
   Future<void> _submitForm() async {
@@ -58,7 +88,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
         String successMessage;
         if (widget.pacijent == null) {
           await _pacijentProvider.insert(Pacijent.fromJson(formData));
-          successMessage = 'Pacijent uspješno dodan.';
+          successMessage = 'Patient successufully added.';
         } else {
           if (widget.pacijent!.pacijentId == null) {
             throw Exception('Patient ID is null');
@@ -67,7 +97,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
             widget.pacijent!.pacijentId!,
             Pacijent.fromJson(formData),
           );
-          successMessage = 'Pacijent uspješno uređen.';
+          successMessage = 'Patient successufully updated.';
         }
 
         Navigator.of(context).pop(successMessage);
@@ -90,6 +120,64 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
     }
   }
 
+  Future<bool> _showConfirmationDialog() async {
+    return await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Delete confirmation'),
+              content: Text(
+                  'Are you sure you want to delete patients preventive measure?'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+                TextButton(
+                  child: Text('Delete'),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+
+  Widget _buildPreventivneMjereList() {
+    if (preventiveMjereForPacijent.isNotEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: preventiveMjereForPacijent.map((mj) {
+          return Row(
+            children: [
+              Expanded(
+                child: Text('Preventive measure: ${mj.stanje}'),
+              ),
+              IconButton(
+                icon: Icon(Icons.delete, color: Colors.red),
+                onPressed: () async {
+                  bool confirmDelete = await _showConfirmationDialog();
+                  if (confirmDelete) {
+                    await _preventivneMjereProvider
+                        .delete(mj.preventivneMjereId);
+                    _loadPreventivneMjere();
+                  }
+                },
+              ),
+            ],
+          );
+        }).toList(),
+      );
+    } else {
+      return Text('This patient does not have any preventive measure!');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
@@ -103,7 +191,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Detaljni prikaz podataka pacijenta',
+                  'Patient deatiled list of informations',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 24,
@@ -113,7 +201,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                 FormBuilderTextField(
                     name: 'ime',
                     decoration: InputDecoration(
-                      labelText: 'Ime',
+                      labelText: 'First name',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -134,7 +222,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                 FormBuilderTextField(
                     name: 'prezime',
                     decoration: InputDecoration(
-                      labelText: 'Prezime',
+                      labelText: 'Last name',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -151,10 +239,11 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
 
                       return null;
                     }),
+                SizedBox(height: 16),
                 FormBuilderTextField(
                     name: 'brojKartona',
                     decoration: InputDecoration(
-                      labelText: 'Broj kartona',
+                      labelText: 'Carton number',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -163,22 +252,24 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                       }
                     }),
                 SizedBox(height: 16),
-                FormBuilderTextField(
-                    name: 'datumRodjenja',
-                    decoration: InputDecoration(
-                      labelText: 'Datum rodjenja',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Ovo polje je obavezno! Datum u formatu yyyy-mm-dd';
-                      }
-                    }),
+                FormBuilderDateTimePicker(
+                  name: 'datumRodjenja',
+                  decoration: InputDecoration(
+                    labelText: 'Date of birth',
+                    border: OutlineInputBorder(),
+                  ),
+                  inputType: InputType.date,
+                  format: DateFormat('yyyy-MM-dd'),
+                  validator: (value) {
+                    if (value == null) return 'Molimo odaberite datum';
+                    return null;
+                  },
+                ),
                 SizedBox(height: 16),
                 FormBuilderTextField(
                     name: 'spol',
                     decoration: InputDecoration(
-                      labelText: 'Spol',
+                      labelText: 'Gender',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -207,7 +298,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                 FormBuilderTextField(
                     name: 'mjestoRodjenja',
                     decoration: InputDecoration(
-                      labelText: 'Mjesto rodjenja',
+                      labelText: 'Birth city',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -219,7 +310,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                 FormBuilderTextField(
                     name: 'prebivaliste',
                     decoration: InputDecoration(
-                      labelText: 'Prebivaliste',
+                      labelText: 'Residence',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -231,7 +322,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                 FormBuilderTextField(
                     name: 'telefon',
                     decoration: InputDecoration(
-                      labelText: 'Telefon',
+                      labelText: 'Phone number',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -246,7 +337,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                 FormBuilderTextField(
                     name: 'krvnaGrupa',
                     decoration: InputDecoration(
-                      labelText: 'Krva grupa',
+                      labelText: 'Blood type',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -258,7 +349,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                 FormBuilderTextField(
                     name: 'rhFaktor',
                     decoration: InputDecoration(
-                      labelText: 'Rh faktor',
+                      labelText: 'Rh factor',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -270,7 +361,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                 FormBuilderTextField(
                     name: 'hronicneBolesti',
                     decoration: InputDecoration(
-                      labelText: 'Hronicne bolesti',
+                      labelText: 'Chronic diseases',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -282,7 +373,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                 FormBuilderTextField(
                     name: 'alergija',
                     decoration: InputDecoration(
-                      labelText: 'Alergija',
+                      labelText: 'Allergy',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -291,10 +382,10 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                       }
                     }),
                 SizedBox(height: 24),
+                _buildPreventivneMjereList(),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child:
-                      Text(widget.pacijent == null ? 'Dodaj' : 'Uredi podatke'),
+                  child: Text(widget.pacijent == null ? 'Add' : 'Edit data'),
                 ),
               ],
             ),
@@ -302,8 +393,8 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
         ),
       ),
       title: widget.pacijent != null
-          ? "Pacijent: ${widget.pacijent?.ime}"
-          : "Pacijent details",
+          ? "Patient: ${widget.pacijent?.ime}"
+          : "Patient details",
     );
   }
 }

@@ -20,7 +20,7 @@ class Pregled {
       this.pacijentId});
 
   int? pregledId;
-  String? datum;
+  DateTime? datum;
   String? razlogPosjete;
   String? dijagnoza;
   int? terapijaId;

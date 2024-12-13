@@ -23,7 +23,7 @@ class _PreventivneMjereScreen extends State<PreventivneMjereScreen> {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  'Stanje',
+                  'Condition',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),

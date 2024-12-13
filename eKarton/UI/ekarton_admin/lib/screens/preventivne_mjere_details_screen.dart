@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 class PreventivneMjereDetailsScreen extends StatefulWidget {
   final PreventivneMjere? preventivneMjere;
+
   PreventivneMjereDetailsScreen({Key? key, this.preventivneMjere})
       : super(key: key);
 
@@ -102,7 +103,7 @@ class _PreventivneMjereDetailsScreen
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Dodavanje preventivnih mjera pacijenta',
+                'Add patients preventive meausere',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 24,
@@ -111,7 +112,7 @@ class _PreventivneMjereDetailsScreen
               SizedBox(height: 16.0),
               FormBuilderTextField(
                 decoration: InputDecoration(
-                  labelText: "Stanje",
+                  labelText: "Condition",
                   border: OutlineInputBorder(),
                 ),
                 name: "stanje",
@@ -127,7 +128,7 @@ class _PreventivneMjereDetailsScreen
                 child: FormBuilderDropdown<String>(
                   name: 'pacijentId',
                   decoration: InputDecoration(
-                    labelText: 'Pacijent',
+                    labelText: 'Patient',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -154,17 +155,16 @@ class _PreventivneMjereDetailsScreen
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _submitForm,
-                child: Text(widget.preventivneMjere == null
-                    ? 'Dodaj'
-                    : 'Uredi podatke'),
+                child:
+                    Text(widget.preventivneMjere == null ? 'Add' : 'Edit data'),
               ),
             ],
           ),
         ),
       ),
       title: widget.preventivneMjere != null
-          ? "Preventivna mjera: ${widget.preventivneMjere?.pacijentId}"
-          : "Detalji preventivnih mjera",
+          ? "Preventive measure: ${widget.preventivneMjere?.pacijentId}"
+          : "Deatils about patients preventive measure",
     );
   }
 }

@@ -34,68 +34,89 @@ class _BolnicaScreenState extends State<BolnicaScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Informacije o bolnici"),
+      title_widget: Text("Contact"),
       child: Container(
-        child: Column(
-          children: [
-            _buildDataListView(),
-          ],
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/ekarton3.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              if (result == null)
+                const CircularProgressIndicator()
+              else if (result!.result.isEmpty)
+                const Text("Nema dostupnih podataka.")
+              else
+                Expanded(
+                  child: _buildCardListView(),
+                ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Expanded _buildDataListView() {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: DataTable(
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Naziv',
-                  style: TextStyle(fontStyle: FontStyle.italic),
+  Widget _buildCardListView() {
+    return ListView.builder(
+      itemCount: result!.result.length,
+      itemBuilder: (context, index) {
+        Bolnica bolnica = result!.result[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  bolnica.naziv ?? "Nepoznato",
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Adresa',
-                  style: TextStyle(fontStyle: FontStyle.italic),
+                const SizedBox(height: 8.0),
+                Row(
+                  children: [
+                    const Icon(Icons.location_on, color: Colors.grey),
+                    const SizedBox(width: 8.0),
+                    Expanded(
+                      child: Text(bolnica.adresa ?? "Nepoznato"),
+                    ),
+                  ],
                 ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Telefon',
-                  style: TextStyle(fontStyle: FontStyle.italic),
+                const SizedBox(height: 8.0),
+                Row(
+                  children: [
+                    const Icon(Icons.phone, color: Colors.grey),
+                    const SizedBox(width: 8.0),
+                    Text(bolnica.telefon ?? "Nepoznato"),
+                  ],
                 ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Email',
-                  style: TextStyle(fontStyle: FontStyle.italic),
+                const SizedBox(height: 8.0),
+                Row(
+                  children: [
+                    const Icon(Icons.email, color: Colors.grey),
+                    const SizedBox(width: 8.0),
+                    Expanded(
+                      child: Text(bolnica.email ?? "Nepoznato"),
+                    ),
+                  ],
                 ),
-              ),
+              ],
             ),
-          ],
-          rows: result?.result
-                  .map((Bolnica e) => DataRow(
-                        cells: [
-                          DataCell(Text(e.naziv ?? "")),
-                          DataCell(Text(e.telefon ?? "")),
-                          DataCell(Text(e.adresa ?? "")),
-                          DataCell(Text(e.email ?? "")),
-                        ],
-                      ))
-                  .toList() ??
-              [],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

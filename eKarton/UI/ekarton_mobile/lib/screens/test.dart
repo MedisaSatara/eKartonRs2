@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:ekarton_mobile/models/doktor.dart';
 import 'package:ekarton_mobile/models/pacijent.dart';
 import 'package:ekarton_mobile/models/search_result.dart';
@@ -90,7 +91,7 @@ class _TerminScreen extends State<TerminScreen> {
         children: [
           Expanded(
             child: TextField(
-              decoration: InputDecoration(labelText: "Ime doktora"),
+              decoration: InputDecoration(labelText: "Doctor first name"),
               controller: _imeDoktoraController,
               onChanged: (value) => _onSearchChanged(),
             ),
@@ -98,14 +99,14 @@ class _TerminScreen extends State<TerminScreen> {
           SizedBox(width: 8),
           Expanded(
             child: TextField(
-              decoration: InputDecoration(labelText: "Prezime doktora"),
+              decoration: InputDecoration(labelText: "Doctor last name"),
               controller: _prezimeDoktoraController,
               onChanged: (value) => _onSearchChanged(),
             ),
           ),
           ElevatedButton(
             onPressed: _searchData,
-            child: Text("Pretraga"),
+            child: Text("Search"),
           ),
         ],
       ),
@@ -117,17 +118,18 @@ class _TerminScreen extends State<TerminScreen> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Potvrdi brisanje'),
-              content: Text('Jeste li sigurni da želite obrisati ovaj termin?'),
+              title: Text('Confirmation deleting'),
+              content:
+                  Text('Are you sure you want to delete this appointment?'),
               actions: <Widget>[
                 TextButton(
-                  child: Text('Odustani'),
+                  child: Text('Cancel'),
                   onPressed: () {
                     Navigator.of(context).pop(false);
                   },
                 ),
                 TextButton(
-                  child: Text('Obriši'),
+                  child: Text('Delete'),
                   onPressed: () {
                     Navigator.of(context).pop(true);
                   },
@@ -142,7 +144,7 @@ class _TerminScreen extends State<TerminScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Pogledaj listu zakazanih termina"),
+      title_widget: Text("See the list of scheduled appointments"),
       child: Container(
         child: Column(children: [
           _buildSearch(),
@@ -156,7 +158,7 @@ class _TerminScreen extends State<TerminScreen> {
               );
               _fetchTermini();
             },
-            child: Text("Dodaj novi termin!"),
+            child: Text("Add new appoitment!"),
           ),
         ]),
       ),
@@ -164,117 +166,143 @@ class _TerminScreen extends State<TerminScreen> {
   }
 
   Expanded _buildDataListView() {
+    final _verticalScrollController = ScrollController();
+    final _horizontalScrollController = ScrollController();
+
     return Expanded(
-      child: SingleChildScrollView(
-        child: DataTable(
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Datum',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Vrijeme',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Razlog',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Pacijent',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Doktor',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'State machine',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Obrisi',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-          ],
-          rows: terminResult?.result.map((Termin e) {
-                var pacijentName = pacijentResult?.result
-                    .firstWhere((p) => p.pacijentId == e.pacijentId);
-
-                var doktorName = doktorResult?.result
-                    .firstWhere((d) => d.doktorId == e.doktorId);
-
-                return DataRow(
-                  onSelectChanged: (selected) async {
-                    if (selected == true) {
-                      final result = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => TerminDetailsScreen(termin: e),
+      child: Card(
+        child: AdaptiveScrollbar(
+          controller: _verticalScrollController,
+          underColor: Colors.blueGrey.withOpacity(0.3),
+          sliderDefaultColor: Colors.grey.withOpacity(0.7),
+          sliderActiveColor: Colors.grey,
+          child: AdaptiveScrollbar(
+            controller: _horizontalScrollController,
+            position: ScrollbarPosition.bottom,
+            underColor: Colors.blueGrey.withOpacity(0.3),
+            sliderDefaultColor: Colors.grey.withOpacity(0.7),
+            sliderActiveColor: Colors.grey,
+            child: SingleChildScrollView(
+              controller: _verticalScrollController,
+              scrollDirection: Axis.vertical,
+              child: SingleChildScrollView(
+                controller: _horizontalScrollController,
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  columns: const <DataColumn>[
+                    DataColumn(
+                      label: Expanded(
+                        child: Text(
+                          'Date',
+                          style: TextStyle(fontStyle: FontStyle.italic),
                         ),
-                      );
-
-                      if (result != null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(result),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                        _fetchTermini();
-                      }
-                    }
-                  },
-                  cells: [
-                    DataCell(Text(e.datum ?? "")),
-                    DataCell(Text(e.vrijeme ?? "")),
-                    DataCell(Text(e.razlog ?? "")),
-                    DataCell(Text(pacijentName?.ime ?? "")),
-                    DataCell(Text(doktorName?.ime ?? "")),
-                    DataCell(Text(e?.stateMachine ?? "")),
-                    DataCell(
-                      IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () async {
-                          bool confirmDelete = await _showConfirmationDialog();
-                          if (confirmDelete) {
-                            await _terminProvider.delete(e.terminId);
-                            _fetchTermini();
-                          }
-                        },
+                      ),
+                    ),
+                    DataColumn(
+                      label: Expanded(
+                        child: Text(
+                          'Time',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Expanded(
+                        child: Text(
+                          'Reason',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Expanded(
+                        child: Text(
+                          'Patient',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Expanded(
+                        child: Text(
+                          'Doctor',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Expanded(
+                        child: Text(
+                          'State machine',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Expanded(
+                        child: Text(
+                          'Delete',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
                       ),
                     ),
                   ],
-                );
-              }).toList() ??
-              [],
+                  rows: terminResult?.result.map((Termin e) {
+                        var pacijentName = pacijentResult?.result
+                            .firstWhere((p) => p.pacijentId == e.pacijentId);
+
+                        var doktorName = doktorResult?.result
+                            .firstWhere((d) => d.doktorId == e.doktorId);
+
+                        return DataRow(
+                          onSelectChanged: (selected) async {
+                            if (selected == true) {
+                              final result = await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      TerminDetailsScreen(termin: e),
+                                ),
+                              );
+
+                              if (result != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(result),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                                _fetchTermini();
+                              }
+                            }
+                          },
+                          cells: [
+                            DataCell(Text(e.datum ?? "")),
+                            DataCell(Text(e.vrijeme ?? "")),
+                            DataCell(Text(e.razlog ?? "")),
+                            DataCell(Text(pacijentName?.ime ?? "")),
+                            DataCell(Text(doktorName?.ime ?? "")),
+                            DataCell(Text(e?.stateMachine ?? "")),
+                            DataCell(
+                              IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () async {
+                                  bool confirmDelete =
+                                      await _showConfirmationDialog();
+                                  if (confirmDelete) {
+                                    await _terminProvider.delete(e.terminId);
+                                    _fetchTermini();
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList() ??
+                      [],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

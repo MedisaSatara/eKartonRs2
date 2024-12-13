@@ -73,7 +73,9 @@ flutter:
     - assets/images/background.png
     - assets/images/background.jpg
     - assets/images/logo.jpg
-    - assets/images/ekarton1.jpg
+    - assets/images/ekarton3.png
+    - assets/images/welcomepage.jpg
+
 
   #   - images/a_dot_ham.jpeg
 

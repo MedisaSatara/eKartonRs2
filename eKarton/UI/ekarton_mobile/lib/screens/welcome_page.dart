@@ -1,19 +1,22 @@
+import 'package:ekarton_mobile/main.dart';
 import 'package:ekarton_mobile/screens/korisnik_profile_screen.dart';
 import 'package:ekarton_mobile/screens/pacijent_list_screen.dart';
 import 'package:ekarton_mobile/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget {
+class WelcomeScreen extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return MasterScreenWidget(
-      title: 'Home Page',
-      child: Stack(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Welcome Page'),
+      ),
+      body: Stack(
         children: [
           Positioned.fill(
             child: Image.asset(
@@ -40,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Center(
       child: SizedBox(
         width: 400,
-        height: 300,
+        height: 350,
         child: Card(
           color: Colors.white.withOpacity(0.8),
           elevation: 4,
@@ -52,29 +55,28 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'eKarton!',
+                  'Welcome to eKarton Mobile app!',
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16),
                 Text(
-                  'Everything you want to know from your Health record, You can find here!',
+                  'If you are using eKarton, lets login to check details about your health.',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 16),
                 Text(
                   'Let\'s start the journey!',
                   style: TextStyle(fontSize: 18),
                 ),
+                SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () async {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) =>
-                            PacijentListScreen(pacijent: null),
+                        builder: (context) => LoginPage(),
                       ),
                     );
                   },
-                  child: Text("Search"),
+                  child: Text("Login"),
                 ),
               ],
             ),

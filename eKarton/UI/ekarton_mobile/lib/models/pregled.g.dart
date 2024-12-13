@@ -8,7 +8,9 @@ part of 'pregled.dart';
 
 Pregled _$PregledFromJson(Map<String, dynamic> json) => Pregled(
       pregledId: (json['pregledId'] as num?)?.toInt(),
-      datum: json['datum'] as String?,
+      datum: json['datum'] == null
+          ? null
+          : DateTime.parse(json['datum'] as String),
       razlogPosjete: json['razlogPosjete'] as String?,
       dijagnoza: json['dijagnoza'] as String?,
       terapijaId: (json['terapijaId'] as num?)?.toInt(),
@@ -19,7 +21,7 @@ Pregled _$PregledFromJson(Map<String, dynamic> json) => Pregled(
 
 Map<String, dynamic> _$PregledToJson(Pregled instance) => <String, dynamic>{
       'pregledId': instance.pregledId,
-      'datum': instance.datum,
+      'datum': instance.datum?.toIso8601String(),
       'razlogPosjete': instance.razlogPosjete,
       'dijagnoza': instance.dijagnoza,
       'terapijaId': instance.terapijaId,
