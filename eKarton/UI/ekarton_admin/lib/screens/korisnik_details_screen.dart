@@ -57,11 +57,11 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
 
         if (widget.korisnik == null) {
           await _korisnikProvider.insert(Korisnik.fromJson(formData));
-          Navigator.of(context).pop('success');
+          _showSuccessDialog('User added successfully');
         } else {
           await _korisnikProvider.update(
               widget.korisnik!.korisnikId!, Korisnik.fromJson(formData));
-          Navigator.of(context).pop('updated');
+          _showSuccessDialog('User updated successfully');
         }
       } catch (e) {
         print('Error: $e');
@@ -73,9 +73,7 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                 Text("Failed to save user. Please try again: ${e.toString()}"),
             actions: [
               TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+                onPressed: () => Navigator.of(context).pop(),
                 child: Text('OK'),
               ),
             ],
@@ -83,6 +81,27 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
         );
       }
     }
+  }
+
+  void _showSuccessDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Success'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -144,7 +163,6 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                     } else if (value.length > 50) {
                       return 'Premašili ste maksimalan broj karaktera (50).';
                     }
-
                     return null;
                   },
                 ),
@@ -236,11 +254,11 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                 FormBuilderDateTimePicker(
                   name: "datumRodjenja",
                   inputType: InputType.date,
+                  format: DateFormat('yyyy-MM-dd'),
                   decoration: InputDecoration(
                     labelText: "Date of birth",
                     border: OutlineInputBorder(),
                   ),
-                  format: DateFormat('yyyy-MM-dd'),
                   validator: (value) {
                     if (value == null) {
                       return 'Ovo polje je obavezno!';
