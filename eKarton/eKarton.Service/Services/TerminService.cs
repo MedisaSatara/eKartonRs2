@@ -34,7 +34,7 @@ namespace eKarton.Service.Services
 
             base.BeforeInsert(insert, entity);
 
-            SendEmailOnTerminInsert(entity.PacijentId, entity.Datum, entity.Vrijeme);
+           SendEmailOnTerminInsert(entity.PacijentId, entity.Datum, entity.Vrijeme);
         }
 
         private void SendEmailOnTerminInsert(int pacijentId, string? datum, string vrijeme)
@@ -123,7 +123,6 @@ namespace eKarton.Service.Services
 
             await _context.SaveChangesAsync();
 
-            //RabbitMQ: API - objekat - Auxiliary
 
             var korisnik = entity.Pacijent;
             if (korisnik != null)

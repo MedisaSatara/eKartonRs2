@@ -95,11 +95,16 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
       try {
         if (widget.termin == null) {
           await _terminProvider.insert(Termin.fromJson(mutableFormData));
+          Navigator.of(context).pop();
+
+          _showSuccessDialog('Appoitment successufully added.');
         } else {
           await _terminProvider.update(
               widget.termin!.terminId!, Termin.fromJson(mutableFormData));
+          Navigator.of(context).pop();
+
+          _showSuccessDialog('Apoitment successufully updated.');
         }
-        Navigator.of(context).pop();
       } catch (e) {
         print('Error: $e');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -107,6 +112,27 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
         );
       }
     }
+  }
+
+  void _showSuccessDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Success'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   bool _showRecommendedDoctors = false;
