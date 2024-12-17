@@ -13,7 +13,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
   BaseProvider(String endpoint) : _endpoint = endpoint {
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "http://192.168.0.109:7073/");
+        defaultValue: "http://10.0.2.2:7073/");
     totalUrl = "$_baseUrl$_endpoint";
   }
   //http://192.168.0.106:7073/
