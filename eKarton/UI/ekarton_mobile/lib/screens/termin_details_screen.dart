@@ -36,6 +36,8 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
   List<Map<String, String>> stateOptions = [
     {"display": "Active", "value": "Active"},
     {"display": "Draft", "value": "Draft"},
+    {"display": "Cancelled", "value": "Cancelled"},
+
   ];
 
   @override
@@ -239,18 +241,28 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                       return null;
                     }),
                 SizedBox(height: 16),
-                FormBuilderTextField(
-                    decoration: InputDecoration(
-                      labelText: "State machine",
-                      border: OutlineInputBorder(),
-                    ),
-                    name: "stateMachine",
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Ovo polje je obavezno!';
-                      }
-                      return null;
-                    }),
+                FormBuilderDropdown<String>(
+                  name: 'stateMachine',
+                  decoration: InputDecoration(
+                    labelText: 'State Machine',
+                  ),
+                  items: stateOptions
+                      .map((state) => DropdownMenuItem<String>(
+                            value: state['value'],
+                            child: Text(state['display']!),
+                          ))
+                      .toList(),
+                  initialValue: _initialValue['stateMachine'],
+                  onChanged: (value) {
+                    print("Odabrano stanje: $value");
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ovo polje je obavezno!';
+                    }
+                    return null;
+                  },
+                ),
                 SizedBox(height: 16),
                 FormBuilderDropdown<String>(
                     name: 'pacijentId',
