@@ -1,8 +1,5 @@
-import 'package:ekarton_admin/main.dart';
-import 'package:ekarton_admin/models/bolnica.dart';
 import 'package:ekarton_admin/models/odjel.dart';
 import 'package:ekarton_admin/models/search_result.dart';
-import 'package:ekarton_admin/providers/bolnica_provider.dart';
 import 'package:ekarton_admin/providers/odjel_provider.dart';
 import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +9,10 @@ class OdjelScreen extends StatefulWidget {
   const OdjelScreen({Key? key}) : super(key: key);
 
   @override
-  State<OdjelScreen> createState() => _OdjelScreen();
+  State<OdjelScreen> createState() => _OdjelScreenState();
 }
 
-class _OdjelScreen extends State<OdjelScreen> {
+class _OdjelScreenState extends State<OdjelScreen> {
   late OdjelProvider _odjelProvider;
   SearchResult<Odjel>? odjelResult;
 
@@ -37,48 +34,71 @@ class _OdjelScreen extends State<OdjelScreen> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title_widget: Text("Departments"),
-      child: Container(
-        child: Column(
-          children: [
-            _buildDataListView(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Expanded _buildDataListView() {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: DataTable(
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Department name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/welcome.jpg'),
+                fit: BoxFit.cover,
               ),
             ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Phone number',
-                  style: TextStyle(fontStyle: FontStyle.italic),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Text(
+                  "Departments",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
+                SizedBox(height: 16),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: odjelResult?.result.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final odjel = odjelResult!.result[index];
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 8.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        elevation: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                odjel.naziv ?? "N/A",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "Phone: ${odjel.telefon ?? 'N/A'}",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
-          rows: odjelResult?.result
-                  .map((Odjel e) => DataRow(
-                        cells: [
-                          DataCell(Text(e.naziv ?? "")),
-                          DataCell(Text(e.telefon ?? "")),
-                        ],
-                      ))
-                  .toList() ??
-              [],
-        ),
+          ),
+        ],
       ),
     );
   }

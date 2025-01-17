@@ -34,7 +34,6 @@ class _RecommendedDoctorsScreenState extends State<RecommendedDoctorsScreen> {
         SnackBar(content: Text('Error fetching data: $e')),
       );
     }
-
     setState(() {});
   }
 
@@ -79,7 +78,6 @@ class _RecommendedDoctorsScreenState extends State<RecommendedDoctorsScreen> {
                       if (ratingGroup.rating != _selectedRating) {
                         return SizedBox.shrink();
                       }
-
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(

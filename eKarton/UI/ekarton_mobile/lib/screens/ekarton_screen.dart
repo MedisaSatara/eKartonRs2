@@ -399,15 +399,19 @@ class _EkartonScreen extends State<EkartonScreen> {
     );
   }
 
-  Widget _buildLicniPodaciTable() {
-    if (widget.pacijent == null) {
-      return Center(child: Text("Nema ličnih podataka za ovog pacijenta."));
-    }
-    final _verticalScrollController = ScrollController();
-    final _horizontalScrollController = ScrollController();
-    return Container(
-      child: Card(
-          child: AdaptiveScrollbar(
+ Widget _buildLicniPodaciTable() {
+  if (widget.pacijent == null) {
+    return Center(child: Text("Nema ličnih podataka za ovog pacijenta."));
+  }
+  final _verticalScrollController = ScrollController();
+  final _horizontalScrollController = ScrollController();
+  return Container(
+     decoration: BoxDecoration(
+      color: const Color.fromARGB(255, 34, 78, 57),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: Card(
+      child: AdaptiveScrollbar(
         underColor: Colors.blueGrey.withOpacity(0.3),
         sliderDefaultColor: Colors.grey.withOpacity(0.7),
         sliderActiveColor: Colors.grey,
@@ -428,42 +432,90 @@ class _EkartonScreen extends State<EkartonScreen> {
                 padding: const EdgeInsets.only(right: 8.0, bottom: 16.0),
                 child: DataTable(
                   columns: const [
-                    DataColumn(label: Text('First name')),
-                    DataColumn(label: Text('Last name')),
-                    DataColumn(label: Text('Gender')),
-                    DataColumn(label: Text('Date of birth')),
-                    DataColumn(label: Text('JMBG')),
-                    DataColumn(label: Text('Birthplace')),
-                    DataColumn(label: Text('Residence')),
-                    DataColumn(label: Text('Phone number')),
-                    DataColumn(label: Text('Blood type')),
-                    DataColumn(label: Text('Rh Factor')),
-                    DataColumn(label: Text('Chronic diseases')),
-                    DataColumn(label: Text('Allergy')),
-                    DataColumn(label: Text('Carton number')),
+                    DataColumn(label: Text('Parameter')),
+                    DataColumn(label: Text('Value')),
                   ],
                   rows: [
                     DataRow(
                       cells: [
+                        DataCell(Text('First name')),
                         DataCell(Text(widget.pacijent!.ime ?? 'N/A')),
+                      ],
+                    ),
+                    DataRow(
+                      cells: [
+                        DataCell(Text('Last name')),
                         DataCell(Text(widget.pacijent!.prezime ?? 'N/A')),
+                      ],
+                    ),
+                    DataRow(
+                      cells: [
+                        DataCell(Text('Gender')),
                         DataCell(Text(widget.pacijent!.spol ?? 'N/A')),
+                      ],
+                    ),
+                    DataRow(
+                      cells: [
+                        DataCell(Text('Date of birth')),
                         DataCell(Text(
                           widget.pacijent!.datumRodjenja != null
                               ? DateFormat('yyyy-MM-dd')
                                   .format(widget.pacijent!.datumRodjenja!)
                               : '',
                         )),
+                      ],
+                    ),
+                    DataRow(
+                      cells: [
+                        DataCell(Text('JMBG')),
                         DataCell(Text(widget.pacijent!.jmbg ?? 'N/A')),
-                        DataCell(
-                            Text(widget.pacijent!.mjestoRodjenja ?? 'N/A')),
+                      ],
+                    ),
+                    DataRow(
+                      cells: [
+                        DataCell(Text('Birthplace')),
+                        DataCell(Text(widget.pacijent!.mjestoRodjenja ?? 'N/A')),
+                      ],
+                    ),
+                    DataRow(
+                      cells: [
+                        DataCell(Text('Residence')),
                         DataCell(Text(widget.pacijent!.prebivaliste ?? 'N/A')),
+                      ],
+                    ),
+                    DataRow(
+                      cells: [
+                        DataCell(Text('Phone number')),
                         DataCell(Text(widget.pacijent!.telefon ?? 'N/A')),
+                      ],
+                    ),
+                    DataRow(
+                      cells: [
+                        DataCell(Text('Blood type')),
                         DataCell(Text(widget.pacijent!.krvnaGrupa ?? 'N/A')),
+                      ],
+                    ),
+                    DataRow(
+                      cells: [
+                        DataCell(Text('Rh Factor')),
                         DataCell(Text(widget.pacijent!.rhFaktor ?? 'N/A')),
-                        DataCell(
-                            Text(widget.pacijent!.hronicneBolesti ?? 'N/A')),
+                      ],
+                    ),
+                    DataRow(
+                      cells: [
+                        DataCell(Text('Chronic diseases')),
+                        DataCell(Text(widget.pacijent!.hronicneBolesti ?? 'N/A')),
+                      ],
+                    ),
+                    DataRow(
+                      cells: [
+                        DataCell(Text('Allergy')),
                         DataCell(Text(widget.pacijent!.alergija ?? 'N/A')),
+                      ],
+                    ),
+                    DataRow(
+                      cells: [
+                        DataCell(Text('Carton number')),
                         DataCell(Text(
                             widget.pacijent!.brojKartona?.toString() ?? 'N/A')),
                       ],
@@ -474,9 +526,11 @@ class _EkartonScreen extends State<EkartonScreen> {
             ),
           ),
         ),
-      )),
-    );
-  }
+      ),
+    ),
+  );
+}
+
 
   Widget _buildButton(String title, IconData icon, VoidCallback onPressed) {
     return Container(
@@ -485,7 +539,7 @@ class _EkartonScreen extends State<EkartonScreen> {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
-          backgroundColor: Colors.blue,
+          backgroundColor: const Color.fromARGB(255, 34, 78, 57),
           padding: EdgeInsets.all(16.0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
@@ -494,7 +548,7 @@ class _EkartonScreen extends State<EkartonScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 40),
+            Icon(icon, size: 40, color: Colors.white,),
             SizedBox(height: 8),
             Text(
               title,

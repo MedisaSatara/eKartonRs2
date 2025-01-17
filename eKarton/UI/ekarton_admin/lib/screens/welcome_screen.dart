@@ -1,19 +1,7 @@
+import 'dart:ui';
 import 'package:ekarton_admin/main.dart';
-import 'package:ekarton_admin/models/bolnica.dart';
-import 'package:ekarton_admin/models/korisnik.dart';
-import 'package:ekarton_admin/models/search_result.dart';
-import 'package:ekarton_admin/models/tehnicka_podrska.dart';
-import 'package:ekarton_admin/providers/bolnica_provider.dart';
-import 'package:ekarton_admin/providers/korisnik_provider.dart';
-import 'package:ekarton_admin/providers/tehnicka_podrska_provider.dart';
-import 'package:ekarton_admin/screens/korisnik_profile_screen.dart';
-import 'package:ekarton_admin/screens/doktor_list_scren.dart';
-import 'package:ekarton_admin/screens/korisnik_screen.dart';
-import 'package:ekarton_admin/screens/pacijent_details_screen.dart';
-import 'package:ekarton_admin/screens/pacijent_list_screen.dart';
-import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -24,59 +12,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: Row(
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              "assets/images/welcomepage.jpg",
-              fit: BoxFit.cover,
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              child: _buildWelcomeCard(),
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildNavbar(),
-              Expanded(
-                child: Center(
-                  child: _buildWelcomeCard(),
+          Expanded(
+            flex: 1,
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/welcome.jpg"),
+                  fit: BoxFit.cover,
                 ),
               ),
-            ],
+            ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildNavbar() {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavButton(context, "Welcome page", WelcomeScreen(), Icons.home),
-          Spacer(),
-          _buildNavButton(context, "Login", LoginPage(), Icons.person),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavButton(
-      BuildContext context, String title, Widget screen, IconData icon) {
-    return ElevatedButton.icon(
-      onPressed: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => screen),
-        );
-      },
-      icon: Icon(icon, color: Colors.white),
-      label: Text(title, style: TextStyle(color: Colors.white)),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blueGrey.withOpacity(0.8),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       ),
     );
   }
@@ -84,55 +40,75 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget _buildWelcomeCard() {
     return Center(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.6,
-        height: MediaQuery.of(context).size.height * 0.5,
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.65,
         child: Card(
-          color: const Color.fromARGB(255, 202, 202, 202).withOpacity(0.4),
-          elevation: 4,
+          elevation: 10,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Welcome to the eKarton Admin Welcome Page!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          color: Colors.white.withOpacity(0.85),
+          shadowColor: Colors.black.withOpacity(0.5),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Welcome to the eKarton Admin!',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.abhayaLibre(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87)),
+                    SizedBox(height: 20),
+                    Text(
+                        'This is the central hub for managing the eKarton system. From here, you can access users, patients, doctors, and more.',
+                        textAlign: TextAlign.justify,
+                        style: GoogleFonts.abhayaLibre(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87)),
+                    SizedBox(height: 16),
+                    Text(
+                        'We are proud of this app and are constantly working on improving it.',
+                        textAlign: TextAlign.justify,
+                        style: GoogleFonts.abhayaLibre(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87)),
+                    SizedBox(height: 100),
+                    Text('Login with username and password!',
+                        textAlign: TextAlign.justify,
+                        style: GoogleFonts.abhayaLibre(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87)),
+                    SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                        );
+                      },
+                      child: Text('Login', style: TextStyle(fontSize: 18)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        shadowColor: const Color.fromARGB(255, 15, 58, 17),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 16),
-                Text(
-                  'This is the central hub for managing the eKarton system. From here, you can access various sections like users, patients, doctors, and departments.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'For every other information or action that you are going to do, you need to login with your account.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'Make sure that your credentials are right, so you can enjoy through our app.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'We made an effort to build the app. It is not the final version by design, but it is full of my inovations, and proud for now on it.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'Welcome! Let\'s login!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
+              ),
             ),
           ),
         ),

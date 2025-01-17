@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:ekarton_mobile/models/doktor.dart';
 import 'package:ekarton_mobile/models/pacijent.dart';
@@ -87,28 +86,78 @@ class _TerminScreen extends State<TerminScreen> {
   Widget _buildSearch() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(labelText: "Doctor first name"),
-              controller: _imeDoktoraController,
-              onChanged: (value) => _onSearchChanged(),
-            ),
+      child: Card(
+        elevation: 5,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.person_search,
+                      color: const Color.fromARGB(255, 34, 78, 57)),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: "Doctor first name",
+                        labelStyle: TextStyle(
+                            color: const Color.fromARGB(255, 34, 78, 57)),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: const Color.fromARGB(255, 34, 78, 57)),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: const Color.fromARGB(255, 34, 78, 57)),
+                        ),
+                        fillColor: const Color.fromARGB(255, 237, 237, 237),
+                        filled: true,
+                      ),
+                      controller: _imeDoktoraController,
+                      onChanged: (value) => _onSearchChanged(),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Row(
+                children: [
+                  Icon(Icons.person_search,
+                      color: const Color.fromARGB(255, 34, 78, 57)),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: "Doctor last name",
+                        labelStyle: TextStyle(
+                            color: const Color.fromARGB(255, 34, 78, 57)),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: const Color.fromARGB(255, 34, 78, 57)),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: const Color.fromARGB(255, 34, 78, 57)),
+                        ),
+                        fillColor: const Color.fromARGB(255, 237, 237, 237),
+                        filled: true,
+                      ),
+                      controller: _prezimeDoktoraController,
+                      onChanged: (value) => _onSearchChanged(),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _searchData,
+                child: Text("Search"),
+              ),
+            ],
           ),
-          SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(labelText: "Doctor last name"),
-              controller: _prezimeDoktoraController,
-              onChanged: (value) => _onSearchChanged(),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: _searchData,
-            child: Text("Search"),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -146,21 +195,24 @@ class _TerminScreen extends State<TerminScreen> {
     return MasterScreenWidget(
       title_widget: Text("See the list of scheduled appointments"),
       child: Container(
-        child: Column(children: [
-          _buildSearch(),
-          _buildDataListView(),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => TerminDetailsScreen(),
-                ),
-              );
-              _fetchTermini();
-            },
-            child: Text("Add new appoitment!"),
-          ),
-        ]),
+        child: Column(
+          children: [
+            _buildSearch(),
+            SizedBox(height: 16),
+            Expanded(child: _buildDataListView()),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => TerminDetailsScreen(),
+                  ),
+                );
+                _fetchTermini();
+              },
+              child: Text("Add new appointment!"),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -171,6 +223,7 @@ class _TerminScreen extends State<TerminScreen> {
 
     return Expanded(
       child: Card(
+        elevation: 5,
         child: AdaptiveScrollbar(
           controller: _verticalScrollController,
           underColor: Colors.blueGrey.withOpacity(0.3),

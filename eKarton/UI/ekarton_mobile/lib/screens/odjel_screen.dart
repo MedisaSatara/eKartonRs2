@@ -50,88 +50,104 @@ class _OdjelScreen extends State<OdjelScreen> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title_widget: Text("Departments"),
-      child: Container(
-        child: Column(
-          children: [
-            _buildDataListView(),
-          ],
-        ),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              "assets/images/welcomepage.jpg",
+              fit: BoxFit.cover,
+            ),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildCardListView(),
+                SizedBox(height: 16),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Expanded _buildDataListView() {
+  Expanded _buildCardListView() {
     return Expanded(
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: DataTable(
-          columnSpacing: 20,
-          dataRowMinHeight: 150.0,
-          dataRowMaxHeight: 300.0,
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Flexible(
-                child: Text(
-                  'Departments name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Flexible(
-                child: Text(
-                  'Phone number',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Flexible(
-                child: Text(
-                  'Doctors',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ],
-          rows: odjelResult?.result.map((Odjel odjel) {
+        child: Column(
+          children: odjelResult?.result.map((Odjel odjel) {
                 var doktori = doktorMap[odjel.odjelId] ?? [];
-
-                return DataRow(
-                  cells: [
-                    DataCell(
-                      Container(
-                        child: Text(odjel.naziv ?? ""),
-                        height: 400,
+                return Opacity(
+                  opacity: 0.9,
+                  child: Card(
+                    margin: EdgeInsets.all(8.0),
+                    elevation: 4.0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Stack(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.business,
+                                    size: 24,
+                                    color:
+                                        const Color.fromARGB(255, 34, 78, 57),
+                                  ),
+                                  SizedBox(width: 8.0),
+                                  Text(
+                                    '${odjel.naziv?.toUpperCase() ?? "Unknown"}',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 8.0),
+                              Text(
+                                'Phone: ${odjel.telefon ?? "N/A"}',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              SizedBox(height: 16.0),
+                              Text(
+                                'Doctors:',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 8.0),
+                              doktori.isNotEmpty
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: doktori.map((doktor) {
+                                        return Text(
+                                          '${doktor.ime} ${doktor.prezime}',
+                                          style: TextStyle(fontSize: 14),
+                                        );
+                                      }).toList(),
+                                    )
+                                  : Text("No doctors available"),
+                            ],
+                          ),
+                          Positioned(
+                            right: 0,
+                            bottom: -30,
+                            child: Image.asset(
+                              'assets/images/logo.jpg',
+                              width: 100,
+                              height: 100,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    DataCell(
-                      Container(
-                        child: Text(odjel.telefon ?? ""),
-                        height: 400,
-                      ),
-                    ),
-                    DataCell(
-                      Container(
-                        height: 600.0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: doktori.isNotEmpty
-                              ? doktori.map((doktor) {
-                                  return Text('${doktor.ime} ${doktor.prezime}',
-                                      style: TextStyle(fontSize: 14));
-                                }).toList()
-                              : [Text("Nema doktora")],
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 );
               }).toList() ??
               [],

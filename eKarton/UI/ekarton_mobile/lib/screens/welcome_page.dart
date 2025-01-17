@@ -1,7 +1,4 @@
 import 'package:ekarton_mobile/main.dart';
-import 'package:ekarton_mobile/screens/korisnik_profile_screen.dart';
-import 'package:ekarton_mobile/screens/pacijent_list_screen.dart';
-import 'package:ekarton_mobile/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -14,74 +11,77 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Welcome Page'),
+        title: Text('eKarton'),
       ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              "assets/images/ekarton3.png",
-              fit: BoxFit.cover,
-            ),
-          ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildWelcomeCard(),
-                SizedBox(height: 16),
-              ],
-            ),
-          ),
-        ],
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildCircularImage(),
+            SizedBox(height: 16),
+            _buildWelcomeCard(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCircularImage() {
+    return Center(
+      child: CircleAvatar(
+        radius: 150,
+        backgroundColor: Colors.grey[200],
+        backgroundImage: AssetImage("assets/images/welcomepage.jpg"),
       ),
     );
   }
 
   Widget _buildWelcomeCard() {
     return Center(
-      child: SizedBox(
-        width: 400,
-        height: 350,
-        child: Card(
-          color: Colors.white.withOpacity(0.8),
-          elevation: 4,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Welcome to eKarton Mobile app!',
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'If you are using eKarton, lets login to check details about your health.',
-                  style: TextStyle(fontSize: 18),
-                ),
-                Text(
-                  'Let\'s start the journey!',
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => LoginPage(),
-                      ),
-                    );
-                  },
-                  child: Text("Login"),
-                ),
-              ],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Welcome to eKarton Mobile app!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Let\'s start the journey!',
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 70),
+          Text(
+            'Connect with username and password',
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 8),
+          SizedBox(
+            width: 350, 
+            height: 50,
+            child: ElevatedButton(
+              onPressed: () async {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
+                );
+              },
+              child: Text(
+                "Login",
+                style: TextStyle(fontSize: 18, color: Colors.black),
+                
+                textAlign: TextAlign.center,
+                
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

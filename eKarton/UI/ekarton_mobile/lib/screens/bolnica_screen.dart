@@ -38,7 +38,7 @@ class _BolnicaScreenState extends State<BolnicaScreen> {
       child: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/ekarton3.png'),
+            image: AssetImage('assets/images/welcomepage.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -52,7 +52,7 @@ class _BolnicaScreenState extends State<BolnicaScreen> {
                 const Text("Nema dostupnih podataka.")
               else
                 Expanded(
-                  child: _buildCardListView(),
+                  child: _buildCardView(),
                 ),
             ],
           ),
@@ -61,62 +61,59 @@ class _BolnicaScreenState extends State<BolnicaScreen> {
     );
   }
 
-  Widget _buildCardListView() {
-    return ListView.builder(
-      itemCount: result!.result.length,
-      itemBuilder: (context, index) {
-        Bolnica bolnica = result!.result[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  bolnica.naziv ?? "Nepoznato",
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8.0),
-                Row(
-                  children: [
-                    const Icon(Icons.location_on, color: Colors.grey),
-                    const SizedBox(width: 8.0),
-                    Expanded(
-                      child: Text(bolnica.adresa ?? "Nepoznato"),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8.0),
-                Row(
-                  children: [
-                    const Icon(Icons.phone, color: Colors.grey),
-                    const SizedBox(width: 8.0),
-                    Text(bolnica.telefon ?? "Nepoznato"),
-                  ],
-                ),
-                const SizedBox(height: 8.0),
-                Row(
-                  children: [
-                    const Icon(Icons.email, color: Colors.grey),
-                    const SizedBox(width: 8.0),
-                    Expanded(
-                      child: Text(bolnica.email ?? "Nepoznato"),
-                    ),
-                  ],
-                ),
-              ],
+  Widget _buildCardView() {
+    Bolnica bolnica = result!.result.first;
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              bolnica.naziv ?? "Nepoznato",
+              style: const TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        );
-      },
+            const SizedBox(height: 16.0),
+            Image.asset('assets/images/bolnica.jpg',
+                height: 200, width: double.infinity, fit: BoxFit.cover),
+            const SizedBox(height: 36.0),
+
+            _buildInfoRow(Icons.location_on, bolnica.adresa ?? "Nepoznato"),
+            const SizedBox(height: 12.0),
+            const Divider(
+                color: const Color.fromARGB(255, 34, 78, 57), thickness: 1.0),
+            const SizedBox(height: 12.0),
+
+            _buildInfoRow(Icons.phone, bolnica.telefon ?? "Nepoznato"),
+            const SizedBox(height: 12.0),
+            const Divider(
+                color: const Color.fromARGB(255, 34, 78, 57), thickness: 1.0),
+            const SizedBox(height: 12.0),
+            _buildInfoRow(Icons.email, bolnica.email ?? "Nepoznato"),
+            const SizedBox(height: 12.0),
+            const Divider(
+                color: const Color.fromARGB(255, 34, 78, 57), thickness: 1.0),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(icon, color: Color.fromARGB(255, 34, 78, 57)),
+        const SizedBox(width: 26.0),
+        Expanded(child: Text(text)),
+      ],
     );
   }
 }

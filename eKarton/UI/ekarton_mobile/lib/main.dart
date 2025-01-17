@@ -12,6 +12,7 @@ import 'package:ekarton_mobile/providers/preventivne_mjere_provider.dart';
 import 'package:ekarton_mobile/providers/terapija_provider.dart';
 import 'package:ekarton_mobile/providers/termin_provider.dart';
 import 'package:ekarton_mobile/providers/uloga_provider.dart';
+import 'package:ekarton_mobile/screens/ekarton_screen.dart';
 import 'package:ekarton_mobile/screens/home_screen.dart';
 import 'package:ekarton_mobile/screens/korisnik_profile_screen.dart';
 import 'package:ekarton_mobile/screens/welcome_page.dart';
@@ -77,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
   late KorisnikProvider _korisnikProvider;
   int? loggedInUserID;
   bool _isLoading = false;
+  bool _isHover = false;
 
   @override
   void initState() {
@@ -159,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Login admin!"),
+          title: Text("User login!"),
         ),
         body: Stack(children: [
           Positioned.fill(
@@ -181,14 +183,20 @@ class _LoginPageState extends State<LoginPage> {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      Image.asset(
-                        "assets/images/logo.jpg",
-                        height: 200,
-                        width: 300,
+                      Opacity(
+                          opacity: 0.7,
+                          child: Image.asset(
+                            "assets/images/logo.jpg",
+                            fit: BoxFit.cover,
+                            width: 370,
+                            height: 150,
+                          )),
+                      SizedBox(
+                        height: 66,
                       ),
                       Container(
                         decoration: BoxDecoration(
-                          color: Color(0x298031CC),
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: TextField(
@@ -209,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       Container(
                         decoration: BoxDecoration(
-                          color: Color(0x298031CC),
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: TextField(
@@ -231,19 +239,22 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       _isLoading
                           ? CircularProgressIndicator()
-                          : ElevatedButton(
-                              onPressed: _login,
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.white),
-                              ),
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.black),
-                              ),
-                            )
+                          : SizedBox(
+                              width: 370,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: _login,
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<
+                                          Color>(
+                                      const Color.fromARGB(255, 34, 78, 57)),
+                                ),
+                                child: Text(
+                                  "Login",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.white),
+                                ),
+                              )),
                     ],
                   ),
                 ),

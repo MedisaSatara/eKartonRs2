@@ -47,13 +47,24 @@ class _PacijentListScreen extends State<PacijentListScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Carton number search!"),
+      title_widget: Text(
+        "Carton number search!",
+        style: TextStyle(color: Colors.white),
+      ),
       child: Container(
-        child: Column(children: [
-          _buildSearch(),
-          if (pacijentResult != null && pacijentResult!.result.isNotEmpty)
-            _buildDataListView(),
-        ]),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/welcomepage.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            _buildSearch(),
+            if (pacijentResult != null && pacijentResult!.result.isNotEmpty)
+              _buildDataListView(),
+          ],
+        ),
       ),
     );
   }
@@ -73,15 +84,20 @@ class _PacijentListScreen extends State<PacijentListScreen> {
         children: [
           Expanded(
             child: TextField(
-              decoration: InputDecoration(labelText: "Carton number"),
+              decoration: InputDecoration(
+                labelText: "Carton number",
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
+              ),
               controller: _brojKartonaController,
               onChanged: (value) => _onSearchChanged(),
             ),
           ),
           SizedBox(width: 8),
-          ElevatedButton(
+          IconButton(
             onPressed: _searchData,
-            child: Text("Search"),
+            icon: Icon(Icons.search),
+            color: Colors.black,
           ),
         ],
       ),

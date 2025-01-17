@@ -37,29 +37,24 @@ class _ReportScreen extends State<ReportScreen> {
     final pdf = pw.Document();
 
     pdf.addPage(
-      pw.Page(
+      pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
-        build: (context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(reportName, style: pw.TextStyle(fontSize: 24)),
-              pw.SizedBox(height: 20),
-              ...data.map((item) {
-                if (item is OdabraniDoktori) {
-                  return pw.Text(
-                      'Ime: ${item.imeDoktora}, Specijalizacija: ${item.specijalizacija}');
-                } else if (item is DoktoriPregledReport) {
-                  return pw.Text(
-                      'Pregled kod: ${item.imeDoktora}, Broj pregleda: ${item.brojPregleda}');
-                } else if (item is BolestiPoGodistuReport) {
-                  return pw.Text('Godina: ${item.decade}');
-                }
-                return pw.Text(item.toString());
-              }).toList(),
-            ],
-          );
-        },
+        margin: const pw.EdgeInsets.all(20),
+        build: (context) => [
+          pw.Header(
+            level: 0,
+            child: pw.Text(
+              reportName,
+              style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+            ),
+          ),
+          pw.Paragraph(
+            text: "Izveštaj generisan: ${DateTime.now().toString()}",
+            style: pw.TextStyle(fontSize: 12, fontStyle: pw.FontStyle.italic),
+          ),
+          pw.SizedBox(height: 20),
+          ..._buildReportContent(data),
+        ],
       ),
     );
 
@@ -75,6 +70,104 @@ class _ReportScreen extends State<ReportScreen> {
     } catch (e) {
       print('Greška: $e');
     }
+  }
+
+  List<pw.Widget> _buildReportContent(List<dynamic> data) {
+    List<pw.Widget> content = [];
+
+    if (data.isNotEmpty) {
+      if (data.first is OdabraniDoktori) {
+        for (var doktor in data) {
+          final doc = doktor as OdabraniDoktori;
+          content.add(pw.Text(
+              'Ovdje su prikazani podaci o najposjecenijem doktoru. Rangirali smo ih u top 3 najposjecenija doktora.'));
+          content.add(pw.Text(
+              'Jedan od njih je i doktor ${doc.imeDoktora ?? ''} ${doc.prezimeDoktora ?? ''}'));
+          content.add(pw.Text(
+              'Doktor radi specijalizaciju na odjelu ${doc.specijalizacija ?? ''}'));
+          content.add(pw.Text(
+              'Do sada je imao  ${doc.brojZakazanihTermina ?? ''} zakazanih termina kod pacijenata.'));
+
+          content.add(pw.Text('Slijedi prikaz dodatnih informacija doktora:'));
+          content.add(pw.Text('Datum rodjenja: ${doc.datumRodjenja ?? ''}'));
+          content.add(pw.Text('Email: ${doc.email ?? ''}'));
+          content.add(pw.Text('Telefon: ${doc.telefon ?? ''}'));
+          content.add(pw.SizedBox(height: 10));
+        }
+      } else if (data.first is DoktoriPregledReport) {
+        for (var pregled in data) {
+          final preg = pregled as DoktoriPregledReport;
+          content.add(pw.Text('Ime doktora: ${preg.imeDoktora ?? ''}'));
+          content.add(pw.Text('Broj pregleda: ${preg.brojPregleda ?? 0}'));
+          content.add(pw.SizedBox(height: 10));
+        }
+      } else if (data.first is BolestiPoGodistuReport) {
+        for (var bolest in data) {
+          final bol = bolest as BolestiPoGodistuReport;
+          content.add(pw.Text('Godina: ${bol.decade ?? ''}'));
+          for (var bolestDetalj in bol.najcesceBolesti) {
+            content.add(pw.Text('Dijagnoza: ${bolestDetalj.dijagnoza ?? ''}'));
+            content.add(pw.Text(
+                'Broj pacijenata: ${bolestDetalj.brojPacijenata ?? 0}'));
+          }
+          content.add(pw.SizedBox(height: 10));
+        }
+      }
+    }
+
+    return content;
+  }
+
+  List<String> _getHeaders(List<dynamic> data) {
+    if (data.isNotEmpty) {
+      if (data.first is OdabraniDoktori) {
+        return [
+          'Ime doktora',
+          'Prezime doktora',
+          'Datum rodjenja',
+          'Email',
+          'Telefon',
+          'Specijalizacija'
+        ];
+      } else if (data.first is DoktoriPregledReport) {
+        return ['Ime doktora', 'Broj pregleda'];
+      } else if (data.first is BolestiPoGodistuReport) {
+        return ['Godina', 'Bolesti'];
+      }
+    }
+    return [];
+  }
+
+  List<List<String>> _getTableData(List<dynamic> data) {
+    if (data.isNotEmpty) {
+      if (data.first is OdabraniDoktori) {
+        return data.map((e) {
+          final doktor = e as OdabraniDoktori;
+          return [
+            doktor.imeDoktora ?? '',
+            doktor.specijalizacija ?? '',
+            doktor.prezimeDoktora ?? '',
+            doktor.email ?? '',
+            doktor.datumRodjenja ?? '',
+            doktor.telefon ?? '',
+          ];
+        }).toList();
+      } else if (data.first is DoktoriPregledReport) {
+        return data.map((e) {
+          final pregled = e as DoktoriPregledReport;
+          return [pregled.imeDoktora ?? '', pregled.brojPregleda.toString()];
+        }).toList();
+      } else if (data.first is BolestiPoGodistuReport) {
+        return data.map((e) {
+          final bolest = e as BolestiPoGodistuReport;
+          final bolestiDetalji = bolest.najcesceBolesti.map((d) {
+            return '${d.dijagnoza}: ${d.brojPacijenata}';
+          }).join(', ');
+          return [bolest.decade.toString(), bolestiDetalji];
+        }).toList();
+      }
+    }
+    return [];
   }
 
   void _showReportDownloadedDialog(String filePath) {
@@ -111,6 +204,35 @@ class _ReportScreen extends State<ReportScreen> {
       title: 'Reports',
       child: Column(
         children: [
+          Card(
+            margin: const EdgeInsets.all(16.0),
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'Welcome to the report generation section!',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Here you can view and download reports related to doctors, exams, and diseases.'
+                    ' Click on one of the provided buttons to see the available data and generate a PDF report.',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -156,7 +278,7 @@ class _ReportScreen extends State<ReportScreen> {
                         trailing: Column(
                           children: [
                             IconButton(
-                              icon: Icon(Icons.download),
+                              icon: const Icon(Icons.download),
                               onPressed: () async {
                                 await _generatePdf('Top 3 Doktora', [doktor]);
                               },
@@ -176,7 +298,7 @@ class _ReportScreen extends State<ReportScreen> {
                         trailing: Column(
                           children: [
                             IconButton(
-                              icon: Icon(Icons.download),
+                              icon: const Icon(Icons.download),
                               onPressed: () async {
                                 await _generatePdf(
                                     'Pregledi Po Doktoru', [pregled]);
@@ -196,13 +318,13 @@ class _ReportScreen extends State<ReportScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: bolest.najcesceBolesti.map((detail) {
                             return Text(
-                                '${detail.dijagnoza}: ${detail.brojPacijenata}');
+                                'Dijagnoza: ${detail.dijagnoza} | Broj pacijenata sa dijagnozom: ${detail.brojPacijenata}');
                           }).toList(),
                         ),
                         trailing: Column(
                           children: [
                             IconButton(
-                              icon: Icon(Icons.download),
+                              icon: const Icon(Icons.download),
                               onPressed: () async {
                                 await _generatePdf(
                                     'Bolesti Po Godištu', [bolest]);

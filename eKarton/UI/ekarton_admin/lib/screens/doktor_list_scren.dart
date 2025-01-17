@@ -25,222 +25,201 @@ class _DoktorScreenState extends State<DoktorScreen> {
   SearchResult<Odjel>? odjelResult;
   TextEditingController _imeController = TextEditingController();
   TextEditingController _prezimeController = TextEditingController();
-  TextEditingController _nazivOdjelaController = TextEditingController();
-
   String? _selectedOdjelId;
-  Map<String, dynamic> _initialValue = {};
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _initialValue = {
-      'doktorId': widget.doktor?.doktorId,
-      'ime': widget.doktor?.ime,
-      'prezime': widget.doktor?.prezime,
-      'spol': widget.doktor?.spol,
-      'datumRodjenja': widget.doktor?.datumRodjenja,
-      'grad': widget.doktor?.grad,
-      'jmbg': widget.doktor?.jmbg,
-      'telefon': widget.doktor?.telefon,
-      'email': widget.doktor?.email,
-      'odjelId': widget.doktor?.odjelId?.toString(),
-    };
     _doktorProvider = context.read<DoktorProvider>();
     _odjelProvider = context.read<OdjelProvider>();
     initForm();
-    _searchData();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _doktorProvider = context.read<DoktorProvider>();
-    _odjelProvider = context.read<OdjelProvider>();
   }
 
   Future initForm() async {
     odjelResult = await _odjelProvider.get();
     if (odjelResult == null || odjelResult!.result == null) {
-      print('odjel je prazan');
-    }
-    for (var item in odjelResult!.result) {
-      print('Dropdown item: ${item.odjelId} - ${item.naziv}');
+      print('Odjel je prazan');
     }
     setState(() {
       isLoading = false;
     });
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return MasterScreenWidget(
-      title_widget: Text("Doctors"),
-      child: Container(
-        child: Column(children: [
-          _buildSearch(),
-          _buildDataListView(),
-        ]),
-      ),
-    );
-  }
-
-  Widget _buildSearch() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(labelText: "First name"),
-              controller: _imeController,
-            ),
-          ),
-          SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(labelText: "Last name"),
-              controller: _prezimeController,
-            ),
-          ),
-          SizedBox(width: 8),
-          Expanded(
-            child: FormBuilderDropdown<String>(
-              name: 'odjelId',
-              decoration: InputDecoration(
-                labelText: 'Department',
-              ),
-              items: [
-                DropdownMenuItem(value: null, child: Text("All departments")),
-                ...?odjelResult?.result
-                    .map((item) => DropdownMenuItem<String>(
-                          value: item.odjelId.toString(),
-                          child: Text(item.naziv ?? ""),
-                        ))
-                    .toList(),
-              ],
-              initialValue: _initialValue['odjelId'] ?? null,
-              onChanged: (value) {
-                setState(() {
-                  _selectedOdjelId = value;
-                });
-                print("Odabrani odjelId: $_selectedOdjelId");
-              },
-            ),
-          ),
-          SizedBox(width: 8),
-          ElevatedButton(
-            onPressed: _searchData,
-            child: Text("Search"),
-          ),
-        ],
-      ),
-    );
+    _searchData();
   }
 
   Future<void> _searchData() async {
     var filter = {
       'imeDoktora': _imeController.text,
       'prezimeDoktora': _prezimeController.text,
-      'nazivOdjela': _nazivOdjelaController.text,
     };
 
     if (_selectedOdjelId != null && _selectedOdjelId!.isNotEmpty) {
       filter['odjelId'] = _selectedOdjelId!;
     }
 
-    print("Filter: $filter");
-
     var data = await _doktorProvider.get(filter: filter);
-
-    var filteredData = data.result.where((doktor) {
-      var imeMatch =
-          doktor.ime!.toLowerCase().contains(_imeController.text.toLowerCase());
-      var prezimeMatch = doktor.prezime!
-          .toLowerCase()
-          .contains(_prezimeController.text.toLowerCase());
-      return imeMatch && prezimeMatch;
-    }).toList();
 
     setState(() {
       doktorResult = data;
     });
   }
 
-  Expanded _buildDataListView() {
-    return Expanded(
+  @override
+  Widget build(BuildContext context) {
+    return MasterScreenWidget(
+      title_widget: Text(
+        "Doctors",
+        style: TextStyle(color: Colors.white),
+      ),
       child: SingleChildScrollView(
-        child: DataTable(
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'First name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              height: 200,
+              color: const Color.fromARGB(255, 63, 125, 137),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      width: 400,
+                      height: 280,
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextField(
+                            controller: _imeController,
+                            decoration:
+                                InputDecoration(labelText: 'First Name'),
+                          ),
+                          SizedBox(height: 8),
+                          TextField(
+                            controller: _prezimeController,
+                            decoration: InputDecoration(labelText: 'Last Name'),
+                          ),
+                          SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: _searchData,
+                            child: Text("Search"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 16),
+                  Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      width: 200,
+                      height: 280,
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Select Department",
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Row(
+                            children: [
+                              Radio<String>(
+                                value: "",
+                                groupValue: _selectedOdjelId,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedOdjelId = value;
+                                  });
+                                  _searchData();
+                                },
+                              ),
+                              Text("No Department"),
+                            ],
+                          ),
+                          ...?odjelResult?.result.map((item) {
+                            return Row(
+                              children: [
+                                Radio<String>(
+                                  value: item.odjelId.toString(),
+                                  groupValue: _selectedOdjelId,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedOdjelId = value;
+                                    });
+                                    _searchData();
+                                  },
+                                ),
+                                Text(item.naziv ?? "N/A"),
+                              ],
+                            );
+                          }).toList(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Last name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Date of birth',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Gender',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Department',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: doktorResult == null
+                  ? Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: doktorResult?.result.length ?? 0,
+                      itemBuilder: (context, index) {
+                        final doktor = doktorResult!.result[index];
+                        final odjel = odjelResult?.result.firstWhere(
+                          (odjel) => odjel.odjelId == doktor.odjelId,
+                          orElse: () => Odjel(odjelId: 0, naziv: "N/A"),
+                        );
+
+                        return Card(
+                          elevation: 4,
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${doktor.ime ?? ''} ${doktor.prezime ?? ''}",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                    "Date of Birth: ${doktor.datumRodjenja ?? 'N/A'}"),
+                                Text("Gender: ${doktor.spol ?? 'N/A'}"),
+                                Text("Department: ${odjel?.naziv ?? 'N/A'}"),
+                                SizedBox(height: 8),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
             ),
           ],
-          rows: doktorResult?.result
-                  .map((Doktor e) => DataRow(
-                        /* onSelectChanged: (selected) {
-                          if (selected == true) {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    DoktorDetailsScreen(doktor: e),
-                              ),
-                            );
-                          }
-                        },*/
-                        cells: [
-                          DataCell(Text(e.ime ?? "")),
-                          DataCell(Text(e.prezime ?? "")),
-                          DataCell(Text(e.datumRodjenja ?? "")),
-                          DataCell(Text(e.spol ?? "")),
-                          DataCell(Text(odjelResult?.result
-                                  .firstWhere(
-                                      (odjel) => odjel.odjelId == e.odjelId,
-                                      orElse: () =>
-                                          Odjel(odjelId: 0, naziv: "N/A"))
-                                  .naziv ??
-                              "")),
-                        ],
-                      ))
-                  .toList() ??
-              [],
         ),
       ),
     );

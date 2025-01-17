@@ -1,3 +1,4 @@
+import 'package:ekarton_mobile/models/odjel.dart';
 import 'package:ekarton_mobile/screens/bolnica_screen.dart';
 import 'package:ekarton_mobile/screens/home_screen.dart';
 import 'package:ekarton_mobile/screens/korisnik_profile_screen.dart';
@@ -8,7 +9,7 @@ import 'package:ekarton_mobile/screens/preporuceni_doktori.dart';
 import 'package:ekarton_mobile/screens/test.dart';
 import 'package:flutter/material.dart';
 
-class MasterScreenWidget extends StatefulWidget {
+/*class MasterScreenWidget extends StatefulWidget {
   final Widget? child;
   final String? title;
   final Widget? title_widget;
@@ -95,6 +96,122 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             MaterialPageRoute(builder: (context) => screen),
           );
         },
+      ),
+    );
+  }
+}
+*/
+class MasterScreenWidget extends StatefulWidget {
+  Widget? child;
+  String? title;
+  Widget? title_widget;
+  MasterScreenWidget({this.child, this.title, this.title_widget, Key? key})
+      : super(key: key);
+
+  @override
+  State<MasterScreenWidget> createState() => _MasterScreenWidgetState();
+}
+
+class _MasterScreenWidgetState extends State<MasterScreenWidget> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _mainScreens = [
+    HomeScreen(),
+    OdjelScreen(),
+    TerminScreen(),
+    OcjenaDoktorScreen(),
+  ];
+
+  final Map<String, Widget> _moreOptions = {
+    'Recommended doctors': RecommendedDoctorsScreen(),
+    'Contact': BolnicaScreen(),
+    'Online paymant': OnlinePayScreen(),
+  };
+
+  void _onMainItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => _mainScreens[index]),
+      );
+    });
+  }
+
+  void _onMoreOptionSelected(String key) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => _moreOptions[key]!),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor:const Color.fromARGB(255, 34, 78, 57),
+        title: widget.title_widget ??
+            Text(
+              widget.title ?? "",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person),
+            color: Colors.white,
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => KorisnikProfileScreen(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+      body: widget.child ?? _mainScreens[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onMainItemTapped,
+        items: [
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            label: 'Departments',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.app_registration),
+            label: 'Appointment',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.grade_sharp),
+            label: 'Grades',
+          ),
+          BottomNavigationBarItem(
+            icon: PopupMenuButton<String>(
+              icon: const Icon(Icons.more_vert),
+              onSelected: _onMoreOptionSelected,
+              itemBuilder: (BuildContext context) {
+                return _moreOptions.keys
+                    .map(
+                      (String key) => PopupMenuItem<String>(
+                        value: key,
+                        child: Text(key),
+                      ),
+                    )
+                    .toList();
+              },
+            ),
+            label: 'More',
+          ),
+        ],
+        backgroundColor: Colors.blueGrey[900],
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey[400],
+        showUnselectedLabels: true,
       ),
     );
   }

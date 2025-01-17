@@ -49,7 +49,6 @@ class _KorisnikScreen extends State<KorisnikScreen> {
     } else if (result == 'updated') {
       _showSnackbar('Korisnik uspješno ažuriran!');
     }
-
     await _fetchKorisnici();
   }
 
@@ -59,7 +58,6 @@ class _KorisnikScreen extends State<KorisnikScreen> {
       backgroundColor: Colors.grey,
       duration: Duration(seconds: 3),
     );
-
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -67,57 +65,171 @@ class _KorisnikScreen extends State<KorisnikScreen> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title_widget: Text("User list"),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (_successMessage != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Text(
-                  _successMessage!,
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 200,
+                color: const Color.fromARGB(255, 63, 125, 137),
               ),
-            _buildSearch(),
-            Expanded(child: _buildDataListView()),
-            _buildButton(),
-          ],
-        ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 120),
+                if (_successMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: Text(
+                      _successMessage!,
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                _buildSearch(),
+                _buildButton(),
+                const SizedBox(height: 12),
+                Expanded(child: _buildDataListView()),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        children: [
+          Spacer(),
+          ElevatedButton(
+            onPressed: _navigateToAddUser,
+            child: Text(
+              "Add New User",
+              style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 63, 125, 137),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildSearch() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(labelText: "Name"),
-              controller: _imeController,
-            ),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Card(
+        elevation: 6.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  labelText: "Name",
+                  labelStyle: TextStyle(color: Colors.black),
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 246, 246, 246),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                ),
+                style: TextStyle(color: Colors.black),
+                controller: _imeController,
+              ),
+              SizedBox(height: 12),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: "Last name",
+                  labelStyle: TextStyle(color: Colors.black),
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 246, 246, 246),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                ),
+                style: TextStyle(color: Colors.black),
+                controller: _prezimeController,
+              ),
+              SizedBox(height: 12),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: "Username",
+                  labelStyle: TextStyle(color: Colors.black),
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 246, 246, 246),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                ),
+                style: TextStyle(color: Colors.black),
+                controller: _korisnickoImeController,
+              ),
+              SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await _fetchKorisnici();
+                  },
+                  child: Text(
+                    "Search",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 14),
+                    backgroundColor: const Color.fromARGB(255, 63, 125, 137),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-          SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(labelText: "Last name"),
-              controller: _prezimeController,
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              await _fetchKorisnici();
-            },
-            child: Text("Search"),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -150,26 +262,6 @@ class _KorisnikScreen extends State<KorisnikScreen> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Center(
-        child: ElevatedButton(
-          onPressed: _navigateToAddUser,
-          child: Text("Add new user"),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 236, 233, 233),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

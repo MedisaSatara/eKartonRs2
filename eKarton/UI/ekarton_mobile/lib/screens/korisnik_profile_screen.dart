@@ -50,7 +50,7 @@ class _KorisnikProfileScreen extends State<KorisnikProfileScreen> {
 
     return MasterScreenWidget(
       title_widget: Text(
-        "Hello, User! Welcome to your profile!",
+        "Hello, ${korisnik?.ime}! Welcome to your profile!",
         style: TextStyle(color: Colors.black),
       ),
       child: korisnik != null

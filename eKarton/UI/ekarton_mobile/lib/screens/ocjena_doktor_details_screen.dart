@@ -97,18 +97,23 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
       final mutableFormData = Map<String, dynamic>.from(formData);
 
       if (mutableFormData['ocjena'] != null) {
-        mutableFormData['ocjena'] =
-            int.tryParse(mutableFormData['ocjena'] as String) ?? 0;
+        mutableFormData['ocjena'] = mutableFormData['ocjena'] is int
+            ? mutableFormData['ocjena']
+            : int.tryParse(mutableFormData['ocjena'].toString()) ?? 0;
       }
 
       if (mutableFormData['korisnikId'] != null) {
-        mutableFormData['korisnikId'] =
-            int.tryParse(mutableFormData['korisnikId'] as String) ?? 0;
+        mutableFormData['korisnikId'] = mutableFormData['korisnikId'] is int
+            ? mutableFormData['korisnikId']
+            : int.tryParse(mutableFormData['korisnikId'].toString()) ?? 0;
       }
+
       if (mutableFormData['doktorId'] != null) {
-        mutableFormData['doktorId'] =
-            int.tryParse(mutableFormData['doktorId'] as String) ?? 0;
+        mutableFormData['doktorId'] = mutableFormData['doktorId'] is int
+            ? mutableFormData['doktorId']
+            : int.tryParse(mutableFormData['doktorId'].toString()) ?? 0;
       }
+
       try {
         String successMessage;
 
@@ -195,15 +200,28 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
                   ),
                 ),
                 SizedBox(height: 16.0),
-                FormBuilderTextField(
+                FormBuilderDropdown<int>(
+                  name: 'ocjena',
                   decoration: InputDecoration(
-                    labelText: "Rating",
+                    labelText: 'Rating',
                     border: OutlineInputBorder(),
                   ),
-                  name: "ocjena",
-                  keyboardType: TextInputType.number,
+                  items: List.generate(5, (index) {
+                    int rating = index + 1;
+                    return DropdownMenuItem<int>(
+                      value: rating,
+                      child: Text(rating.toString()),
+                    );
+                  }),
+                  initialValue: _initialValue['ocjena'],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedDoktorId = value?.toString();
+                    });
+                    print("Odabrana ocjena: $value");
+                  },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null) {
                       return 'Ovo polje je obavezno!';
                     }
                     return null;

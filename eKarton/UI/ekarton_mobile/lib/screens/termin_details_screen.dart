@@ -5,6 +5,7 @@ import 'package:ekarton_mobile/providers/doktor_provider.dart';
 import 'package:ekarton_mobile/providers/pacijent_provider.dart';
 import 'package:ekarton_mobile/providers/termin_provider.dart';
 import 'package:ekarton_mobile/screens/preporuceni_doktori.dart';
+import 'package:ekarton_mobile/screens/list_preporuceni_doktori.dart';
 import 'package:ekarton_mobile/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -31,6 +32,11 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
   String? _selectedDoktorId;
 
   late Map<String, dynamic> _initialValue;
+
+  List<Map<String, String>> stateOptions = [
+    {"display": "Active", "value": "Active"},
+    {"display": "Draft", "value": "Draft"},
+  ];
 
   @override
   void initState() {
@@ -75,6 +81,17 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
     } catch (e) {
       print('Error fetching doktori: $e');
     }
+  }
+
+  Future<void> _fetchRecommendedDoctors() async {
+    try {
+      _doktori = await _doktorProvider.fetchRecommendedDoctors();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error fetching data: $e')),
+      );
+    }
+    setState(() {});
   }
 
   Future<void> _submitForm() async {
@@ -306,7 +323,7 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                   Container(
                     width: double.infinity,
                     height: 300,
-                    child: RecommendedDoctorsScreen(),
+                    child: RecommendedDoctorScreen(),
                   ),
                 SizedBox(
                   height: 16,

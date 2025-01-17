@@ -75,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
@@ -86,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Positioned.fill(
               child: Image.asset(
-                "assets/images/welcomepage.jpg",
+                "assets/images/welcome.jpg",
                 fit: BoxFit.cover,
               ),
             ),
@@ -96,22 +95,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _buildWelcomeCard(),
-                        SizedBox(height: 16),
-                        _bolnicaDetails != null
-                            ? _buildHospitalInfoCard()
-                            : Center(child: CircularProgressIndicator()),
-                        SizedBox(height: 16),
-                        _buildBrojKorisnikaCard(),
-                        SizedBox(height: 16),
-                        _buildTehnickaPodrskaCard(),
-                      ],
-                    ),
+                    child: _buildCardsSection(),
                   ),
                 ),
+                SizedBox(height: 16),
               ],
             ),
           ],
@@ -120,50 +107,33 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildNavbar(BuildContext context) {
-    return Container(
-      color: Colors.blueGrey[900],
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavButton(context, "", HomeScreen(), Icons.home),
-          SizedBox(width: 200.0),
-          _buildNavButton(context, "Korisnik", KorisnikScreen(), Icons.person),
-          SizedBox(width: 50.0),
-          _buildNavButton(
-              context, "Pacijenti", PacijentiScreen(), Icons.people),
-          SizedBox(width: 50.0),
-          _buildNavButton(
-              context, "Doktori", DoktorScreen(), Icons.local_hospital),
-          SizedBox(width: 50.0),
-          _buildNavButton(
-              context, "Odjel", PacijentiDetailsScreen(), Icons.business),
-          SizedBox(width: 50.0),
-          _buildNavButton(
-              context, "Termini", PacijentiDetailsScreen(), Icons.schedule),
-          Spacer(),
-          _buildNavButton(context, "", KorisnikProfileScreen(), Icons.person),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavButton(
-      BuildContext context, String title, Widget screen, IconData icon) {
-    return ElevatedButton.icon(
-      onPressed: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => screen),
-        );
-      },
-      icon: Icon(icon, color: Colors.white),
-      label: Text(title, style: TextStyle(color: Colors.white)),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blueGrey.withOpacity(0.8),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      ),
+  Widget _buildCardsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildWelcomeCard(),
+        SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 1,
+              child: Column(
+                children: [
+                  _buildBrojKorisnikaCard(),
+                  SizedBox(height: 16),
+                  _buildTotalRegistratedUserCard(),
+                ],
+              ),
+            ),
+            SizedBox(width: 56),
+            Expanded(
+              flex: 1,
+              child: _buildTehnickaPodrskaCard(),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -192,9 +162,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Total Registered Users: $_brojKorisnika',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  'You have full control over all aspects of the eKarton platform. With just a few clicks, you can easily navigate to different sections, update information, and ensure the system is functioning smoothly.',
+                  style: TextStyle(fontSize: 16),
                 ),
+                SizedBox(height: 8),
+                Text(
+                  'Feel free to explore and make the most of the features available in the admin panel. Everything you need is right here at your fingertips.',
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 8),
               ],
             ),
           ),
@@ -203,10 +179,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildHospitalInfoCard() {
+  Widget _buildTotalRegistratedUserCard() {
     return Center(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.4,
+        width: MediaQuery.of(context).size.width * 0.2,
         child: Card(
           color: Colors.white.withOpacity(0.8),
           elevation: 4,
@@ -218,21 +194,16 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hospital Information',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  'Total Users registrated on the App:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 8),
-                _buildHospitalDetailRow(
-                    'Name:', _bolnicaDetails!.naziv ?? 'N/A'),
-                SizedBox(height: 8),
-                _buildHospitalDetailRow(
-                    'Address:', _bolnicaDetails!.adresa ?? 'N/A'),
-                SizedBox(height: 8),
-                _buildHospitalDetailRow(
-                    'Phone:', _bolnicaDetails!.telefon ?? 'N/A'),
-                SizedBox(height: 8),
-                _buildHospitalDetailRow(
-                    'Email:', _bolnicaDetails!.email ?? 'N/A'),
+                SizedBox(
+                  height: 8.0,
+                ),
+                Text(
+                  '$_brojKorisnika',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                ),
               ],
             ),
           ),
@@ -256,13 +227,13 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Number of users app:',
-                  style: TextStyle(fontSize: 16),
+                  'Number of App Users:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
                 Text(
                   '$_brojKorisnika',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                 ),
               ],
             ),
@@ -290,19 +261,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Requests and calls to technical support:',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 16),
                 if (_tehnickaPodrskaData != null)
                   Column(
                     children: _tehnickaPodrskaData!.result.map((e) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              'Number of requests processed: ${e.brojPozivaDoSada ?? 'N/A'}'),
-                          SizedBox(height: 8),
-                          Text(
-                              'Most common problems: ${e.najcesciProblemi ?? 'N/A'}'),
-                        ],
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 30.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Most common problems: ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 8),
+                            Text('${e.najcesciProblemi ?? 'N/A'}'),
+                            SizedBox(height: 8),
+                            Text('Number of requests processed:',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            SizedBox(height: 8),
+                            Text('${e.brojPozivaDoSada ?? 'N/A'}'),
+                          ],
+                        ),
                       );
                     }).toList(),
                   )
@@ -313,26 +293,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildHospitalDetailRow(String label, String detail) {
-    return Row(
-      children: [
-        Icon(Icons.info_outline, color: Colors.blueAccent, size: 24),
-        SizedBox(width: 16),
-        Text(
-          label,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            detail,
-            style: TextStyle(fontSize: 18),
-          ),
-        ),
-      ],
     );
   }
 }

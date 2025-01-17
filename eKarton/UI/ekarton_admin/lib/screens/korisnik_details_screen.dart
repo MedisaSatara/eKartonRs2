@@ -117,159 +117,56 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Look users detail informations',
+                  widget.korisnik != null
+                      ? 'Edit User Details'
+                      : 'Add New User',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 48,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 16.0),
-                FormBuilderTextField(
-                  decoration: InputDecoration(
-                    labelText: "First name",
-                    border: OutlineInputBorder(),
-                  ),
-                  name: "ime",
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Ovo polje je obavezno!';
-                    } else if (!RegExp(r'^[a-zA-ZšđčćžŠĐČĆŽ\s]+$')
-                        .hasMatch(value)) {
-                      return 'Ime može sadržavati samo slova.';
-                    } else if (value.length < 3) {
-                      return 'Morate unijeti najmanje 3 karaktera.';
-                    } else if (value.length > 50) {
-                      return 'Premašili ste maksimalan broj karaktera (50).';
-                    }
-
-                    return null;
-                  },
-                ),
+                SizedBox(height: 24),
+                _buildFormField("First name", "ime", Icons.person),
                 SizedBox(height: 16),
-                FormBuilderTextField(
-                  decoration: InputDecoration(
-                    labelText: "Last name",
-                    border: OutlineInputBorder(),
-                  ),
-                  name: "prezime",
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Ovo polje je obavezno!';
-                    } else if (!RegExp(r'^[a-zA-ZšđčćžŠĐČĆŽ\s]+$')
-                        .hasMatch(value)) {
-                      return 'Prezime može sadržavati samo slova.';
-                    } else if (value.length < 3) {
-                      return 'Morate unijeti najmanje 3 karaktera.';
-                    } else if (value.length > 50) {
-                      return 'Premašili ste maksimalan broj karaktera (50).';
-                    }
-                    return null;
-                  },
-                ),
+                _buildFormField("Last name", "prezime", Icons.person_outline),
                 SizedBox(height: 16),
-                FormBuilderTextField(
-                  decoration: InputDecoration(
-                    labelText: "Username",
-                    border: OutlineInputBorder(),
-                  ),
-                  name: "korisnickoIme",
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Ovo polje je obavezno!';
-                    }
-                    return null;
-                  },
-                ),
+                _buildFormField(
+                    "Username", "korisnickoIme", Icons.account_circle),
                 SizedBox(height: 16),
-                FormBuilderTextField(
-                  decoration: InputDecoration(
-                    labelText: "Email",
-                    border: OutlineInputBorder(),
-                  ),
-                  name: "email",
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Ovo polje je obavezno!';
-                    }
-                    return null;
-                  },
-                ),
+                _buildFormField("Email", "email", Icons.email),
                 SizedBox(height: 16),
-                FormBuilderTextField(
-                  decoration: InputDecoration(
-                    labelText: "Password",
-                    border: OutlineInputBorder(),
-                  ),
-                  name: "password",
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Ovo polje je obavezno!';
-                    }
-                    return null;
-                  },
-                ),
+                _buildFormField("Password", "password", Icons.lock,
+                    obscureText: true),
                 SizedBox(height: 16),
-                FormBuilderTextField(
-                  decoration: InputDecoration(
-                    labelText: "Confirm password",
-                    border: OutlineInputBorder(),
-                  ),
-                  name: "potvrdaPassworda",
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Ovo polje je obavezno!';
-                    }
-                    return null;
-                  },
-                ),
+                _buildFormField(
+                    "Confirm password", "potvrdaPassworda", Icons.lock_outline,
+                    obscureText: true),
                 SizedBox(height: 16),
-                FormBuilderTextField(
-                  decoration: InputDecoration(
-                    labelText: "Phone number",
-                    border: OutlineInputBorder(),
-                  ),
-                  name: "telefon",
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Ovo polje je obavezno!';
-                    }
-                    return null;
-                  },
-                ),
+                _buildFormField("Phone number", "telefon", Icons.phone),
                 SizedBox(height: 16),
-                FormBuilderTextField(
-                  decoration: InputDecoration(
-                    labelText: "Gender",
-                    border: OutlineInputBorder(),
-                  ),
-                  name: "spol",
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Ovo polje je obavezno!';
-                    }
-                    return null;
-                  },
-                ),
+                _buildGenderDropdown(),
                 SizedBox(height: 16),
-                FormBuilderDateTimePicker(
-                  name: "datumRodjenja",
-                  inputType: InputType.date,
-                  format: DateFormat('yyyy-MM-dd'),
-                  decoration: InputDecoration(
-                    labelText: "Date of birth",
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Ovo polje je obavezno!';
-                    }
-                    return null;
-                  },
-                ),
+                _buildDatePicker(),
                 SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: Text(widget.korisnik == null ? 'Add' : 'Edit data'),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: const Color.fromARGB(255, 63, 125, 137),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    textStyle: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                    minimumSize: Size(double.infinity, 50),
+                  ),
+                  child: Text(
+                    widget.korisnik == null ? 'Add User' : 'Update User',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),
@@ -278,7 +175,77 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
       ),
       title: widget.korisnik != null
           ? "User: ${widget.korisnik?.ime}"
-          : "User details",
+          : "User Details",
+    );
+  }
+
+  Widget _buildFormField(String label, String name, IconData icon,
+      {bool obscureText = false}) {
+    return FormBuilderTextField(
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: Colors.blueGrey),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        prefixIcon: Icon(icon, color: const Color.fromARGB(255, 63, 125, 137)),
+      ),
+      name: name,
+      obscureText: obscureText,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'This field is required';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildDatePicker() {
+    return FormBuilderDateTimePicker(
+      name: "datumRodjenja",
+      inputType: InputType.date,
+      format: DateFormat('yyyy-MM-dd'),
+      decoration: InputDecoration(
+        labelText: "Date of Birth",
+        labelStyle: TextStyle(color: Colors.blueGrey),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        prefixIcon: Icon(Icons.calendar_today,
+            color: const Color.fromARGB(255, 63, 125, 137)),
+      ),
+      validator: (value) {
+        if (value == null) {
+          return 'This field is required';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildGenderDropdown() {
+    return FormBuilderDropdown(
+      name: 'spol',
+      decoration: InputDecoration(
+        labelText: "Gender",
+        labelStyle: TextStyle(color: Colors.blueGrey),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        prefixIcon: Icon(Icons.person_add_alt_1,
+            color: const Color.fromARGB(255, 63, 125, 137)),
+      ),
+      items: [
+        DropdownMenuItem(value: 'M', child: Text('Muški')),
+        DropdownMenuItem(value: 'Ž', child: Text('Ženski')),
+      ],
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'This field is required';
+        }
+        return null;
+      },
     );
   }
 }

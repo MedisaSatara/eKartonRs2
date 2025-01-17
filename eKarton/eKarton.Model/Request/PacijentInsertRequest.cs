@@ -13,7 +13,7 @@ namespace eKarton.Model.Request
         public string Ime { get; set; } = null!;
         public string Prezime { get; set; } = null!;
         public string Spol { get; set; } = null!;
-        public string? DatumRodjenja { get; set; }
+        public DateTime? DatumRodjenja { get; set; }
         public string Jmbg { get; set; } = null!;
         public string? MjestoRodjenja { get; set; }
         public string? Prebivaliste { get; set; }

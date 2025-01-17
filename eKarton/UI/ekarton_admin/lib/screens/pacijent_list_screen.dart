@@ -65,46 +65,66 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
       child: Container(
         child: Column(
           children: [
+            Container(
+              width: double.infinity,
+              height: 200.0,
+              color: const Color.fromARGB(255, 63, 125, 137),
+              child: Center(
+                child: Text(
+                  'Patients Found',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
             _buildSearch(),
             _buildDataListView(),
-            ElevatedButton(
-              onPressed: () async {
-                final result = await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        PacijentiDetailsScreen(pacijent: null),
-                  ),
-                );
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      final result = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PacijentiDetailsScreen(pacijent: null),
+                        ),
+                      );
 
-                if (result != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(result.toString())),
-                  );
-                  _fetchInitialData();
-                }
-              },
-              child: Text("Add new patient"),
-            ),
-            SizedBox(
-              height: 8.0,
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final result = await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => PreventivneMjereDetailsScreen(),
+                      if (result != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(result.toString())),
+                        );
+                        _fetchInitialData();
+                      }
+                    },
+                    child: Text("Add new patient"),
                   ),
-                );
+                  SizedBox(width: 16.0),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final result = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => PreventivneMjereDetailsScreen(),
+                        ),
+                      );
 
-                if (result != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(result.toString())),
-                  );
-                  _fetchInitialData();
-                }
-              },
-              child: Text("Add patient preventive measures"),
-            ),
+                      if (result != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(result.toString())),
+                        );
+                        _fetchInitialData();
+                      }
+                    },
+                    child: Text("Add patient preventive measures"),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -113,71 +133,84 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
 
   Widget _buildSearch() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Search patients:",
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Transform.translate(
+        offset: Offset(0, -40),
+        child: Card(
+          elevation: 5.0,
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          shadowColor: Colors.black.withOpacity(0.3),
+          child: Container(
+            width: 400,
+            height: 300,
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Search patients:",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: "Name",
+                  ),
+                  controller: _imeController,
+                ),
+                SizedBox(height: 8.0),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: "Last name",
+                  ),
+                  controller: _prezimeController,
+                ),
+                SizedBox(height: 8.0),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: "Carton number",
+                  ),
+                  controller: _brojkartonaController,
+                ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () async {
+                    var data = await _pacijentiProvider.get(filter: {
+                      'imePacijenta': _imeController.text.trim().toLowerCase(),
+                      'prezimePacijenta':
+                          _prezimeController.text.trim().toLowerCase(),
+                      'brojKartona': _brojkartonaController.text.trim(),
+                    });
+                    setState(() {
+                      result = data;
+                    });
+                  },
+                  child: Text(
+                    "Search",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 63, 125, 137),
+                    elevation: 5.0,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 12.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 16.0),
-          TextField(
-            decoration: InputDecoration(
-              labelText: "Name",
-            ),
-            controller: _imeController,
-            //onChanged: (value) => _onSearchChanged(),
-          ),
-          SizedBox(height: 8.0),
-          TextField(
-            decoration: InputDecoration(
-              labelText: "Last name",
-            ),
-            controller: _prezimeController,
-            // onChanged: (value) => _onSearchChanged(),
-          ),
-          SizedBox(height: 8.0),
-          TextField(
-            decoration: InputDecoration(
-              labelText: "Carton number",
-            ),
-            controller: _brojkartonaController,
-            // onChanged: (value) => _onSearchChanged(),
-          ),
-          SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: () async {
-              var data = await _pacijentiProvider.get(filter: {
-                'imePacijenta': _imeController.text.trim().toLowerCase(),
-                'prezimePacijenta':
-                    _prezimeController.text.trim().toLowerCase(),
-                'brojKartona': _brojkartonaController.text.trim(),
-              });
-              setState(() {
-                result = data;
-              });
-            },
-            child: Text(
-              "Search",
-              style: TextStyle(
-                color: Colors.black,
-              ),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              elevation: 5.0,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -199,54 +232,10 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
   Expanded _buildDataListView() {
     return Expanded(
       child: SingleChildScrollView(
-        child: DataTable(
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'First name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Last name',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Date of birth',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Carton number',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Preventive measure',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-          ],
-          rows: result?.result.map((Pacijent e) {
+        child: Column(
+          children: result?.result.map((Pacijent e) {
                 var preventiveMjere = preventivneMjereResult?.result
-                    .where(
-                      (mj) => mj.pacijentId == e.pacijentId,
-                    )
+                    .where((mj) => mj.pacijentId == e.pacijentId)
                     .toList();
 
                 var preventiveMjereText =
@@ -254,9 +243,15 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
                         ? preventiveMjere.map((mj) => mj.stanje).join(', ')
                         : "/";
 
-                return DataRow(
-                  onSelectChanged: (selected) async {
-                    if (selected == true) {
+                return Card(
+                  elevation: 5.0,
+                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.all(16.0),
+                    onTap: () async {
                       final result = await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) =>
@@ -266,54 +261,115 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
 
                       if (result != null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(result),
-                            duration: Duration(seconds: 2),
-                          ),
+                          SnackBar(content: Text(result)),
                         );
                         _fetchInitialData();
                       }
-                    }
-                  },
-                  cells: [
-                    DataCell(Text(e.ime ?? "")),
-                    DataCell(Text(e.prezime ?? "")),
-                    DataCell(Text(e.datumRodjenja != null
-                        ? DateFormat('dd.MM.yyyy').format(e.datumRodjenja!)
-                        : "")),
-                    DataCell(Text(e.brojKartona ?? "")),
-                    DataCell(
-                      GestureDetector(
-                        onTap: () async {
-                          if (preventiveMjere != null &&
-                              preventiveMjere.isNotEmpty) {
-                            var selectedMeasure = preventiveMjere.first;
-
-                            final result = await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    PreventivneMjereDetailsScreen(
-                                        preventivneMjere: selectedMeasure),
-                              ),
-                            );
-
-                            if (result != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(result)),
-                              );
-                              _fetchInitialData();
-                            }
-                          }
-                        },
-                        child: Text(
-                          preventiveMjereText,
-                          style: TextStyle(
-                              color: Colors.black,
-                              decoration: TextDecoration.none),
-                        ),
+                    },
+                    leading: CircleAvatar(
+                      backgroundColor: const Color.fromARGB(255, 63, 125, 137),
+                      child: Text(
+                        e.ime != null && e.prezime != null
+                            ? '${e.ime![0]}${e.prezime![0]}'
+                            : 'N/A',
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
-                  ],
+                    title: Text(
+                      '${e.ime ?? ""} ${e.prezime ?? ""}',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Carton No: ${e.brojKartona ?? "N/A"}',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        SizedBox(height: 4.0),
+                        Text(
+                          'Date of Birth: ${e.datumRodjenja != null ? DateFormat('dd.MM.yyyy').format(e.datumRodjenja!) : "N/A"}',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        SizedBox(height: 4.0),
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                if (preventiveMjere != null &&
+                                    preventiveMjere.isNotEmpty) {
+                                  var selectedMeasure = preventiveMjere.first;
+
+                                  final result =
+                                      await Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          PreventivneMjereDetailsScreen(
+                                        preventivneMjere: selectedMeasure,
+                                      ),
+                                    ),
+                                  );
+
+                                  if (result != null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(result)),
+                                    );
+                                    _fetchInitialData();
+                                  }
+                                }
+                              },
+                              child: Text(
+                                'Preventive measure: ${preventiveMjereText}',
+                                style: TextStyle(
+                                  color:
+                                      const Color.fromARGB(255, 63, 125, 137),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8.0),
+                            if (preventiveMjere != null &&
+                                preventiveMjere.isNotEmpty)
+                              IconButton(
+                                icon: Icon(
+                                  Icons.edit,
+                                  color:
+                                      const Color.fromARGB(255, 63, 125, 137),
+                                ),
+                                onPressed: () async {
+                                  var selectedMeasure = preventiveMjere.first;
+
+                                  final result =
+                                      await Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          PreventivneMjereDetailsScreen(
+                                        preventivneMjere: selectedMeasure,
+                                      ),
+                                    ),
+                                  );
+
+                                  if (result != null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(result)),
+                                    );
+                                    _fetchInitialData();
+                                  }
+                                },
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    trailing: Icon(
+                      Icons.chevron_right,
+                      color: Colors.black45,
+                    ),
+                  ),
                 );
               }).toList() ??
               [],

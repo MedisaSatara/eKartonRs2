@@ -1,6 +1,5 @@
 import 'package:ekarton_admin/models/pacijent.dart';
 import 'package:ekarton_admin/models/preventivne_mjere.dart';
-import 'package:ekarton_admin/models/search_result.dart';
 import 'package:ekarton_admin/providers/pacijent_provider.dart';
 import 'package:ekarton_admin/providers/preventivne_mjere_provider.dart';
 import 'package:ekarton_admin/widget/master_screen.dart';
@@ -95,7 +94,7 @@ class _PreventivneMjereDetailsScreen
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: FormBuilder(
           key: _formKey,
           initialValue: _initialValue,
@@ -103,68 +102,85 @@ class _PreventivneMjereDetailsScreen
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Add patients preventive meausere',
+                widget.preventivneMjere == null
+                    ? 'Add Patient\'s Preventive Measure'
+                    : 'Edit Patient\'s Preventive Measure',
                 style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
+                  color: Colors.blueGrey,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 20.0),
               FormBuilderTextField(
                 decoration: InputDecoration(
                   labelText: "Condition",
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 16, horizontal: 12),
                 ),
                 name: "stanje",
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Ovo polje je obavezno!';
+                    return 'This field is required!';
                   }
                   return null;
                 },
               ),
-              SizedBox(height: 16),
-              Expanded(
-                child: FormBuilderDropdown<String>(
-                  name: 'pacijentId',
-                  decoration: InputDecoration(
-                    labelText: 'Patient',
+              SizedBox(height: 20),
+              FormBuilderDropdown<String>(
+                name: 'pacijentId',
+                decoration: InputDecoration(
+                  labelText: 'Select Patient',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Ovo polje je obavezno!';
-                    }
-                    return null;
-                  },
-                  items: _pacijenti
-                          ?.map((pacijent) => DropdownMenuItem<String>(
-                                value: pacijent.pacijentId.toString(),
-                                child: Text(pacijent.ime ?? ""),
-                              ))
-                          .toList() ??
-                      [],
-                  initialValue: _initialValue['pacijentId']?.toString(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedPacijentId = value;
-                    });
-                    print("Odabrani pacijentId: $_selectedPacijentId");
-                  },
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'This field is required!';
+                  }
+                  return null;
+                },
+                items: _pacijenti
+                        ?.map((pacijent) => DropdownMenuItem<String>(
+                              value: pacijent.pacijentId.toString(),
+                              child: Text(pacijent.ime ?? ""),
+                            ))
+                        .toList() ??
+                    [],
+                initialValue: _initialValue['pacijentId']?.toString(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedPacijentId = value;
+                  });
+                  print("Selected Patient ID: $_selectedPacijentId");
+                },
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submitForm,
-                child:
-                    Text(widget.preventivneMjere == null ? 'Add' : 'Edit data'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 63, 125, 137),
+                  padding: EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                ),
+                child: Text(
+                  widget.preventivneMjere == null ? 'Add' : 'Edit',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
               ),
             ],
           ),
         ),
       ),
       title: widget.preventivneMjere != null
-          ? "Preventive measure: ${widget.preventivneMjere?.pacijentId}"
-          : "Deatils about patients preventive measure",
+          ? "Update Preventive Measure"
+          : "Details about Patient's Preventive Measure",
     );
   }
 }

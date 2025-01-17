@@ -266,17 +266,21 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                   },
                 ),
                 SizedBox(height: 16),
-                FormBuilderTextField(
-                    name: 'spol',
-                    decoration: InputDecoration(
-                      labelText: 'Gender',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Ovo polje je obavezno! Spol u formatu M/Z';
-                      }
-                    }),
+                FormBuilderRadioGroup<String>(
+                  name: 'spol',
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                  ),
+                  options: [
+                    FormBuilderFieldOption(value: 'M', child: Text('Male')),
+                    FormBuilderFieldOption(value: 'Z', child: Text('Female')),
+                  ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ovo polje je obavezno! Odaberite spol.';
+                    }
+                  },
+                ),
                 SizedBox(height: 16),
                 FormBuilderTextField(
                     name: 'jmbg',
@@ -334,29 +338,41 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                       return null;
                     }),
                 SizedBox(height: 16),
-                FormBuilderTextField(
-                    name: 'krvnaGrupa',
-                    decoration: InputDecoration(
-                      labelText: 'Blood type',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Ovo polje je obavezno!';
-                      }
-                    }),
+                FormBuilderDropdown<String>(
+                  name: 'krvnaGrupa',
+                  decoration: InputDecoration(
+                    labelText: 'Blood type',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: [
+                    DropdownMenuItem(value: 'A', child: Text('A')),
+                    DropdownMenuItem(value: 'B', child: Text('B')),
+                    DropdownMenuItem(value: 'AB', child: Text('AB')),
+                    DropdownMenuItem(value: 'O', child: Text('O')),
+                  ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ovo polje je obavezno! Odaberite krvnu grupu.';
+                    }
+                  },
+                ),
                 SizedBox(height: 16),
-                FormBuilderTextField(
-                    name: 'rhFaktor',
-                    decoration: InputDecoration(
-                      labelText: 'Rh factor',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Ovo polje je obavezno!';
-                      }
-                    }),
+                FormBuilderDropdown<String>(
+                  name: 'rhFaktor',
+                  decoration: InputDecoration(
+                    labelText: 'Rh factor',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: [
+                    DropdownMenuItem(value: '+', child: Text('Rh+')),
+                    DropdownMenuItem(value: '-', child: Text('Rh-')),
+                  ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ovo polje je obavezno! Odaberite Rh faktor.';
+                    }
+                  },
+                ),
                 SizedBox(height: 16),
                 FormBuilderTextField(
                     name: 'hronicneBolesti',

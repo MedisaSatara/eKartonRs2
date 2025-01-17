@@ -3,6 +3,7 @@ using eKarton.Model.Request.SearchObject;
 using eKarton.Service.Databases;
 using eKarton.Service.Services;
 using Microsoft.EntityFrameworkCore;
+using Raven.Client.Documents.Linq.Indexing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,11 +89,15 @@ namespace eKarton.Service.Report
                 .Where(t =>
                     (!startDate.HasValue || DateTime.Parse(t.Datum) >= startDate) && 
                     (!endDate.HasValue || DateTime.Parse(t.Datum) <= endDate))      
-                .GroupBy(t => new { t.Doktor.DoktorId, t.Doktor.Ime, t.Doktor.Odjel.Naziv, t.Doktor.Prezime,t.Doktor.Telefon, t.Doktor.DatumRodjenja })
+                .GroupBy(t => new { t.Doktor.DoktorId, t.Doktor.Ime, t.Doktor.Odjel.Naziv, t.Doktor.Prezime,t.Doktor.Telefon, t.Doktor.DatumRodjenja, t.Doktor.Email })
                 .Select(g => new
                 {
                     DoktorId = g.Key.DoktorId,
                     ImeDoktora = g.Key.Ime,
+                    PrezimeDoktora=g.Key.Prezime,
+                    DatumRodjenja=g.Key.DatumRodjenja,
+                    Telefon=g.Key.Telefon,
+                    Email=g.Key.Email,
                     Specijalizacija = g.Key.Naziv,
                     BrojZakazanihTermina = g.Count(),
                 })
@@ -103,6 +108,9 @@ namespace eKarton.Service.Report
             return query.Select(d => new OdabraniDoktori
             {
                 ImeDoktora = d.ImeDoktora,
+                PrezimeDoktora=d.PrezimeDoktora,
+                DatumRodjenja=d.DatumRodjenja,
+                Telefon=d.Telefon,  Email=d.Email,
                 Specijalizacija = d.Specijalizacija,
                 BrojZakazanihTermina = d.BrojZakazanihTermina
             }).ToList();

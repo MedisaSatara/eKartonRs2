@@ -303,7 +303,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Opacity(
               opacity: 0.9,
               child: Image.asset(
-                "assets/images/welcomepage.jpg",
+                "assets/images/welcome.jpg",
                 fit: BoxFit.cover,
               ),
             ),
@@ -312,18 +312,21 @@ class _LoginPageState extends State<LoginPage> {
             child: Container(
               constraints: const BoxConstraints(maxHeight: 500, maxWidth: 400),
               child: Card(
-                color: Colors.white.withOpacity(0.6),
+                color: Colors.white.withOpacity(0.8),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      Image.asset(
-                        "assets/images/logo.jpg",
-                        height: 200,
-                        width: 300,
-                      ),
+                      Opacity(
+                          opacity: 0.7,
+                          child: Image.asset(
+                            "assets/images/logo.jpg",
+                            fit: BoxFit.cover,
+                            width: 370,
+                            height: 150,
+                          )),
                       SizedBox(
-                        height: 10,
+                        height: 30,
                       ),
                       Container(
                         decoration: BoxDecoration(
@@ -366,23 +369,23 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 30,
                       ),
                       _isLoading
                           ? CircularProgressIndicator()
                           : SizedBox(
-                              width: 300,
+                              width: 400,
                               child: ElevatedButton(
                                 onPressed: _login,
                                 style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.white),
+                                  backgroundColor: MaterialStateProperty.all<
+                                          Color>(
+                                      const Color.fromARGB(255, 63, 125, 137)),
                                 ),
                                 child: Text(
                                   "Login",
                                   style: TextStyle(
-                                      fontSize: 18, color: Colors.black),
+                                      fontSize: 18, color: Colors.white),
                                 ),
                               ),
                             )

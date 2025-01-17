@@ -43,6 +43,7 @@ dependencies:
   share: ^2.0.4
   path_provider: ^2.0.2
   pdf: ^3.10.0
+  google_fonts: ^5.0.0
 
 dev_dependencies:
   json_serializable: ^6.7.0
@@ -71,7 +72,10 @@ flutter:
   assets:
     - assets/images/logo.jpg
     - assets/images/ekarton1.jpg
+    - assets/images/ekarton3.png
     - assets/images/welcomepage.jpg
+    - assets/images/welcome.jpg
+
 
   #   - images/a_dot_ham.jpeg
 

@@ -19,6 +19,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   //http://192.168.0.106:7073/
   //https://localhost:7285/
   //http://192.168.0.102:7073/ - pravi
+  //http://10.0.2.2:7073/
   Future<SearchResult<T>> get({dynamic filter}) async {
     var url = "$_baseUrl$_endpoint";
 
