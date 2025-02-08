@@ -9,8 +9,10 @@ import 'package:provider/provider.dart';
 
 class PreventivneMjereDetailsScreen extends StatefulWidget {
   final PreventivneMjere? preventivneMjere;
+  final Pacijent? pacijent;
 
-  PreventivneMjereDetailsScreen({Key? key, this.preventivneMjere})
+  PreventivneMjereDetailsScreen(
+      {Key? key, this.preventivneMjere, this.pacijent})
       : super(key: key);
 
   @override
@@ -24,7 +26,7 @@ class _PreventivneMjereDetailsScreen
   late PreventivneMjereProvider _preventivneMjereProvider;
   late PacijentProvider _pacijentProvider;
   List<Pacijent>? _pacijenti;
-  String? _selectedPacijentId;
+  int? _selectedPacijentId;
 
   late Map<String, dynamic> _initialValue;
 
@@ -35,6 +37,8 @@ class _PreventivneMjereDetailsScreen
       'stanje': widget.preventivneMjere?.stanje,
       'pacijentId': widget.preventivneMjere?.pacijentId,
     };
+
+    _selectedPacijentId = widget.pacijent?.pacijentId;
   }
 
   @override
@@ -42,7 +46,6 @@ class _PreventivneMjereDetailsScreen
     super.didChangeDependencies();
     _preventivneMjereProvider = context.read<PreventivneMjereProvider>();
     _pacijentProvider = context.read<PacijentProvider>();
-
     _fetchPatients();
   }
 
@@ -60,12 +63,12 @@ class _PreventivneMjereDetailsScreen
   Future<void> _submitForm() async {
     if (_formKey.currentState!.saveAndValidate()) {
       final formData = _formKey.currentState!.value;
-
       final mutableFormData = Map<String, dynamic>.from(formData);
 
-      if (mutableFormData['pacijentId'] != null) {
+      if (_selectedPacijentId != null) {
         mutableFormData['pacijentId'] =
-            int.tryParse(mutableFormData['pacijentId'] as String) ?? 0;
+            int.tryParse(_selectedPacijentId.toString()) ??
+                0;
       }
 
       try {
@@ -130,34 +133,29 @@ class _PreventivneMjereDetailsScreen
                 },
               ),
               SizedBox(height: 20),
-              FormBuilderDropdown<String>(
-                name: 'pacijentId',
-                decoration: InputDecoration(
-                  labelText: 'Select Patient',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+              if (widget.pacijent != null)
+                Text(
+                  'Selected Patient: ${widget.pacijent!.ime ?? "N/A"} ${widget.pacijent!.prezime ?? "N/A"}',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[700],
                   ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field is required!';
-                  }
-                  return null;
-                },
-                items: _pacijenti
-                        ?.map((pacijent) => DropdownMenuItem<String>(
-                              value: pacijent.pacijentId.toString(),
-                              child: Text(pacijent.ime ?? ""),
-                            ))
-                        .toList() ??
-                    [],
-                initialValue: _initialValue['pacijentId']?.toString(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedPacijentId = value;
-                  });
-                  print("Selected Patient ID: $_selectedPacijentId");
-                },
+              SizedBox(height: 20),
+              Offstage(
+                offstage: true,
+                child: FormBuilderTextField(
+                  name: 'pacijentId',
+                  initialValue: _selectedPacijentId.toString(),
+                  enabled: false,
+                  decoration: InputDecoration(
+                    labelText: 'Patient ID ',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
               ),
               SizedBox(height: 20),
               ElevatedButton(

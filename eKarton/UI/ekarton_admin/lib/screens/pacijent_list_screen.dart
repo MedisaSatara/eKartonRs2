@@ -302,23 +302,59 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
                               onTap: () async {
                                 if (preventiveMjere != null &&
                                     preventiveMjere.isNotEmpty) {
-                                  var selectedMeasure = preventiveMjere.first;
-
-                                  final result =
-                                      await Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          PreventivneMjereDetailsScreen(
-                                        preventivneMjere: selectedMeasure,
-                                      ),
-                                    ),
+                                  var selectedMeasure =
+                                      await showDialog<PreventivneMjere>(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title:
+                                            Text("Select Preventive Measure"),
+                                        content: SingleChildScrollView(
+                                          child: Column(
+                                            children: preventiveMjere.map((mj) {
+                                              return ListTile(
+                                                title: Text(
+                                                    mj.stanje ?? "No state"),
+                                                onTap: () {
+                                                  Navigator.of(context).pop(mj);
+                                                },
+                                                trailing: IconButton(
+                                                  icon: Icon(Icons.delete),
+                                                  color: Colors.red,
+                                                  onPressed: () async {
+                                                    await _preventivneMjereProvider
+                                                        .delete(mj
+                                                            .preventivneMjereId);
+                                                    Navigator.of(context)
+                                                        .pop(); 
+                                                  },
+                                                ),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   );
-
-                                  if (result != null) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(result)),
+                                  if (selectedMeasure != null) {
+                                    final result =
+                                        await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            PreventivneMjereDetailsScreen(
+                                          preventivneMjere: selectedMeasure,
+                                          pacijent: e,
+                                        ),
+                                      ),
                                     );
-                                    _fetchInitialData();
+
+                                    if (result != null) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(content: Text(result)),
+                                      );
+                                      _fetchInitialData();
+                                    }
                                   }
                                 }
                               },
@@ -341,26 +377,94 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
                                       const Color.fromARGB(255, 63, 125, 137),
                                 ),
                                 onPressed: () async {
-                                  var selectedMeasure = preventiveMjere.first;
-
-                                  final result =
-                                      await Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          PreventivneMjereDetailsScreen(
-                                        preventivneMjere: selectedMeasure,
-                                      ),
-                                    ),
+                                  var selectedMeasure =
+                                      await showDialog<PreventivneMjere>(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                            "Select Preventive Measure to Edit"),
+                                        content: SingleChildScrollView(
+                                          child: Column(
+                                            children: preventiveMjere.map((mj) {
+                                              return ListTile(
+                                                title: Text(
+                                                    mj.stanje ?? "No state"),
+                                                onTap: () {
+                                                  Navigator.of(context).pop(mj);
+                                                },
+                                                trailing: IconButton(
+                                                  icon: Icon(Icons.delete),
+                                                  color: Colors.red,
+                                                  onPressed: () async {
+                                                    await _preventivneMjereProvider
+                                                        .delete(mj
+                                                            .preventivneMjereId);
+                                                    _fetchInitialData();
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   );
 
-                                  if (result != null) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(result)),
+                                  if (selectedMeasure != null) {
+                                    final result =
+                                        await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            PreventivneMjereDetailsScreen(
+                                          preventivneMjere: selectedMeasure,
+                                          pacijent: e,
+                                        ),
+                                      ),
                                     );
-                                    _fetchInitialData();
+
+                                    if (result != null) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(content: Text(result)),
+                                      );
+                                      _fetchInitialData();
+                                    }
                                   }
                                 },
                               ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () async {
+                                final result = await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        PreventivneMjereDetailsScreen(
+                                      pacijent: e,
+                                    ),
+                                  ),
+                                );
+
+                                if (result != null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(result.toString())),
+                                  );
+                                  _fetchInitialData();
+                                }
+                              },
+                              child: Text(
+                                "Add Measure",
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 63, 125, 137),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ],

@@ -62,7 +62,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ),
           SizedBox(height: 8),
           SizedBox(
-            width: 350, 
+            width: 350,
             height: 50,
             child: ElevatedButton(
               onPressed: () async {
@@ -75,9 +75,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               child: Text(
                 "Login",
                 style: TextStyle(fontSize: 18, color: Colors.black),
-                
                 textAlign: TextAlign.center,
-                
               ),
             ),
           ),

@@ -15,5 +15,9 @@ namespace eKarton.Service.Databases
         public virtual Doktor Doktor { get; set; } = null!;
         public virtual Pacijent Pacijent { get; set; } = null!;
         public string? StateMachine { get; set; }
+        public double? CijenaPregleda { get; set; }
+        public string? brojTransakcije { get; set; }
+
+
     }
 }

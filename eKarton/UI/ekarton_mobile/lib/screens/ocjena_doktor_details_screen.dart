@@ -52,6 +52,13 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
     _korisnikProvider = context.read<KorisnikProvider>();
     _doktorProvider = context.read<DoktorProvider>();
 
+    var currentUser = _korisnikProvider.currentUser;
+    print(currentUser);
+
+    if (currentUser != null) {
+      _initialValue['korisnikId'] = currentUser.korisnikId.toString();
+    }
+
     _fetchOcjene();
     _fetchKorisnici();
     _fetchDoktori();
@@ -199,6 +206,29 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
                     fontSize: 24,
                   ),
                 ),
+                Text(
+                  '${_korisnikProvider.currentUser?.ime ?? 'Nepoznat korisnik'}, welcome to the section for adding Your rate for doctors.',
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                ),
+                SizedBox(
+                  height: 8.0,
+                ),
+                Text(
+                    'Think good, and keep on your mind that on your rate depends future of doctors and patients opinion.'),
+                Offstage(
+                  offstage: true,
+                  child: FormBuilderTextField(
+                    name: 'korisnikId',
+                    initialValue:
+                        _korisnikProvider.currentUser?.korisnikId.toString(),
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      labelText: 'Korisnik (ID)',
+                      border: OutlineInputBorder(),
+                      hintText: "Nepoznat korisnik",
+                    ),
+                  ),
+                ),
                 SizedBox(height: 16.0),
                 FormBuilderDropdown<int>(
                   name: 'ocjena',
@@ -260,33 +290,6 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
                       _selectedDoktorId = value;
                     });
                     print("Odabrani doktorId: $_selectedDoktorId");
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Ovo polje je obavezno!';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-                FormBuilderDropdown<String>(
-                  name: 'korisnikId',
-                  decoration: InputDecoration(
-                    labelText: 'User',
-                  ),
-                  items: _korisnik
-                          ?.map((korisnik) => DropdownMenuItem<String>(
-                                value: korisnik.korisnikId.toString(),
-                                child: Text(korisnik.ime ?? ""),
-                              ))
-                          .toList() ??
-                      [],
-                  initialValue: _initialValue['korisnikId']?.toString(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedKorisnikId = value;
-                    });
-                    print("Odabrani korisnikId: $_selectedKorisnikId");
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {

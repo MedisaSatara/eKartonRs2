@@ -15,8 +15,12 @@ namespace eKarton.Model.Models
         public int PacijentId { get; set; }
         public int DoktorId { get; set; }
         public string? StateMachine { get; set; }
+        public double? CijenaPregleda { get; set; }
+        public string? brojTransakcije { get; set; }
 
-      //  public virtual Doktor Doktor { get; set; } = null!;
-      //  public virtual Pacijent Pacijent { get; set; } = null!;
+
+
+        //  public virtual Doktor Doktor { get; set; } = null!;
+        //  public virtual Pacijent Pacijent { get; set; } = null!;
     }
 }

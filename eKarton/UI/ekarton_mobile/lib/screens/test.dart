@@ -291,6 +291,14 @@ class _TerminScreen extends State<TerminScreen> {
                         ),
                       ),
                     ),
+                     DataColumn(
+                      label: Expanded(
+                        child: Text(
+                          'Broj transkacije',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                    ),
                     DataColumn(
                       label: Expanded(
                         child: Text(
@@ -335,6 +343,8 @@ class _TerminScreen extends State<TerminScreen> {
                             DataCell(Text(pacijentName?.ime ?? "")),
                             DataCell(Text(doktorName?.ime ?? "")),
                             DataCell(Text(e?.stateMachine ?? "")),
+                            DataCell(Text(e?.brojTransakcije ?? "")),
+
                             DataCell(
                               IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),

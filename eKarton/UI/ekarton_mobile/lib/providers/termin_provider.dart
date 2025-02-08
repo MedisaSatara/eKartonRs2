@@ -14,4 +14,11 @@ class TerminProvider extends BaseProvider<Termin> {
   Termin fromJson(data) {
     return Termin.fromJson(data);
   }
+  Future<Termin> updateTransaction(int id, String transactionId) async {
+    final request = {
+      'brojTransakcije': transactionId, // Update the transaction ID in the Termin
+      // Add any other relevant fields to update
+    };
+    return await update(id, request);
+  }
 }

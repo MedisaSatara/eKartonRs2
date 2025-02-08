@@ -43,6 +43,8 @@ dependencies:
   dio: ^5.6.0
   adaptive_scrollbar: ^2.1.2
   google_fonts: ^5.0.0
+  shared_preferences: ^2.0.15
+  uuid: ^4.5.1
 
 dev_dependencies:
   json_serializable: ^6.7.0

@@ -34,6 +34,7 @@ class _KorisnikScreen extends State<KorisnikScreen> {
       'prezime': _prezimeController.text.trim().toLowerCase(),
       'korisnickoIme': _korisnickoImeController.text.trim().toLowerCase(),
     });
+    print('Fetched korisnici: ${data.result.length}');
     setState(() {
       result = data;
     });
@@ -49,6 +50,7 @@ class _KorisnikScreen extends State<KorisnikScreen> {
     } else if (result == 'updated') {
       _showSnackbar('Korisnik uspješno ažuriran!');
     }
+
     await _fetchKorisnici();
   }
 

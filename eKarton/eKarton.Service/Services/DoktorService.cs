@@ -81,7 +81,6 @@ namespace eKarton.Service.Services
 
         public List<Model.Models.Doktor> GetPreporuceniDoktor(int id)
         {
-            // Initialize ML context and model if not already initialized
             if (mlContext == null)
             {
                 lock (isLocked)
@@ -147,7 +146,6 @@ namespace eKarton.Service.Services
                 }
             }
 
-            // Prediction
             var doktors = _context.Doktors.Where(x => x.DoktorId != id);
             var predictionResult = new List<Tuple<Databases.Doktor, float>>();
 

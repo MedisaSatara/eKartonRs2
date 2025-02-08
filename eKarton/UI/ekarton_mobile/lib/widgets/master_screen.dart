@@ -7,6 +7,7 @@ import 'package:ekarton_mobile/screens/odjel_screen.dart';
 import 'package:ekarton_mobile/screens/online_pay_screen.dart';
 import 'package:ekarton_mobile/screens/preporuceni_doktori.dart';
 import 'package:ekarton_mobile/screens/test.dart';
+import 'package:ekarton_mobile/screens/test2.dart';
 import 'package:flutter/material.dart';
 
 /*class MasterScreenWidget extends StatefulWidget {
@@ -125,7 +126,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   final Map<String, Widget> _moreOptions = {
     'Recommended doctors': RecommendedDoctorsScreen(),
     'Contact': BolnicaScreen(),
-    'Online paymant': OnlinePayScreen(),
+    'Online paymant': PaymentDetailsScreen(paymentIntentId: "",),
   };
 
   void _onMainItemTapped(int index) {

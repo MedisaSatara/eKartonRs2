@@ -15,14 +15,18 @@ import 'package:ekarton_mobile/providers/uloga_provider.dart';
 import 'package:ekarton_mobile/screens/ekarton_screen.dart';
 import 'package:ekarton_mobile/screens/home_screen.dart';
 import 'package:ekarton_mobile/screens/korisnik_profile_screen.dart';
+import 'package:ekarton_mobile/screens/online_pay_screen.dart';
 import 'package:ekarton_mobile/screens/welcome_page.dart';
 import 'package:ekarton_mobile/utils/util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:flutter_stripe/flutter_stripe.dart' as sp;
 import 'package:provider/provider.dart';
 
 void main() async {
-  await _setup;
+  WidgetsFlutterBinding.ensureInitialized();
+    sp.Stripe.publishableKey = const String.fromEnvironment(
+      'STRIPE_PUBLISHABLE_KEY',
+      defaultValue: stripePublishableKey);
 
   runApp(MultiProvider(
     providers: [
@@ -46,7 +50,7 @@ void main() async {
 
 Future<void> _setup() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Stripe.publishableKey = stripePublishableKey;
+ // Stripe.publishableKey = stripePublishableKey;
 }
 
 class MyApp extends StatelessWidget {

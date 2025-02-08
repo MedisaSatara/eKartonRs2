@@ -57,11 +57,11 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
 
         if (widget.korisnik == null) {
           await _korisnikProvider.insert(Korisnik.fromJson(formData));
-          _showSuccessDialog('User added successfully');
+          _showSuccessDialog('User added successfully', 'success');
         } else {
           await _korisnikProvider.update(
               widget.korisnik!.korisnikId!, Korisnik.fromJson(formData));
-          _showSuccessDialog('User updated successfully');
+          _showSuccessDialog('User updated successfully', 'updated');
         }
       } catch (e) {
         print('Error: $e');
@@ -83,7 +83,7 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
     }
   }
 
-  void _showSuccessDialog(String message) {
+  void _showSuccessDialog(String message, String result) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -94,7 +94,7 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(result);
               },
               child: Text('OK'),
             ),
@@ -135,14 +135,11 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                     "Username", "korisnickoIme", Icons.account_circle),
                 SizedBox(height: 16),
                 _buildFormField("Email", "email", Icons.email),
-                SizedBox(height: 16),
-                _buildFormField("Password", "password", Icons.lock,
-                    obscureText: true),
-                SizedBox(height: 16),
-                _buildFormField(
+                /* _buildFormField("Password", "password", Icons.lock,
+                    obscureText: true),*/
+                /*_buildFormField(
                     "Confirm password", "potvrdaPassworda", Icons.lock_outline,
-                    obscureText: true),
-                SizedBox(height: 16),
+                    obscureText: true),*/
                 _buildFormField("Phone number", "telefon", Icons.phone),
                 SizedBox(height: 16),
                 _buildGenderDropdown(),

@@ -31,6 +31,7 @@ namespace eKarton.Service.Services
             entity.PacijentId = insert.PacijentId;
             entity.DoktorId = insert.DoktorId;
             entity.StateMachine = insert.StateMachine;
+            entity.brojTransakcije=insert.brojTransakcije;
 
             base.BeforeInsert(insert, entity);
 

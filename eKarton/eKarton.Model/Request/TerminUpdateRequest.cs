@@ -15,5 +15,9 @@ namespace eKarton.Model.Request
         public int PacijentId { get; set; }
         public int DoktorId { get; set; }
         public string? StateMachine { get; set; }
+        public double? CijenaPregleda { get; set; }
+        public string? brojTransakcije { get; set; }
+
+
     }
 }

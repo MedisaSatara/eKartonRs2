@@ -399,142 +399,145 @@ class _EkartonScreen extends State<EkartonScreen> {
     );
   }
 
- Widget _buildLicniPodaciTable() {
-  if (widget.pacijent == null) {
-    return Center(child: Text("Nema ličnih podataka za ovog pacijenta."));
-  }
-  final _verticalScrollController = ScrollController();
-  final _horizontalScrollController = ScrollController();
-  return Container(
-     decoration: BoxDecoration(
-      color: const Color.fromARGB(255, 34, 78, 57),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: Card(
-      child: AdaptiveScrollbar(
-        underColor: Colors.blueGrey.withOpacity(0.3),
-        sliderDefaultColor: Colors.grey.withOpacity(0.7),
-        sliderActiveColor: Colors.grey,
-        controller: _verticalScrollController,
+  Widget _buildLicniPodaciTable() {
+    if (widget.pacijent == null) {
+      return Center(child: Text("Nema ličnih podataka za ovog pacijenta."));
+    }
+    final _verticalScrollController = ScrollController();
+    final _horizontalScrollController = ScrollController();
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 34, 78, 57),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Card(
         child: AdaptiveScrollbar(
-          controller: _horizontalScrollController,
-          position: ScrollbarPosition.bottom,
           underColor: Colors.blueGrey.withOpacity(0.3),
           sliderDefaultColor: Colors.grey.withOpacity(0.7),
           sliderActiveColor: Colors.grey,
-          child: SingleChildScrollView(
-            controller: _verticalScrollController,
-            scrollDirection: Axis.vertical,
+          controller: _verticalScrollController,
+          child: AdaptiveScrollbar(
+            controller: _horizontalScrollController,
+            position: ScrollbarPosition.bottom,
+            underColor: Colors.blueGrey.withOpacity(0.3),
+            sliderDefaultColor: Colors.grey.withOpacity(0.7),
+            sliderActiveColor: Colors.grey,
             child: SingleChildScrollView(
-              controller: _horizontalScrollController,
-              scrollDirection: Axis.horizontal,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 8.0, bottom: 16.0),
-                child: DataTable(
-                  columns: const [
-                    DataColumn(label: Text('Parameter')),
-                    DataColumn(label: Text('Value')),
-                  ],
-                  rows: [
-                    DataRow(
-                      cells: [
-                        DataCell(Text('First name')),
-                        DataCell(Text(widget.pacijent!.ime ?? 'N/A')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text('Last name')),
-                        DataCell(Text(widget.pacijent!.prezime ?? 'N/A')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text('Gender')),
-                        DataCell(Text(widget.pacijent!.spol ?? 'N/A')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text('Date of birth')),
-                        DataCell(Text(
-                          widget.pacijent!.datumRodjenja != null
-                              ? DateFormat('yyyy-MM-dd')
-                                  .format(widget.pacijent!.datumRodjenja!)
-                              : '',
-                        )),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text('JMBG')),
-                        DataCell(Text(widget.pacijent!.jmbg ?? 'N/A')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text('Birthplace')),
-                        DataCell(Text(widget.pacijent!.mjestoRodjenja ?? 'N/A')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text('Residence')),
-                        DataCell(Text(widget.pacijent!.prebivaliste ?? 'N/A')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text('Phone number')),
-                        DataCell(Text(widget.pacijent!.telefon ?? 'N/A')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text('Blood type')),
-                        DataCell(Text(widget.pacijent!.krvnaGrupa ?? 'N/A')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text('Rh Factor')),
-                        DataCell(Text(widget.pacijent!.rhFaktor ?? 'N/A')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text('Chronic diseases')),
-                        DataCell(Text(widget.pacijent!.hronicneBolesti ?? 'N/A')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text('Allergy')),
-                        DataCell(Text(widget.pacijent!.alergija ?? 'N/A')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text('Carton number')),
-                        DataCell(Text(
-                            widget.pacijent!.brojKartona?.toString() ?? 'N/A')),
-                      ],
-                    ),
-                  ],
+              controller: _verticalScrollController,
+              scrollDirection: Axis.vertical,
+              child: SingleChildScrollView(
+                controller: _horizontalScrollController,
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0, bottom: 16.0),
+                  child: DataTable(
+                    columns: const [
+                      DataColumn(label: Text('Parameter')),
+                      DataColumn(label: Text('Value')),
+                    ],
+                    rows: [
+                      DataRow(
+                        cells: [
+                          DataCell(Text('First name')),
+                          DataCell(Text(widget.pacijent!.ime ?? 'N/A')),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Last name')),
+                          DataCell(Text(widget.pacijent!.prezime ?? 'N/A')),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Gender')),
+                          DataCell(Text(widget.pacijent!.spol ?? 'N/A')),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Date of birth')),
+                          DataCell(Text(
+                            widget.pacijent!.datumRodjenja != null
+                                ? DateFormat('yyyy-MM-dd')
+                                    .format(widget.pacijent!.datumRodjenja!)
+                                : '',
+                          )),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('JMBG')),
+                          DataCell(Text(widget.pacijent!.jmbg ?? 'N/A')),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Birthplace')),
+                          DataCell(
+                              Text(widget.pacijent!.mjestoRodjenja ?? 'N/A')),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Residence')),
+                          DataCell(
+                              Text(widget.pacijent!.prebivaliste ?? 'N/A')),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Phone number')),
+                          DataCell(Text(widget.pacijent!.telefon ?? 'N/A')),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Blood type')),
+                          DataCell(Text(widget.pacijent!.krvnaGrupa ?? 'N/A')),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Rh Factor')),
+                          DataCell(Text(widget.pacijent!.rhFaktor ?? 'N/A')),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Chronic diseases')),
+                          DataCell(
+                              Text(widget.pacijent!.hronicneBolesti ?? 'N/A')),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Allergy')),
+                          DataCell(Text(widget.pacijent!.alergija ?? 'N/A')),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Carton number')),
+                          DataCell(Text(
+                              widget.pacijent!.brojKartona?.toString() ??
+                                  'N/A')),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _buildButton(String title, IconData icon, VoidCallback onPressed) {
     return Container(
-      constraints: BoxConstraints(maxWidth: 100),
+      constraints: BoxConstraints(maxWidth: 130),
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -548,7 +551,11 @@ class _EkartonScreen extends State<EkartonScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 40, color: Colors.white,),
+            Icon(
+              icon,
+              size: 40,
+              color: Colors.white,
+            ),
             SizedBox(height: 8),
             Text(
               title,

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eKarton.Service.Databases;
 
@@ -11,9 +12,10 @@ using eKarton.Service.Databases;
 namespace eKarton.Service.Migrations
 {
     [DbContext(typeof(eKartonContext))]
-    partial class eKartonContextModelSnapshot : ModelSnapshot
+    [Migration("20250206232019_Transakcijskibroj")]
+    partial class Transakcijskibroj
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

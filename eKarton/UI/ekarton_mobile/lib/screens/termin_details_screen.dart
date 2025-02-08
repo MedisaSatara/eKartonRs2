@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+import 'package:ekarton_mobile/consts.dart';
 import 'package:ekarton_mobile/models/doktor.dart';
 import 'package:ekarton_mobile/models/pacijent.dart';
 import 'package:ekarton_mobile/models/termin.dart';
 import 'package:ekarton_mobile/providers/doktor_provider.dart';
 import 'package:ekarton_mobile/providers/pacijent_provider.dart';
+import 'package:ekarton_mobile/providers/stripe_service.dart';
 import 'package:ekarton_mobile/providers/termin_provider.dart';
 import 'package:ekarton_mobile/screens/preporuceni_doktori.dart';
 import 'package:ekarton_mobile/screens/list_preporuceni_doktori.dart';
@@ -10,10 +14,14 @@ import 'package:ekarton_mobile/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_stripe/flutter_stripe.dart' as sp;
+import 'package:http/http.dart' as http;
 
 class TerminDetailsScreen extends StatefulWidget {
   final Termin? termin;
-  TerminDetailsScreen({Key? key, this.termin}) : super(key: key);
+  final String? paymentIntentId;
+  TerminDetailsScreen({Key? key, this.termin, this.paymentIntentId})
+      : super(key: key);
 
   @override
   State<TerminDetailsScreen> createState() => _TerminDetailsScreen();
@@ -27,18 +35,42 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
 
   List<Pacijent>? _pacijenti;
   List<Doktor>? _doktori;
+  List<Termin>? _termin;
 
   String? _selectedPacijentId;
   String? _selectedDoktorId;
+  String? _pacijentIme;
 
   late Map<String, dynamic> _initialValue;
+  double? _selectedCijena;
+
+  Map<String, dynamic>? paymentIntent;
+  String? transactionId;
+
+  bool _showRecommendedDoctors = false;
+  bool isLoading = false;
 
   List<Map<String, String>> stateOptions = [
-    {"display": "Active", "value": "Active"},
-    {"display": "Draft", "value": "Draft"},
-    {"display": "Cancelled", "value": "Cancelled"},
-
+    {"display": "active", "value": "active"},
+    {"display": "draft", "value": "draft"},
+    {"display": "cancelled", "value": "cancelled"},
   ];
+
+  List<Map<String, String>> razloziPregleda = [
+    {"display": "Opšti pregled", "value": "Opšti pregled"},
+    {"display": "Rutinska kontrola", "value": "Rutinska kontrola"},
+    {"display": "Specijalistički pregled", "value": "Specijalistički pregled"},
+    {"display": "Laboratorijska analiza", "value": "Laboratorijska analiza"},
+    {"display": "Hitni pregled", "value": "Hitni pregled"},
+  ];
+
+  Map<String, double> pregledCijene = {
+    "Opšti pregled": 50.0,
+    "Rutinska kontrola": 10.0,
+    "Specijalistički pregled": 100.0,
+    "Laboratorijska analiza": 30.0,
+    "Hitni pregled": 150.0,
+  };
 
   @override
   void initState() {
@@ -49,6 +81,9 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
       'razlog': widget.termin?.razlog,
       'pacijentId': widget.termin?.pacijentId,
       'doktorId': widget.termin?.doktorId,
+      'stateMachine': widget.termin?.stateMachine,
+      'brojTransakcije': widget.paymentIntentId ?? '',
+      'cijenaPregleda': widget.termin?.cijenaPregleda,
     };
   }
 
@@ -68,6 +103,12 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
       var pacijentiData = await _pacijentProvider.get();
       setState(() {
         _pacijenti = pacijentiData.result;
+        if (widget.termin?.pacijentId != null) {
+          var pacijent = _pacijenti?.firstWhere(
+            (p) => p.pacijentId == widget.termin?.pacijentId,
+          );
+          _pacijentIme = pacijent?.ime;
+        }
       });
     } catch (e) {
       print('Error fetching patients: $e');
@@ -82,6 +123,17 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
       });
     } catch (e) {
       print('Error fetching doktori: $e');
+    }
+  }
+
+  Future<void> _fetchTermini() async {
+    try {
+      var terminData = await _terminProvider.get();
+      setState(() {
+        _termin = terminData.result;
+      });
+    } catch (e) {
+      print('Error fetching appointments: $e');
     }
   }
 
@@ -110,19 +162,33 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
         mutableFormData['doktorId'] =
             int.tryParse(mutableFormData['doktorId'] as String) ?? 0;
       }
+      if (mutableFormData['stateMachine'] != null) {
+        mutableFormData['stateMachine'] =
+            mutableFormData['stateMachine'] as String;
+      }
+      if (mutableFormData['razlog'] != null) {
+        mutableFormData['razlog'] = mutableFormData['razlog'] as String;
+      }
+
+      mutableFormData['cijenaPregleda'] = _selectedCijena;
+      mutableFormData['brojTransakcije'] = paymentIntent?['id'];
 
       try {
         if (widget.termin == null) {
           await _terminProvider.insert(Termin.fromJson(mutableFormData));
           Navigator.of(context).pop();
 
-          _showSuccessDialog('Appoitment successufully added.');
+          _successDialogADD('Appointment successfully added.');
+          setState(() {
+            _fetchTermini(); 
+          });
         } else {
           await _terminProvider.update(
               widget.termin!.terminId!, Termin.fromJson(mutableFormData));
           Navigator.of(context).pop();
 
-          _showSuccessDialog('Apoitment successufully updated.');
+          _successDialogADD('Appointment successfully updated.');
+          await _fetchTermini();
         }
       } catch (e) {
         print('Error: $e');
@@ -133,7 +199,113 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
     }
   }
 
+  void _toggleRecommendedDoctors() {
+    setState(() {
+      _showRecommendedDoctors = !_showRecommendedDoctors;
+    });
+  }
+
+  Future<Map<String, dynamic>> makePaymentIntent() async {
+    String secretKey = const String.fromEnvironment("STRIPE_SECRET_KEY",
+        defaultValue: stripeSecretKey);
+
+    final body = {
+      'amount': calculateAmount().toString(),
+      'currency': 'BAM',
+      'payment_method_types[]': 'card',
+    };
+
+    final headers = {
+      'Authorization': 'Bearer $secretKey',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+
+    final response = await http.post(
+      Uri.parse("https://api.stripe.com/v1/payment_intents"),
+      headers: headers,
+      body: body,
+    );
+
+    return jsonDecode(response.body);
+  }
+
+  Future<void> displayPaymentSheet() async {
+    try {
+      await sp.Stripe.instance.presentPaymentSheet();
+      await _submitForm();
+      _showSuccessDialog('Payment Successful!');
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red[400],
+        padding: const EdgeInsets.all(15),
+        content: const Text(
+          "Transaction cancelled",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 17,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.5,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ));
+    }
+  }
+
+  Future<void> makePayment() async {
+    try {
+      paymentIntent = await makePaymentIntent();
+      await sp.Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: sp.SetupPaymentSheetParameters(
+          merchantDisplayName: 'Kreiranje termina pregleda',
+          paymentIntentClientSecret: paymentIntent!['client_secret'],
+          style: ThemeMode.dark,
+        ),
+      );
+      await displayPaymentSheet();
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  int calculateAmount() {
+    double amount = _selectedCijena ?? 0.0;
+    return (amount * 100).toInt();
+  }
+
   void _showSuccessDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Success'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(message),
+              SizedBox(height: 10),
+              Text("Payment Intent ID: ${paymentIntent?['id']}"),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                _formKey.currentState?.fields['brojTransakcije']
+                    ?.didChange(paymentIntent?['id']);
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _successDialogADD(String message) {
     showDialog(
       context: context,
       builder: (context) {
@@ -154,14 +326,6 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
     );
   }
 
-  bool _showRecommendedDoctors = false;
-
-  void _toggleRecommendedDoctors() {
-    setState(() {
-      _showRecommendedDoctors = !_showRecommendedDoctors;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
@@ -175,7 +339,9 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Adding a new appointment',
+                  widget.termin == null
+                      ? 'Adding a new appointment'
+                      : 'Updating appointment',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 24,
@@ -228,33 +394,81 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                       return null;
                     }),
                 SizedBox(height: 16),
+                FormBuilderDropdown<String>(
+                  name: 'razlog',
+                  decoration: InputDecoration(
+                    labelText: 'Reasone',
+                  ),
+                  items: razloziPregleda
+                      .map((option) => DropdownMenuItem<String>(
+                            value: option['value'],
+                            child: Text(option['display'] ?? ''),
+                          ))
+                      .toList(),
+                  initialValue: _initialValue['razlog'],
+                  onChanged: (value) {
+                    setState(() {
+                      _initialValue['razlog'] = value;
+                      _selectedCijena = pregledCijene[value];
+                    });
+                    print("Odabrani razlog: $value");
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ovo polje je obavezno!';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 16),
+                if (_selectedCijena != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Price: $_selectedCijena',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () async {
+                          await makePayment();
+                        },
+                        child: Text("Pay"),
+                      ),
+                    ],
+                  ),
+                SizedBox(height: 16),
                 FormBuilderTextField(
-                    decoration: InputDecoration(
-                      labelText: "Reason",
-                      border: OutlineInputBorder(),
-                    ),
-                    name: "razlog",
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Ovo polje je obavezno!';
-                      }
-                      return null;
-                    }),
+                  decoration: InputDecoration(
+                    labelText: "Transaction Number",
+                    border: OutlineInputBorder(),
+                  ),
+                  name: "brojTransakcije",
+                  initialValue: paymentIntent?['id'],
+                ),
                 SizedBox(height: 16),
                 FormBuilderDropdown<String>(
                   name: 'stateMachine',
                   decoration: InputDecoration(
-                    labelText: 'State Machine',
+                    labelText: 'State machine',
                   ),
                   items: stateOptions
-                      .map((state) => DropdownMenuItem<String>(
-                            value: state['value'],
-                            child: Text(state['display']!),
+                      .map((option) => DropdownMenuItem<String>(
+                            value: option['value'],
+                            child: Text(option['display'] ?? ''),
                           ))
                       .toList(),
                   initialValue: _initialValue['stateMachine'],
                   onChanged: (value) {
-                    print("Odabrano stanje: $value");
+                    setState(() {
+                      _initialValue['stateMachine'] = value;
+                    });
+                    print("Odabrani stateMachine: $value");
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -342,7 +556,7 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                 ),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: Text(widget.termin == null ? 'Add' : 'Edit data'),
+                  child: Text(widget.termin == null ? 'Add' : 'Save'),
                 ),
               ],
             ),
@@ -350,7 +564,7 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
         ),
       ),
       title: widget.termin != null
-          ? "Appoitment: ${widget.termin?.pacijentId}"
+          ? "Appoitment: ${_pacijentIme}"
           : "Appoitment details",
     );
   }

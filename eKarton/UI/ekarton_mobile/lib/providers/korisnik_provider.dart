@@ -11,12 +11,15 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
 class KorisnikProvider extends BaseProvider<Korisnik> {
+  Korisnik? _currentUser;
   KorisnikProvider() : super("Korisnik");
+  Korisnik? get currentUser => _currentUser;
 
   @override
   Korisnik fromJson(data) {
     return Korisnik.fromJson(data);
   }
+
 
   Future<Korisnik?> login(String username, String password) async {
     try {
@@ -31,6 +34,7 @@ class KorisnikProvider extends BaseProvider<Korisnik> {
       if (isValidResponse(response)) {
         var data = jsonDecode(response.body);
         Korisnik user = fromJson(data);
+        _currentUser = user;
         return user;
       } else {
         print("Invalid credentials");
@@ -52,6 +56,7 @@ class KorisnikProvider extends BaseProvider<Korisnik> {
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
       Korisnik user = fromJson(data) as Korisnik;
+      _currentUser = user;
       return user;
     } else {
       throw Exception("Pogrešno korisničko ime ili lozinka");
