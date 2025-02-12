@@ -401,7 +401,7 @@ class _PacijentiDetailsScreenState extends State<PacijentiDetailsScreen> {
                 _buildPreventivneMjereList(),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: Text(widget.pacijent == null ? 'Add' : 'Edit data'),
+                  child: Text(widget.pacijent == null ? 'Add' : 'Save'),
                 ),
               ],
             ),

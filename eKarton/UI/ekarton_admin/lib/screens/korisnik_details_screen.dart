@@ -135,11 +135,16 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                     "Username", "korisnickoIme", Icons.account_circle),
                 SizedBox(height: 16),
                 _buildFormField("Email", "email", Icons.email),
-                /* _buildFormField("Password", "password", Icons.lock,
-                    obscureText: true),*/
-                /*_buildFormField(
-                    "Confirm password", "potvrdaPassworda", Icons.lock_outline,
-                    obscureText: true),*/
+                SizedBox(height: 16),
+                if (widget.korisnik == null) ...[
+                  _buildFormField("Password", "password", Icons.lock,
+                      obscureText: true),
+                  SizedBox(height: 16),
+                  _buildFormField("Confirm password", "potvrdaPassworda",
+                      Icons.lock_outline,
+                      obscureText: true),
+                  SizedBox(height: 16),
+                ],
                 _buildFormField("Phone number", "telefon", Icons.phone),
                 SizedBox(height: 16),
                 _buildGenderDropdown(),

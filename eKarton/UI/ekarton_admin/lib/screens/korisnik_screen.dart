@@ -47,8 +47,10 @@ class _KorisnikScreen extends State<KorisnikScreen> {
 
     if (result == 'success') {
       _showSnackbar('Korisnik uspješno dodan!');
+      await _fetchKorisnici();
     } else if (result == 'updated') {
       _showSnackbar('Korisnik uspješno ažuriran!');
+      await _fetchKorisnici();
     }
 
     await _fetchKorisnici();
@@ -254,12 +256,15 @@ class _KorisnikScreen extends State<KorisnikScreen> {
               child: Text(korisnik.ime?[0] ?? '',
                   style: TextStyle(color: Colors.white)),
             ),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
+            onTap: () async {
+              final result = await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => KorisniciDetailsScreen(
                   korisnik: korisnik,
                 ),
               ));
+              if (result != null) {
+                _fetchKorisnici();
+              }
             },
           ),
         );

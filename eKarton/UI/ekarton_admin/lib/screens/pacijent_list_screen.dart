@@ -105,23 +105,6 @@ class _PacijentiScreenState extends State<PacijentiScreen> {
                     child: Text("Add new patient"),
                   ),
                   SizedBox(width: 16.0),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final result = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => PreventivneMjereDetailsScreen(),
-                        ),
-                      );
-
-                      if (result != null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(result.toString())),
-                        );
-                        _fetchInitialData();
-                      }
-                    },
-                    child: Text("Add patient preventive measures"),
-                  ),
                 ],
               ),
             )
