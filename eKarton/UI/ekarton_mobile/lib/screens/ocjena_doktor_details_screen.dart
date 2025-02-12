@@ -301,7 +301,7 @@ class _OcjenaDoktorDetailsScreen extends State<OcjenaDoktorDetailsScreen> {
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: Text('Save'),
+                  child: Text('Add'),
                 ),
               ],
             ),

@@ -21,7 +21,8 @@ class TerminDetailsScreen extends StatefulWidget {
   final Termin? termin;
   final String? paymentIntentId;
   final Function? onDataChanged;
-  TerminDetailsScreen({Key? key, this.termin, this.paymentIntentId, this.onDataChanged})
+  TerminDetailsScreen(
+      {Key? key, this.termin, this.paymentIntentId, this.onDataChanged})
       : super(key: key);
 
   @override
@@ -148,6 +149,16 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
     }
     setState(() {});
   }
+  void _showSuccessMessage(String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.green[400],
+      duration: Duration(seconds: 3),
+    ),
+  );
+}
+
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.saveAndValidate()) {
@@ -177,9 +188,12 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
       try {
         if (widget.termin == null) {
           await _terminProvider.insert(Termin.fromJson(mutableFormData));
+          _showSuccessMessage('Appointment successfully added!');
         } else {
           await _terminProvider.update(
               widget.termin!.terminId!, Termin.fromJson(mutableFormData));
+              _showSuccessMessage('Appointment successfully updated!');
+
         }
 
         if (widget.onDataChanged != null) {
@@ -393,7 +407,7 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                 FormBuilderDropdown<String>(
                   name: 'razlog',
                   decoration: InputDecoration(
-                    labelText: 'Reasone',
+                    labelText: 'Reason for the appointment',
                   ),
                   items: razloziPregleda
                       .map((option) => DropdownMenuItem<String>(
@@ -402,20 +416,35 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                           ))
                       .toList(),
                   initialValue: _initialValue['razlog'],
-                  onChanged: (value) {
-                    setState(() {
-                      _initialValue['razlog'] = value;
-                      _selectedCijena = pregledCijene[value];
-                    });
-                    print("Odabrani razlog: $value");
-                  },
+                  onChanged: widget.termin ==
+                          null 
+                      ? (value) {
+                          setState(() {
+                            _initialValue['razlog'] = value;
+                            _selectedCijena = pregledCijene[value];
+                          });
+                          print("Selected reason: $value");
+                        }
+                      : null, 
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Ovo polje je obavezno!';
+                      return 'This field is required!';
                     }
                     return null;
                   },
+                  enabled: widget.termin ==
+                      null, 
                 ),
+                SizedBox(height: 8),
+                if (widget.termin != null)
+                  Text(
+                    "You can't change the reason of the appointment because you made a transaction already.",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 14,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
                 SizedBox(height: 16),
                 if (_selectedCijena != null)
                   Column(
@@ -438,16 +467,18 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
                       ),
                     ],
                   ),
-                SizedBox(height: 16),
-                FormBuilderTextField(
-                  decoration: InputDecoration(
-                    labelText: "Transaction Number",
-                    border: OutlineInputBorder(),
+                if (widget.termin == null) ...[
+                  SizedBox(height: 16),
+                  FormBuilderTextField(
+                    decoration: InputDecoration(
+                      labelText: "Transaction Number",
+                      border: OutlineInputBorder(),
+                    ),
+                    name: "brojTransakcije",
+                    initialValue: paymentIntent?['id'],
                   ),
-                  name: "brojTransakcije",
-                  initialValue: paymentIntent?['id'],
-                ),
-                SizedBox(height: 16),
+                  SizedBox(height: 16),
+                ],
                 FormBuilderDropdown<String>(
                   name: 'stateMachine',
                   decoration: InputDecoration(

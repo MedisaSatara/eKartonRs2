@@ -205,13 +205,12 @@ class _TerminScreen extends State<TerminScreen> {
                 final result = await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => TerminDetailsScreen(
-                      onDataChanged:
-                          _fetchTermini, 
+                      onDataChanged: _fetchTermini,
                     ),
                   ),
                 );
                 if (result != null) {
-                  _fetchTermini(); 
+                  _fetchTermini();
                 }
               },
               child: Text("Add new appointment!"),
@@ -220,6 +219,14 @@ class _TerminScreen extends State<TerminScreen> {
         ),
       ),
     );
+  }
+
+  void _refreshTermini() async {
+    var terminData = await _terminProvider.get();
+
+    setState(() {
+      terminResult = terminData;
+    });
   }
 
   Expanded _buildDataListView() {
@@ -325,8 +332,10 @@ class _TerminScreen extends State<TerminScreen> {
                             if (selected == true) {
                               final result = await Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      TerminDetailsScreen(termin: e),
+                                  builder: (context) => TerminDetailsScreen(
+                                    termin: e,
+                                    onDataChanged: _refreshTermini,
+                                  ),
                                 ),
                               );
 
