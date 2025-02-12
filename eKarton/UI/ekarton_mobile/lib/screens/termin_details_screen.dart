@@ -20,7 +20,8 @@ import 'package:http/http.dart' as http;
 class TerminDetailsScreen extends StatefulWidget {
   final Termin? termin;
   final String? paymentIntentId;
-  TerminDetailsScreen({Key? key, this.termin, this.paymentIntentId})
+  final Function? onDataChanged;
+  TerminDetailsScreen({Key? key, this.termin, this.paymentIntentId, this.onDataChanged})
       : super(key: key);
 
   @override
@@ -176,20 +177,16 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
       try {
         if (widget.termin == null) {
           await _terminProvider.insert(Termin.fromJson(mutableFormData));
-          Navigator.of(context).pop();
-
-          _successDialogADD('Appointment successfully added.');
-          setState(() {
-            _fetchTermini(); 
-          });
         } else {
           await _terminProvider.update(
               widget.termin!.terminId!, Termin.fromJson(mutableFormData));
-          Navigator.of(context).pop();
-
-          _successDialogADD('Appointment successfully updated.');
-          await _fetchTermini();
         }
+
+        if (widget.onDataChanged != null) {
+          widget.onDataChanged!();
+        }
+
+        Navigator.of(context).pop();
       } catch (e) {
         print('Error: $e');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -287,7 +284,7 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
             children: [
               Text(message),
               SizedBox(height: 10),
-              Text("Payment Intent ID: ${paymentIntent?['id']}"),
+              Text("Broj transakcije: ${paymentIntent?['id']}"),
             ],
           ),
           actions: [
@@ -315,7 +312,6 @@ class _TerminDetailsScreen extends State<TerminDetailsScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
               child: Text('OK'),

@@ -168,7 +168,7 @@ class _PreventivneMjereDetailsScreen
                   ),
                 ),
                 child: Text(
-                  widget.preventivneMjere == null ? 'Add' : 'Edit',
+                  widget.preventivneMjere == null ? 'Add' : 'Save',
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),

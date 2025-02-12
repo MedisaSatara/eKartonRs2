@@ -202,12 +202,17 @@ class _TerminScreen extends State<TerminScreen> {
             Expanded(child: _buildDataListView()),
             ElevatedButton(
               onPressed: () async {
-                Navigator.of(context).push(
+                final result = await Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => TerminDetailsScreen(),
+                    builder: (context) => TerminDetailsScreen(
+                      onDataChanged:
+                          _fetchTermini, 
+                    ),
                   ),
                 );
-                _fetchTermini();
+                if (result != null) {
+                  _fetchTermini(); 
+                }
               },
               child: Text("Add new appointment!"),
             ),
@@ -291,7 +296,7 @@ class _TerminScreen extends State<TerminScreen> {
                         ),
                       ),
                     ),
-                     DataColumn(
+                    DataColumn(
                       label: Expanded(
                         child: Text(
                           'Broj transkacije',
@@ -344,7 +349,6 @@ class _TerminScreen extends State<TerminScreen> {
                             DataCell(Text(doktorName?.ime ?? "")),
                             DataCell(Text(e?.stateMachine ?? "")),
                             DataCell(Text(e?.brojTransakcije ?? "")),
-
                             DataCell(
                               IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),

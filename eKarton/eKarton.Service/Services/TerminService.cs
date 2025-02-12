@@ -99,7 +99,7 @@ namespace eKarton.Service.Services
                     {
                         Sender = "tt8915119@gmail.com",
                         Recipient = user.Email,
-                        Subject = "Prihvaćen termin i usluga od šetača!",
+                        Subject = "Prihvaćen termin i usluga!",
                         Content = $"Zakazani termin za {serviceRequest.Datum} je prihvaćen od strane doktora za pregled u vrijeme {serviceRequest.Vrijeme}."
                     };
 

@@ -9,7 +9,8 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 
 class OnlinePaymentScreen extends StatefulWidget {
   final Termin reservation;
-  const OnlinePaymentScreen({Key? key, required this.reservation}) : super(key: key);
+  const OnlinePaymentScreen({Key? key, required this.reservation})
+      : super(key: key);
 
   @override
   _OnlinePaymentScreenState createState() => _OnlinePaymentScreenState();
@@ -106,23 +107,21 @@ class _OnlinePaymentScreenState extends State<OnlinePaymentScreen> {
 
   Future<void> savePaymentData() async {
     try {
-      // Save the payment data and transaction ID
       TerminProvider terminProvider = TerminProvider();
 
-      // Update the Termin with the payment intent ID (transaction ID)
       Termin updatedTermin = await terminProvider.updateTransaction(
-        widget.reservation.terminId!, // Assume you have the ID of the Termin
-        paymentIntent!['id'], // Get the payment intent ID
+        widget.reservation.terminId!,
+        paymentIntent!['id'],
       );
-
-      print("Payment data updated with transaction ID: ${updatedTermin.brojTransakcije}");
-
+      print(
+          "Payment data updated with transaction ID: ${updatedTermin.brojTransakcije}");
     } catch (error) {
       print('Greška prilikom komunikacije s API-jem: $error');
     }
   }
 
-  Future<Map<String, dynamic>> createPaymentIntent(String amount, String currency) async {
+  Future<Map<String, dynamic>> createPaymentIntent(
+      String amount, String currency) async {
     try {
       int calculatedAmount = calculateAmount(amount);
       Map<String, String> body = {

@@ -126,7 +126,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   final Map<String, Widget> _moreOptions = {
     'Recommended doctors': RecommendedDoctorsScreen(),
     'Contact': BolnicaScreen(),
-    'Online paymant': PaymentDetailsScreen(paymentIntentId: "",),
+    //'Online paymant': PaymentDetailsScreen(paymentIntentId: "",),
   };
 
   void _onMainItemTapped(int index) {
