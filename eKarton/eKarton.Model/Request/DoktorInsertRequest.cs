@@ -17,7 +17,7 @@ namespace eKarton.Model.Request
         public string? Grad { get; set; }
         public string Jmbg { get; set; } = null!;
         public string? Telefon { get; set; }
-        public string? StateMachine { get; set; }
+        //public string? StateMachine { get; set; }
 
         public string? Email { get; set; }
         public int OdjelId { get; set; }

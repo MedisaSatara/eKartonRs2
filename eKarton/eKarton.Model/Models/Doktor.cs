@@ -17,9 +17,9 @@ namespace eKarton.Model.Models
         public string Jmbg { get; set; } = null!;
         public string? Telefon { get; set; }
         public string? Email { get; set; }
-        public string? StateMachine { get; set; }
+       // public string? StateMachine { get; set; }
 
-        public int OdjelId { get; set; }
+        public int? OdjelId { get; set; }
         public double? AverageRating { get; set; }
         public virtual Odjel Odjel { get; set; } = null!;
        // public virtual ICollection<DodjeljeniDoktor> DodjeljeniDoktors { get; set; }

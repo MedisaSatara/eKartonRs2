@@ -127,11 +127,12 @@ namespace eKarton.Service.Databases
                 entity.Property(e => e.Spol).HasMaxLength(1);
 
                 entity.Property(e => e.Telefon).HasMaxLength(20);
+                entity.Property(e => e.OdjelId).IsRequired(false);
 
                 entity.HasOne(d => d.Odjel)
                     .WithMany(p => p.Doktors)
                     .HasForeignKey(d => d.OdjelId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("FK_Odjel_Doktor");
             });
 
@@ -150,7 +151,7 @@ namespace eKarton.Service.Databases
                 entity.Property(e => e.Prezime).HasMaxLength(30);
             });
 
-           /* modelBuilder.Entity<KorisnikUloga>(entity =>
+            modelBuilder.Entity<KorisnikUloga>(entity =>
             {
                 entity.ToTable("KorisnikUloga");
 
@@ -159,13 +160,14 @@ namespace eKarton.Service.Databases
                 entity.HasOne(d => d.Korisnik)
                     .WithMany(p => p.KorisnikUlogas)
                     .HasForeignKey(d => d.KorisnikId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Korisnik_KorisnikUloga");
 
-                entity.HasOne(d => d.Uloga)
+                /*entity.HasOne(d => d.Uloga)
                     .WithMany(p => p.KorisnikUlogas)
                     .HasForeignKey(d => d.UlogaId)
-                    .HasConstraintName("FK_Uloga_KorisnikUloga");
-            });*/
+                    .HasConstraintName("FK_Uloga_KorisnikUloga");*/
+            });
 
             modelBuilder.Entity<Nalaz>(entity =>
             {

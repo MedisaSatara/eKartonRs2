@@ -4,6 +4,7 @@ import 'package:ekarton_admin/providers/bolnica_provider.dart';
 import 'package:ekarton_admin/providers/doktor_provider.dart';
 import 'package:ekarton_admin/providers/doktori_pregled.dart';
 import 'package:ekarton_admin/providers/korisnik_provider.dart';
+import 'package:ekarton_admin/providers/korisnik_uloga_provider.dart';
 import 'package:ekarton_admin/providers/odjel_provider.dart';
 import 'package:ekarton_admin/providers/osiguranje_provider.dart';
 import 'package:ekarton_admin/providers/pacijent_osiguranje_provider.dart';
@@ -38,6 +39,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => Top3Doktora()),
       ChangeNotifierProvider(create: (_) => DoktoriPregled()),
       ChangeNotifierProvider(create: (_) => BolestiPoGodistu()),
+      ChangeNotifierProvider(create: (_) => KorisnikUlogaProvider()),
       ChangeNotifierProvider(create: (_) => TehnickaPodrskaProvider()),
     ],
     child: MyMaterialApp(),

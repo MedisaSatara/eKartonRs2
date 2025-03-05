@@ -20,6 +20,7 @@ class Korisnik {
       this.email,
       this.password,
       this.potvrdaPassworda,
+      this.lozinkaHash,
       this.telefon,
       this.slika,
       this.korisnikUlogas = const []});
@@ -33,6 +34,7 @@ class Korisnik {
   String? email;
   String? password;
   String? potvrdaPassworda;
+  String? lozinkaHash;
   String? datumRodjenja;
   String? slika;
   List<KorisnikUloga> korisnikUlogas;

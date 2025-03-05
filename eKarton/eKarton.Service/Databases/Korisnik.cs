@@ -23,7 +23,7 @@ namespace eKarton.Service.Databases
         public string? LozinkaSalt { get; set; }
         public string? LozinkaHash { get; set; }
         public byte[]? Slika { get; set; }
-        //   public int? UlogaId { get; set; }
+        //  public int? UlogaId { get; set; }
         //  public virtual Uloga Uloga { get; set; } = null!;
         public virtual ICollection<KorisnikUloga> KorisnikUlogas { get; set; }
 

@@ -4,6 +4,7 @@ import 'package:ekarton_admin/models/odjel.dart';
 import 'package:ekarton_admin/models/search_result.dart';
 import 'package:ekarton_admin/providers/doktor_provider.dart';
 import 'package:ekarton_admin/providers/odjel_provider.dart';
+import 'package:ekarton_admin/screens/doktor_details_screen.dart';
 import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -48,6 +49,13 @@ class _DoktorScreenState extends State<DoktorScreen> {
     _searchData();
   }
 
+  Future<void> _fetchInitialData() async {
+    var data = await _doktorProvider.get();
+    setState(() {
+      doktorResult = data;
+    });
+  }
+
   Future<void> _searchData() async {
     var filter = {
       'imeDoktora': _imeController.text,
@@ -63,6 +71,30 @@ class _DoktorScreenState extends State<DoktorScreen> {
     setState(() {
       doktorResult = data;
     });
+  }
+
+  void _navigateToAddDoktor() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DoktorDetailsScreen(
+          doktor: null,
+          onDataChanged: _fetchInitialData,
+        ),
+      ),
+    );
+  }
+
+  void _navigateToDoktorDetails(Doktor doktor) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DoktorDetailsScreen(
+          doktor: doktor,
+          onDataChanged: _fetchInitialData,
+        ),
+      ),
+    );
   }
 
   @override
@@ -174,50 +206,59 @@ class _DoktorScreenState extends State<DoktorScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: doktorResult == null
-                  ? Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: doktorResult?.result.length ?? 0,
-                      itemBuilder: (context, index) {
-                        final doktor = doktorResult!.result[index];
-                        final odjel = odjelResult?.result.firstWhere(
-                          (odjel) => odjel.odjelId == doktor.odjelId,
-                          orElse: () => Odjel(odjelId: 0, naziv: "N/A"),
-                        );
+                padding: const EdgeInsets.all(16.0),
+                child: doktorResult == null
+                    ? Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: doktorResult?.result.length ?? 0,
+                        itemBuilder: (context, index) {
+                          final doktor = doktorResult!.result[index];
+                          final odjel = odjelResult?.result.firstWhere(
+                            (odjel) => odjel.odjelId == doktor.odjelId,
+                            orElse: () => Odjel(odjelId: 0, naziv: "N/A"),
+                          );
 
-                        return Card(
-                          elevation: 4,
-                          margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "${doktor.ime ?? ''} ${doktor.prezime ?? ''}",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          return InkWell(
+                            onTap: () => _navigateToDoktorDetails(
+                                doktor), 
+                            child: Card(
+                              elevation: 4,
+                              margin: const EdgeInsets.symmetric(vertical: 8.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "${doktor.ime ?? ''} ${doktor.prezime ?? ''}",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                        "Date of Birth: ${doktor.datumRodjenja ?? 'N/A'}"),
+                                    Text("Gender: ${doktor.spol ?? 'N/A'}"),
+                                    Text(
+                                        "Department: ${odjel?.naziv ?? 'N/A'}"),
+                                    SizedBox(height: 8),
+                                  ],
                                 ),
-                                SizedBox(height: 8),
-                                Text(
-                                    "Date of Birth: ${doktor.datumRodjenja ?? 'N/A'}"),
-                                Text("Gender: ${doktor.spol ?? 'N/A'}"),
-                                Text("Department: ${odjel?.naziv ?? 'N/A'}"),
-                                SizedBox(height: 8),
-                              ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          );
+                        },
+                      )),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _navigateToAddDoktor,
+              child: Text("Add new doctor"),
             ),
           ],
         ),

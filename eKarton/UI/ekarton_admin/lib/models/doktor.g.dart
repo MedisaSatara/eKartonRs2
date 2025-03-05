@@ -17,6 +17,8 @@ Doktor _$DoktorFromJson(Map<String, dynamic> json) => Doktor(
       grad: json['grad'] as String?,
       telefon: json['telefon'] as String?,
       odjelId: (json['odjelId'] as num?)?.toInt(),
+      stateMachine: json['stateMachine'] as String?,
+
     );
 
 Map<String, dynamic> _$DoktorToJson(Doktor instance) => <String, dynamic>{
@@ -30,4 +32,6 @@ Map<String, dynamic> _$DoktorToJson(Doktor instance) => <String, dynamic>{
       'email': instance.email,
       'datumRodjenja': instance.datumRodjenja,
       'odjelId': instance.odjelId,
+      'stateMachine': instance.stateMachine,
+
     };

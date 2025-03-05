@@ -29,6 +29,12 @@ builder.Services.AddTransient<IPregledService, PregledService>();
 builder.Services.AddTransient<ITerapijaService, TerapijaService>();
 builder.Services.AddTransient<IOcjenaDoktorService, OcjenaDoktorService>();
 builder.Services.AddTransient<ITehnickaPodrska, TehnickaPodrskaService>();
+builder.Services.AddTransient<IUlogaService, UlogaService>();
+builder.Services.AddTransient<IKorisnikUlogaService, KorisnikUlogaService>();
+builder.Services.AddTransient<IOboljenjeService, OboljenjeService>();
+
+
+
 
 
 builder.Services.AddSingleton<IMailProducer, MailProducer>();
@@ -90,6 +96,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<eKartonContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddAutoMapper(typeof(IKorisnikService));
+
 builder.Services.AddAuthentication("BasicAuthentication")
     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
@@ -120,10 +127,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<eKartonContext>();
     dataContext.Database.Migrate();
-}
+}*/
 
 app.Run();

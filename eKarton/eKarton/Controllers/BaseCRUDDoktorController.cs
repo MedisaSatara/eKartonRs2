@@ -1,4 +1,5 @@
-﻿using eKarton.Service.Services;
+﻿using eKarton.Model.Request;
+using eKarton.Service.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +23,7 @@ namespace eKarton.Controllers
         {
             return await _service.Insert(insert);
         }
-
+       
         [HttpPut("{id}")]
         public virtual async Task<T> Update(int id, [FromBody] TUpdate update)
         {

@@ -21,15 +21,18 @@ namespace eKarton.Service.Mapping
             CreateMap<KorisnikSearchObject, Databases.Korisnik>();
             CreateMap<KorisnikInsertRequest, Databases.Korisnik>();
             CreateMap<KorisnikUpdateRequest, Databases.Korisnik>();
+
             CreateMap<Databases.KorisnikUloga, Model.Models.KorisnikUloga>();
+            CreateMap<KorisnikUlogaSearchObject, Databases.KorisnikUloga>();
+            CreateMap<KorisnikUlogaInsertRequest, Databases.KorisnikUloga>();
+            CreateMap<KorisnikUlogaUpdateRequest, Databases.KorisnikUloga>();
+
             CreateMap<Databases.Uloga, Model.Models.Uloga>();
 
             CreateMap<Databases.Doktor, Model.Models.Doktor>();
             CreateMap<DoktorSearchObject, Databases.Doktor>();
             CreateMap<DoktorInsertRequest, Databases.Doktor>();
-
             CreateMap<DoktorUpdateRequest, Databases.Doktor>();
-
 
             CreateMap<Databases.Pacijent, Model.Models.Pacijent>();
             CreateMap<PacijentSearchObject, Databases.Pacijent>();
@@ -40,6 +43,8 @@ namespace eKarton.Service.Mapping
             CreateMap<Databases.PreventivneMjere, Model.Models.PreventivneMjere>();
 
             CreateMap<Databases.Odjel, Model.Models.Odjel>();
+            CreateMap<OdjelInsertRequest, Databases.Odjel>();
+            CreateMap<OdjelUpdateRequest, Databases.Odjel>();
             CreateMap<Databases.TehnickaPodrska, Model.Models.TehnickaPodrska>();
 
 
@@ -63,6 +68,9 @@ namespace eKarton.Service.Mapping
 
             CreateMap<Databases.PacijentOboljenja, Model.Models.PacijentOboljenja>();
             CreateMap<PacijentSearchObject, Databases.PacijentOboljenja>();
+
+            CreateMap<Databases.Oboljenje, Model.Models.Oboljenje>();
+            CreateMap<PacijentClassesSearchObject, Databases.Oboljenje>();
 
             CreateMap<Databases.Nalaz, Model.Models.Nalaz>();
             CreateMap<PacijentClassesSearchObject, Databases.Nalaz>();

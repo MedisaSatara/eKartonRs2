@@ -19,7 +19,7 @@ namespace eKarton.Service.UputniceStateMachine
         {
             var set = _context.Set<Databases.Doktor>();
             var entity = _mapper.Map<Databases.Doktor>(request);
-            entity.StateMachine = "draft";
+           // entity.StateMachine = "draft";
             set.Add(entity);
             await _context.SaveChangesAsync();
             return _mapper.Map<eKarton.Model.Models.Doktor>(entity);

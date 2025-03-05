@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -35,6 +36,8 @@ class _ReportScreen extends State<ReportScreen> {
 
   Future<void> _generatePdf(String reportName, List<dynamic> data) async {
     final pdf = pw.Document();
+    final fontData = await rootBundle.load('assets/fonts/ttf/DejaVuSans.ttf');
+    final ttf = pw.Font.ttf(fontData);
 
     pdf.addPage(
       pw.MultiPage(
@@ -45,15 +48,17 @@ class _ReportScreen extends State<ReportScreen> {
             level: 0,
             child: pw.Text(
               reportName,
-              style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+              style: pw.TextStyle(
+                  fontSize: 24, fontWeight: pw.FontWeight.bold, font: ttf),
             ),
           ),
           pw.Paragraph(
-            text: "Izveštaj generisan: ${DateTime.now().toString()}",
-            style: pw.TextStyle(fontSize: 12, fontStyle: pw.FontStyle.italic),
+            text: "Izvještaj generisan: ${DateTime.now().toString()}",
+            style: pw.TextStyle(
+                fontSize: 12, fontStyle: pw.FontStyle.italic, font: ttf),
           ),
           pw.SizedBox(height: 20),
-          ..._buildReportContent(data),
+          ..._buildReportContent(data, ttf),
         ],
       ),
     );
@@ -72,7 +77,7 @@ class _ReportScreen extends State<ReportScreen> {
     }
   }
 
-  List<pw.Widget> _buildReportContent(List<dynamic> data) {
+  List<pw.Widget> _buildReportContent(List<dynamic> data, pw.Font ttf) {
     List<pw.Widget> content = [];
 
     if (data.isNotEmpty) {
@@ -80,16 +85,31 @@ class _ReportScreen extends State<ReportScreen> {
         for (var doktor in data) {
           final doc = doktor as OdabraniDoktori;
           content.add(pw.Text(
-              'Ovdje su prikazani podaci o najposjecenijem doktoru. Rangirali smo ih u top 3 najposjecenija doktora.'));
+              'Ovdje su prikazani podaci o najposjećenijem doktoru. Rangirali smo ih u top 3 najposjećenija doktora.',
+              style: pw.TextStyle(
+                font: ttf,
+              )));
           content.add(pw.Text(
-              'Jedan od njih je i doktor ${doc.imeDoktora ?? ''} ${doc.prezimeDoktora ?? ''}'));
+              'Jedan od njih je i doktor ${doc.imeDoktora ?? ''} ${doc.prezimeDoktora ?? ''}',
+              style: pw.TextStyle(
+                font: ttf,
+              )));
           content.add(pw.Text(
-              'Doktor radi specijalizaciju na odjelu ${doc.specijalizacija ?? ''}'));
+              'Doktor radi specijalizaciju na odjelu ${doc.specijalizacija ?? ''}',
+              style: pw.TextStyle(
+                font: ttf,
+              )));
           content.add(pw.Text(
-              'Do sada je imao  ${doc.brojZakazanihTermina ?? ''} zakazanih termina kod pacijenata.'));
+              'Do sada je imao  ${doc.brojZakazanihTermina ?? ''} zakazanih termina kod pacijenata.',
+              style: pw.TextStyle(
+                font: ttf,
+              )));
 
           content.add(pw.Text('Slijedi prikaz dodatnih informacija doktora:'));
-          content.add(pw.Text('Datum rodjenja: ${doc.datumRodjenja ?? ''}'));
+          content.add(pw.Text('Datum rodjenja: ${doc.datumRodjenja ?? ''}',
+              style: pw.TextStyle(
+                font: ttf,
+              )));
           content.add(pw.Text('Email: ${doc.email ?? ''}'));
           content.add(pw.Text('Telefon: ${doc.telefon ?? ''}'));
           content.add(pw.SizedBox(height: 10));
@@ -97,7 +117,10 @@ class _ReportScreen extends State<ReportScreen> {
       } else if (data.first is DoktoriPregledReport) {
         for (var pregled in data) {
           final preg = pregled as DoktoriPregledReport;
-          content.add(pw.Text('Ime doktora: ${preg.imeDoktora ?? ''}'));
+          content.add(pw.Text('Ime doktora: ${preg.imeDoktora ?? ''}',
+              style: pw.TextStyle(
+                font: ttf,
+              )));
           content.add(pw.Text('Broj pregleda: ${preg.brojPregleda ?? 0}'));
           content.add(pw.SizedBox(height: 10));
         }
@@ -106,7 +129,10 @@ class _ReportScreen extends State<ReportScreen> {
           final bol = bolest as BolestiPoGodistuReport;
           content.add(pw.Text('Godina: ${bol.decade ?? ''}'));
           for (var bolestDetalj in bol.najcesceBolesti) {
-            content.add(pw.Text('Dijagnoza: ${bolestDetalj.dijagnoza ?? ''}'));
+            content.add(pw.Text('Dijagnoza: ${bolestDetalj.dijagnoza ?? ''}',
+                style: pw.TextStyle(
+                  font: ttf,
+                )));
             content.add(pw.Text(
                 'Broj pacijenata: ${bolestDetalj.brojPacijenata ?? 0}'));
           }

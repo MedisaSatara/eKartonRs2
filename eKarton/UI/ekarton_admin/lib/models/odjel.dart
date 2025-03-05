@@ -10,8 +10,9 @@ class Odjel {
   int? odjelId;
   String? naziv;
   String? telefon;
+  int? bolnicaId;
 
-  Odjel({this.odjelId, this.naziv, this.telefon});
+  Odjel({this.odjelId, this.naziv, this.telefon,this.bolnicaId});
 
   factory Odjel.fromJson(Map<String, dynamic> json) => _$OdjelFromJson(json);
 

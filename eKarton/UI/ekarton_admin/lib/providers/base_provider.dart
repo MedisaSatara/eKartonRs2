@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:ekarton_admin/models/bolesti_po_godistu_report.dart';
 import 'package:ekarton_admin/models/doktori_pregled_report.dart';
+import 'package:ekarton_admin/models/korisnik_uloga.dart';
 import 'package:ekarton_admin/models/odabrani_doktori.dart';
 import 'package:ekarton_admin/models/search_result.dart';
 import 'package:ekarton_admin/utils/util.dart';
@@ -15,7 +16,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
   BaseProvider(String endpoint) : _endpoint = endpoint {
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "http://localhost:7073/");
+        defaultValue: "https://localhost:7285/");
     totalUrl = "$_baseUrl$_endpoint";
   }
   //https://localhost:7285/
@@ -250,6 +251,91 @@ abstract class BaseProvider<T> with ChangeNotifier {
     } catch (e) {
       print("Error fetching report data: $e");
       throw Exception('Failed to load BolestiPoGodistuReport data');
+    }
+  }
+
+  Future<bool> provjeriStaruLozinku(int korisnikId, String staraLozinka) async {
+    String url = totalUrl ?? "$_baseUrl$_endpoint";
+
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "korisnikId": korisnikId,
+          "staraLozinka": staraLozinka,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as bool;
+      } else {
+        print("Greška: ${response.statusCode}");
+        return false;
+      }
+    } catch (e) {
+      print("Greška: $e");
+      return false;
+    }
+  }
+
+  Future<bool> checkOldPassword(int korisnikId, String oldPassword) async {
+    final url = totalUrl ?? "$_baseUrl$_endpoint";
+
+    // final url = Uri.parse('https://localhost:7285/Korisnik/provjeriLozinku');
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'korisnikId': korisnikId,
+        'staraLozinka': oldPassword,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data['isPasswordCorrect'] ?? false;
+    } else {
+      throw Exception('Failed to check password');
+    }
+  }
+
+  Future<T> getById(int? id) async {
+    var url = "$_baseUrl$_endpoint/$id";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    Response response = await http.get(uri, headers: headers);
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return fromJson(data);
+    } else {
+      throw Exception("Unknown error");
+    }
+  }
+
+  Future<SearchResult<KorisnikUloga>> getKorisnikUloga(
+      {Map<String, String>? filter}) async {
+    final response = await http.get(
+      Uri.parse('https://localhost:7285/KorisnikUloga'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      var filteredData = data.where((item) {
+        return item['korisnikId'] == filter?['korisnikId'] &&
+            item['ulogaId'] == filter?['ulogaId'];
+      }).toList();
+
+      return SearchResult<KorisnikUloga>();
+    } else {
+      throw Exception('Failed to load data');
     }
   }
 }

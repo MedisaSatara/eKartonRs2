@@ -52,7 +52,7 @@ namespace eKarton.Service.Services
         }
 
 
-        public override async Task<Model.Models.Doktor> Insert(DoktorInsertRequest insert)
+       /* public override async Task<Model.Models.Doktor> Insert(DoktorInsertRequest insert)
         {
             var state = _baseState.CreateState("initial");
             return await state.Insert(insert);
@@ -63,9 +63,9 @@ namespace eKarton.Service.Services
             var entity = await _context.Doktors.FindAsync(id);
             var state = _baseState.CreateState(entity.StateMachine);
             return await state.Update(id, update);
-        }
+        }*/
 
-        public async Task<Model.Models.Doktor> Activate(int id)
+      /*  public async Task<Model.Models.Doktor> Activate(int id)
         {
             var entity = await _context.Doktors.FindAsync(id);
             var state = _baseState.CreateState(entity.StateMachine);
@@ -78,6 +78,13 @@ namespace eKarton.Service.Services
             var state = _baseState.CreateState(entity.StateMachine);
             return await state.Hide(id);
         }
+
+        public async Task<List<string>> AllowedActions(int id)
+        {
+            var entity = await _context.Termins.FindAsync(id);
+            var state = _baseState.CreateState(entity?.StateMachine ?? "initial");
+            return await state.AllowedActions();
+        }*/
 
         public List<Model.Models.Doktor> GetPreporuceniDoktor(int id)
         {

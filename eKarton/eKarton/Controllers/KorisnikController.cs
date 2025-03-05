@@ -43,6 +43,37 @@ namespace eKarton.Controllers
 
             return ((IKorisnikService)_service).Login(usernamePassword.Substring(0, seperatorIndex), usernamePassword[(seperatorIndex + 1)..]);
         }
+        [HttpPost("provjeriLozinku")]
+        public IActionResult ProvjeriLozinku([FromBody] ProvjeraLozinkeRequest model)
+        {
+            if ((_service as IKorisnikService).ProvjeriLozinku(model.KorisnikId, model.StaraLozinka))
+                return Ok(new { validnaLozinka = true });
+
+            return BadRequest(new { poruka = "Stara lozinka nije tačna" });
+        }
+
+        [HttpPost("promeni-lozinku")]
+        public IActionResult PromeniLozinku([FromBody] PromeniLozinkuRequest request)
+        {
+            try
+            {
+                var result = ((IKorisnikService)_service).PromeniLozinku(request.KorisnikId, request.StaraLozinka, request.NovaLozinka);
+                if (result)
+                {
+                    return Ok("Lozinka je uspešno promenjena.");
+                }
+                else
+                {
+                    return BadRequest("Došlo je do greške pri promeni lozinke.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+       
+
 
     }
 }

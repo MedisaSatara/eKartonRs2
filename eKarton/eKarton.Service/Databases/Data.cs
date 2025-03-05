@@ -244,7 +244,7 @@ namespace eKarton.Services.Database
                     Email = "stanija@gmail.com",
                     Grad = "Sarajevo",
                     Jmbg = "1215988789654",
-                    StateMachine = "active",
+                    //StateMachine = "active",
                     OdjelId = 2001
                 },
                 new Doktor()
@@ -258,7 +258,7 @@ namespace eKarton.Services.Database
                     Email = "radas@gmail.com",
                     Grad = "Mostar",
                     Jmbg = "0102988789654",
-                    StateMachine="active",
+                    //StateMachine="active",
                     OdjelId = 2006
                 },
                 new Doktor()
@@ -272,7 +272,7 @@ namespace eKarton.Services.Database
                     Email = "jelenap@gmail.com",
                     Grad = "Sarajevo",
                     Jmbg = "1002980789654",
-                    StateMachine = "active",
+                    //StateMachine = "active",
                     OdjelId = 2006
                 },
                  new Doktor()
@@ -286,7 +286,7 @@ namespace eKarton.Services.Database
                      Email = "markom@gmail.com",
                      Grad = "Sarajevo",
                      Jmbg = "2099750789654",
-                     StateMachine = "active",
+                    // StateMachine = "active",
                      OdjelId = 2005
                  },
                  new Doktor()
@@ -300,7 +300,7 @@ namespace eKarton.Services.Database
                      Email = "bznada@gmail.com",
                      Grad = "Mostar",
                      Jmbg = "0507990078965",
-                     StateMachine = "archived",
+                    // StateMachine = "archived",
                      OdjelId = 2005
                  },
                  new Doktor()
@@ -314,7 +314,7 @@ namespace eKarton.Services.Database
                      Email = "adnaz@gmail.com",
                      Grad = "Mostar",
                      Jmbg = "2806989789654",
-                     StateMachine = "draft",
+                     //StateMachine = "draft",
                      OdjelId = 2004
                  },
                  new Doktor()
@@ -328,7 +328,7 @@ namespace eKarton.Services.Database
                      Email = "rankog@gmail.com",
                      Grad = "Tuzla",
                      Jmbg = "2039801236547",
-                     StateMachine = "draft",
+                    // StateMachine = "draft",
                      OdjelId = 2001
                  },
                  new Doktor()
@@ -342,7 +342,7 @@ namespace eKarton.Services.Database
                      Email = "nikolinas@gmail.com",
                      Grad = "Mostar",
                      Jmbg = "1111197523974",
-                     StateMachine = "cancelled",
+                    // StateMachine = "cancelled",
                      OdjelId = 2001
                  },
                  new Doktor()
@@ -356,7 +356,7 @@ namespace eKarton.Services.Database
                      Email = "editas@gmail.com",
                      Grad = "Stolac",
                      Jmbg = "2203197154239",
-                     StateMachine = "active",
+                   //  StateMachine = "active",
                      OdjelId = 2001
                  },
                  new Doktor()
@@ -370,7 +370,7 @@ namespace eKarton.Services.Database
                      Email = "gordanap@gmail.com",
                      Grad = "Mostar",
                      Jmbg = "1105971289654",
-                     StateMachine = "active",
+                   //  StateMachine = "active",
                      OdjelId = 2001
                  },
                  new Doktor()
@@ -384,7 +384,7 @@ namespace eKarton.Services.Database
                      Email = "senadv@gmail.com",
                      Grad = "Mostar",
                      Jmbg = "1911980647123",
-                     StateMachine = "archived",
+                   //  StateMachine = "archived",
                      OdjelId = 2002
                  },
                  new Doktor()
@@ -398,7 +398,7 @@ namespace eKarton.Services.Database
                      Email = "sandrab@gmail.com",
                      Grad = "Sarajevo",
                      Jmbg = "2206985452136",
-                     StateMachine = "active",
+                   //  StateMachine = "active",
                      OdjelId = 2003
                  });
             #endregion
@@ -872,7 +872,7 @@ namespace eKarton.Services.Database
                 new Termin()
                 {
                     TerminId = 7110,
-                    Razlog = "rutinska kontrola",
+                    Razlog = "Rutinska kontrola",
                     Datum = "22.05.2022",
                     Vrijeme = "09:15:00",
                     PacijentId = 5001,
@@ -884,7 +884,7 @@ namespace eKarton.Services.Database
                  new Termin()
                  {
                      TerminId = 7116,
-                     Razlog = "rutinska kontrola",
+                     Razlog = "Rutinska kontrola",
                      Datum = "22.05.2024",
                      Vrijeme = "09:15:00",
                      PacijentId = 5002,
@@ -897,7 +897,7 @@ namespace eKarton.Services.Database
                   new Termin()
                   {
                       TerminId = 7117,
-                      Razlog = "rutinska kontrola",
+                      Razlog = "Rutinska kontrola",
                       Datum = "15.07.2024",
                       Vrijeme = "09:15:00",
                       PacijentId = 5003,
@@ -910,7 +910,7 @@ namespace eKarton.Services.Database
                    new Termin()
                    {
                        TerminId = 7118,
-                       Razlog = "rutinska kontrola",
+                       Razlog = "Rutinska kontrola",
                        Datum = "12.12.2023",
                        Vrijeme = "09:15:00",
                        PacijentId = 5001,
@@ -923,7 +923,7 @@ namespace eKarton.Services.Database
                                       new Termin()
                                       {
                                           TerminId = 7119,
-                                          Razlog = "rutinska kontrola",
+                                          Razlog = "Rutinska kontrola",
                                           Datum = "11.02.2024",
                                           Vrijeme = "09:15:00",
                                           PacijentId = 5002,

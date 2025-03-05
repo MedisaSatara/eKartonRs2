@@ -15,7 +15,9 @@ namespace eKarton.Controllers
 
         }
 
-        [HttpPut("{id}/activate")]
+
+       
+       /* [HttpPut("{id}/activate")]
         public virtual async Task<Doktor> Activate(int id)
         {
             return await (_service as IDoktorService).Activate(id);
@@ -27,12 +29,12 @@ namespace eKarton.Controllers
         {
             return await (_service as IDoktorService).Hide(id);
         }
-       /* [HttpGet("{id}/allowedActions")]
+        [HttpGet("{id}/allowedActions")]
         public virtual async Task<List<string>> AllowedActions(int id)
         {
             return await (_service as IDoktorService).AllowedActions(id);
         }*/
-       [HttpGet("preporuceno/{id}")]
+        [HttpGet("preporuceno/{id}")]
         public List<eKarton.Model.Models.Doktor> GetPreporuceniDoktor(int id)
         {
             return _service.GetPreporuceniDoktor(id);

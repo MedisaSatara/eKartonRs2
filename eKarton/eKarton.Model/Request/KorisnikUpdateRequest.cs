@@ -24,5 +24,6 @@ namespace eKarton.Model.Request
 
         [Compare("Password", ErrorMessage = "Passwords do not match.")]
         public string PasswordPotvrda { get; set; }
+       // public int? UlogaId {  get; set; }
     }
 }

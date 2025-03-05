@@ -188,7 +188,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                     child: Container(
                       padding: EdgeInsets.all(16.0),
                       color: Colors.white,
-                      //child: _buildNalazTable(),
+                      child: _buildPeriodicnaTable(),
                     ),
                   ),
                   SizedBox(height: 24),
@@ -205,7 +205,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                     child: Container(
                       padding: EdgeInsets.all(16.0),
                       color: Colors.white,
-                      // child: _buildMjereTable(),
+                      child: _buildOboljenjeTable(),
                     ),
                   ),
                   Visibility(
@@ -277,7 +277,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                       rows: filteredNalazi!.map((nalaz) {
                         return DataRow(
                           cells: [
-                            DataCell(Text(nalaz.nalazId.toString())),
+                            DataCell(Text(nalaz.licnaAnamneza.toString())),
                             DataCell(Text(nalaz.datum ?? 'N/A')),
                           ],
                         );
@@ -567,6 +567,103 @@ class _EkartonScreen extends State<EkartonScreen> {
               overflow: TextOverflow.visible,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOboljenjeTable() {
+    if (filteredMjere == null || filteredMjere!.isEmpty) {
+      return Center(child: Text("Nema oboljenja za ovog pacijenta."));
+    }
+
+    final _verticalScrollController = ScrollController();
+    final _horizontalScrollController = ScrollController();
+    return Container(
+      child: Card(
+        child: AdaptiveScrollbar(
+          underColor: Colors.blueGrey.withOpacity(0.3),
+          sliderDefaultColor: Colors.grey.withOpacity(0.7),
+          sliderActiveColor: Colors.grey,
+          controller: _verticalScrollController,
+          child: AdaptiveScrollbar(
+            controller: _horizontalScrollController,
+            position: ScrollbarPosition.bottom,
+            underColor: Colors.blueGrey.withOpacity(0.3),
+            sliderDefaultColor: Colors.grey.withOpacity(0.7),
+            sliderActiveColor: Colors.grey,
+            child: SingleChildScrollView(
+              controller: _verticalScrollController,
+              scrollDirection: Axis.vertical,
+              child: SingleChildScrollView(
+                controller: _horizontalScrollController,
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0, bottom: 16.0),
+                  child: DataTable(
+                    columns: const [
+                      DataColumn(label: Text('Condition')),
+                    ],
+                    rows: filteredMjere!.map((mjere) {
+                      return DataRow(
+                        cells: [
+                          DataCell(Text(mjere.stanje.toString())),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+   Widget _buildPeriodicnaTable() {
+    if (filteredMjere == null || filteredMjere!.isEmpty) {
+      return Center(child: Text("Nema periodicnih pregleda za ovog pacijenta."));
+    }
+
+    final _verticalScrollController = ScrollController();
+    final _horizontalScrollController = ScrollController();
+    return Container(
+      child: Card(
+        child: AdaptiveScrollbar(
+          underColor: Colors.blueGrey.withOpacity(0.3),
+          sliderDefaultColor: Colors.grey.withOpacity(0.7),
+          sliderActiveColor: Colors.grey,
+          controller: _verticalScrollController,
+          child: AdaptiveScrollbar(
+            controller: _horizontalScrollController,
+            position: ScrollbarPosition.bottom,
+            underColor: Colors.blueGrey.withOpacity(0.3),
+            sliderDefaultColor: Colors.grey.withOpacity(0.7),
+            sliderActiveColor: Colors.grey,
+            child: SingleChildScrollView(
+              controller: _verticalScrollController,
+              scrollDirection: Axis.vertical,
+              child: SingleChildScrollView(
+                controller: _horizontalScrollController,
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0, bottom: 16.0),
+                  child: DataTable(
+                    columns: const [
+                      DataColumn(label: Text('Condition')),
+                    ],
+                    rows: filteredMjere!.map((mjere) {
+                      return DataRow(
+                        cells: [
+                          DataCell(Text(mjere.stanje.toString())),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

@@ -37,7 +37,7 @@ namespace eKarton.Service.UputniceStateMachine
 
             var entity = set.Find(id);
 
-            entity.StateMachine = "active";
+           // entity.StateMachine = "active";
 
             await _context.SaveChangesAsync();
             var bus = RabbitHutch.CreateBus("host=localhost:5672");

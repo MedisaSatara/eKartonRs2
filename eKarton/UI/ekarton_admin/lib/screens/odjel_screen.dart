@@ -4,6 +4,7 @@ import 'package:ekarton_admin/providers/odjel_provider.dart';
 import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'odjel_details_screen.dart';
 
 class OdjelScreen extends StatefulWidget {
   const OdjelScreen({Key? key}) : super(key: key);
@@ -30,6 +31,30 @@ class _OdjelScreenState extends State<OdjelScreen> {
     });
   }
 
+  void _navigateToAddOdjel() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OdjelDetailsScreen(
+          odjel: null,
+          onDataChanged: _fetchInitialData,
+        ),
+      ),
+    );
+  }
+
+  void _navigateToOdjelDetails(Odjel odjel) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OdjelDetailsScreen(
+          odjel: odjel,
+          onDataChanged: _fetchInitialData,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
@@ -48,52 +73,89 @@ class _OdjelScreenState extends State<OdjelScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                Text(
-                  "Departments",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
                 SizedBox(height: 16),
                 Expanded(
                   child: ListView.builder(
                     itemCount: odjelResult?.result.length ?? 0,
                     itemBuilder: (context, index) {
                       final odjel = odjelResult!.result[index];
-                      return Card(
-                        margin: EdgeInsets.symmetric(vertical: 8.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        elevation: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                odjel.naziv ?? "N/A",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                      return GestureDetector(
+                        onTap: () => _navigateToOdjelDetails(odjel),
+                        child: Card(
+                          margin: EdgeInsets.symmetric(vertical: 8.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          elevation: 4,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      odjel.naziv ?? "N/A",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      "Phone: ${odjel.telefon ?? 'N/A'}",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                "Phone: ${odjel.telefon ?? 'N/A'}",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[700],
+                                IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text('Delete Department'),
+                                          content: Text(
+                                              'Are you sure you want to delete this department?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Cancel'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () async {
+                                                await _odjelProvider
+                                                    .delete(odjel.odjelId!);
+                                                Navigator.of(context).pop();
+                                                _fetchInitialData();
+                                              },
+                                              child: Text('Delete'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );
                     },
                   ),
+                ),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _navigateToAddOdjel,
+                  child: Text("Add New Odjel"),
                 ),
               ],
             ),

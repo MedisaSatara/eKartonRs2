@@ -58,7 +58,8 @@ namespace eKarton.Service.Services
         {
             if (search?.IsUlogeIncluded == true)
             {
-                query = query.Include("Uloga");
+                query = query.Include(k => k.KorisnikUlogas)
+                             .ThenInclude(ku => ku.Uloga);
             }
             return base.AddInclude(query, search);
         }
@@ -98,6 +99,51 @@ namespace eKarton.Service.Services
             }
             return this._mapper.Map<Model.Models.Korisnik>(entity);
         }
+
+        public bool ProvjeriLozinku(int korisnikId, string staraLozinka)
+        {
+            var korisnik = _context.Korisniks.FirstOrDefault(k => k.KorisnikId == korisnikId);
+            if (korisnik == null)
+                return false; 
+
+            var hashLozinke = GenerateHash(korisnik.LozinkaSalt, staraLozinka);
+            return hashLozinke == korisnik.LozinkaHash; 
+        }
+
+        public bool PromeniLozinku(int korisnikId, string staraLozinka, string novaLozinka)
+        {
+            var korisnik = _context.Korisniks.FirstOrDefault(k => k.KorisnikId == korisnikId);
+            if (korisnik == null)
+            {
+                throw new Exception("Korisnik nije pronađen.");
+            }
+
+            var hashStareLozinke = GenerateHash(korisnik.LozinkaSalt, staraLozinka);
+            if (hashStareLozinke != korisnik.LozinkaHash)
+            {
+                throw new Exception("Stara lozinka je netačna.");
+            }
+
+            var noviSalt = GenerateSalt();
+            var noviHash = GenerateHash(noviSalt, novaLozinka);
+
+            korisnik.LozinkaSalt = noviSalt;
+            korisnik.LozinkaHash = noviHash;
+
+            _context.SaveChanges();
+
+            return true;
+        }
+        public async Task DeleteKorisnikAsync(int korisnikId)
+        {
+            var korisnik = await _context.Korisniks.FindAsync(korisnikId);
+            if (korisnik != null)
+            {
+                _context.Korisniks.Remove(korisnik);
+                await _context.SaveChangesAsync();
+            }
+        }
+
 
     }
 }

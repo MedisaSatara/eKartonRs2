@@ -1,5 +1,8 @@
 import 'package:ekarton_admin/models/korisnik.dart';
 import 'package:ekarton_admin/providers/korisnik_provider.dart';
+import 'package:ekarton_admin/providers/korisnik_uloga_provider.dart';
+import 'package:ekarton_admin/screens/korisnik_uloga_screen.dart';
+import 'package:ekarton_admin/screens/password_screen.dart';
 import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -18,6 +21,7 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   late KorisnikProvider _korisnikProvider;
   late Map<String, dynamic> _initialValue;
+  late KorisnikUlogaProvider _korisnikUlogaProvider;
 
   @override
   void initState() {
@@ -32,8 +36,6 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
           ? DateTime.parse(widget.korisnik!.datumRodjenja!.replaceAll('/', '-'))
           : null,
       'spol': widget.korisnik?.spol,
-      'lozinka': widget.korisnik?.password,
-      'potvrdaPassworda': widget.korisnik?.potvrdaPassworda,
       'korisnikUlogas': widget.korisnik?.korisnikUlogas ?? [],
     };
   }
@@ -42,6 +44,7 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _korisnikProvider = context.read<KorisnikProvider>();
+    _korisnikUlogaProvider = context.read<KorisnikUlogaProvider>();
   }
 
   Future<void> _submitForm() async {
@@ -57,10 +60,12 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
 
         if (widget.korisnik == null) {
           await _korisnikProvider.insert(Korisnik.fromJson(formData));
+
           _showSuccessDialog('User added successfully', 'success');
         } else {
           await _korisnikProvider.update(
               widget.korisnik!.korisnikId!, Korisnik.fromJson(formData));
+
           _showSuccessDialog('User updated successfully', 'updated');
         }
       } catch (e) {
@@ -94,9 +99,42 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.of(context).pop(result);
+                _showAddRoleDialog();
               },
               child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showAddRoleDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Add Role'),
+          content: Text('Do you want to add a role to this user?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        KorisnikUlogaScreen(korisnik: widget.korisnik),
+                  ),
+                );
+              },
+              child: Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('No'),
             ),
           ],
         );
@@ -136,38 +174,70 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                 SizedBox(height: 16),
                 _buildFormField("Email", "email", Icons.email),
                 SizedBox(height: 16),
-                if (widget.korisnik == null) ...[
-                  _buildFormField("Password", "password", Icons.lock,
-                      obscureText: true),
-                  SizedBox(height: 16),
-                  _buildFormField("Confirm password", "potvrdaPassworda",
-                      Icons.lock_outline,
-                      obscureText: true),
-                  SizedBox(height: 16),
-                ],
                 _buildFormField("Phone number", "telefon", Icons.phone),
                 SizedBox(height: 16),
                 _buildGenderDropdown(),
                 SizedBox(height: 16),
                 _buildDatePicker(),
                 SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: _submitForm,
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: const Color.fromARGB(255, 63, 125, 137),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                if (widget.korisnik == null) ...[
+                  _buildFormField("Password", "password", Icons.lock,
+                      obscureText: true),
+                  SizedBox(height: 16),
+                  _buildFormField(
+                      "Confirm password", "confirmPassword", Icons.lock_outline,
+                      obscureText: true),
+                  SizedBox(height: 16),
+                ],
+                if (widget.korisnik != null) ...[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChangePasswordScreen(
+                                korisnikId: widget.korisnik!.korisnikId!),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Change Password',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                    textStyle: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                    minimumSize: Size(double.infinity, 50),
                   ),
-                  child: Text(
-                    widget.korisnik == null ? 'Add User' : 'Update User',
-                    style: TextStyle(color: Colors.white),
+                  SizedBox(height: 24),
+                ],
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: _submitForm,
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                      side: BorderSide(
+                        color: const Color.fromARGB(255, 63, 125, 137),
+                        width: 1,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      widget.korisnik == null ? 'Add' : 'Save',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromARGB(255, 63, 125, 137),
+                      ),
+                    ),
                   ),
                 ),
               ],

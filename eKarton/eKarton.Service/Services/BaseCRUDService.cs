@@ -51,17 +51,46 @@ namespace eKarton.Service.Services
         {
             var set = _context.Set<TDb>();
             var entity = set.Find(id);
+
             if (entity != null)
             {
-                var tmp = entity;
+                if (typeof(TDb) == typeof(Korisnik)) 
+                {
+                    var relatedKorisnikUlogas = _context.Set<KorisnikUloga>()
+                                                         .Where(ku => ku.KorisnikId == id)
+                                                         .ToList();
+
+                    foreach (var korisnikUloga in relatedKorisnikUlogas)
+                    {
+                        _context.Set<KorisnikUloga>().Remove(korisnikUloga);  
+                    }
+                }
+
+                if (typeof(TDb) == typeof(Doktor))
+                {
+                    var relatedDoktori = _context.Doktors.Where(d => d.OdjelId == id).ToList();
+
+                    if (relatedDoktori.Any())
+                    {
+                        foreach (var doktor in relatedDoktori)
+                        {
+                            doktor.OdjelId = null;  
+                        }
+
+                        _context.SaveChanges();
+                    }
+                }
+
                 _context.Remove(entity);
-                int result = _context.SaveChanges(); // Dodajte ovaj red za proveru rezultata brisanja
-                Console.WriteLine($"Delete result: {result}"); // Dodajte ovaj red za proveru rezultata brisanja
-                return _mapper.Map<T>(tmp);
+
+                int result = _context.SaveChanges();
+                Console.WriteLine($"Delete result: {result}");
+
+                return _mapper.Map<T>(entity); 
             }
             else
             {
-                return null;
+                return null;  
             }
         }
 

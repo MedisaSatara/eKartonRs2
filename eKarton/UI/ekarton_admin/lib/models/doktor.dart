@@ -19,6 +19,7 @@ class Doktor {
       this.email,
       this.grad,
       this.telefon,
+      this.stateMachine,
       this.odjelId});
 
   int? doktorId;
@@ -31,6 +32,7 @@ class Doktor {
   String? email;
   String? datumRodjenja;
   int? odjelId;
+  String? stateMachine;
 
   factory Doktor.fromJson(Map<String, dynamic> json) => _$DoktorFromJson(json);
 

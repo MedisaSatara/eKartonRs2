@@ -11,14 +11,12 @@ namespace eKarton.Service.Services
 {
     public interface IDoktorService : ICRUDDoktoriService<Doktor, DoktorSearchObject, DoktorInsertRequest, DoktorUpdateRequest>
     {
-        Task<Doktor> Activate(int id);
+       /* Task<Doktor> Activate(int id);
         Task<Doktor> Hide(int id);
+        Task<List<string>> AllowedActions(int id);*/
+
         List<Model.Models.Doktor> GetPreporuceniDoktor(int id);
         List<Model.Models.Doktor> GetRecommendedDoctors();
-       // List<Doktor> RecommendDoctors(int korisnikId);
-       // List<Model.Models.Doktor> GetRecommendedDoctorsForUser(int userId);
-
-        // Task<List<string>> AllowedActions(int id);
 
     }
 }

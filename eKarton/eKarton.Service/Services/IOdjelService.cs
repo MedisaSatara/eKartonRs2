@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace eKarton.Service.Services
 {
-    public interface IOdjelService : IService<Model.Models.Odjel, BaseSearchObject>
+    public interface IOdjelService : ICRUDService<Model.Models.Odjel, BaseSearchObject, Model.Request.OdjelInsertRequest, Model.Request.OdjelUpdateRequest>
     {
-
     }
- 
+
 }
