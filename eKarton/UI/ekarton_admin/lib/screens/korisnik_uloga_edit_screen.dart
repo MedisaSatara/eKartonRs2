@@ -33,9 +33,13 @@ class _KorisnikUlogaEditScreenState extends State<KorisnikUlogaEditScreen> {
   @override
   void initState() {
     super.initState();
-
-    _datumIzmjeneController =
-        TextEditingController(text: widget.korisnikUloga.datumIzmjene);
+    if (widget.korisnikUloga.datumIzmjene != null) {
+      DateTime dateTime = DateTime.parse(widget.korisnikUloga.datumIzmjene!);
+      _datumIzmjeneController = TextEditingController(
+          text: DateFormat('dd/MM/yyyy').format(dateTime));
+    } else {
+      _datumIzmjeneController = TextEditingController();
+    }
 
     _fetchUloge();
     _fetchKorisnik();
@@ -168,7 +172,6 @@ class _KorisnikUlogaEditScreenState extends State<KorisnikUlogaEditScreen> {
       try {
         DateTime datumIzmjene =
             DateFormat('dd/MM/yyyy').parse(widget.korisnikUloga.datumIzmjene!);
-
         await context.read<KorisnikUlogaProvider>().update(
           widget.korisnikUloga.korisnikUlogaId!,
           {
