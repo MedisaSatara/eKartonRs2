@@ -306,7 +306,7 @@ class _ReportScreen extends State<ReportScreen> {
                             IconButton(
                               icon: const Icon(Icons.download),
                               onPressed: () async {
-                                await _generatePdf('Top 3 Doktora', [doktor]);
+                                await _generatePdf('Top 3 doktora', [doktor]);
                               },
                             ),
                           ],
@@ -327,7 +327,7 @@ class _ReportScreen extends State<ReportScreen> {
                               icon: const Icon(Icons.download),
                               onPressed: () async {
                                 await _generatePdf(
-                                    'Pregledi Po Doktoru', [pregled]);
+                                    'Pregledi po doktoru', [pregled]);
                               },
                             ),
                           ],
@@ -353,7 +353,7 @@ class _ReportScreen extends State<ReportScreen> {
                               icon: const Icon(Icons.download),
                               onPressed: () async {
                                 await _generatePdf(
-                                    'Bolesti Po Godištu', [bolest]);
+                                    'Bolesti po godištu', [bolest]);
                               },
                             ),
                           ],

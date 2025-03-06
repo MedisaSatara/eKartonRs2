@@ -1,8 +1,10 @@
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
+import 'package:ekarton_mobile/models/pacijent_oboljenja.dart';
 import 'package:ekarton_mobile/models/pregled.dart';
 import 'package:ekarton_mobile/models/preventivne_mjere.dart';
 import 'package:ekarton_mobile/models/terapija.dart';
 import 'package:ekarton_mobile/providers/doktor_provider.dart';
+import 'package:ekarton_mobile/providers/pacijent_oboljenja_provider.dart';
 import 'package:ekarton_mobile/providers/pregled_provider.dart';
 import 'package:ekarton_mobile/providers/preventivne_mjere_provider.dart';
 import 'package:ekarton_mobile/providers/terapija_provider.dart';
@@ -38,8 +40,11 @@ class _EkartonScreen extends State<EkartonScreen> {
   late PregledProvider _pregledProvider;
   late DoktorProvider _doktorProvider;
   late TerapijaProvider _terapijaProvider;
+  late PacijentOboljenjaProvider _pacijentOboljenjaProvider;
+
   List<Nalaz>? filteredNalazi;
   List<PreventivneMjere>? filteredMjere;
+  List<PacijentOboljenja>? pacijentOboljenja;
   List<Pregled>? filteredPregled;
   List<Terapija>? fliteredTerapija;
   Map<int?, String?> _doktorMap = {};
@@ -53,6 +58,7 @@ class _EkartonScreen extends State<EkartonScreen> {
     _pregledProvider = context.read<PregledProvider>();
     _doktorProvider = context.read<DoktorProvider>();
     _terapijaProvider = context.read<TerapijaProvider>();
+    _pacijentOboljenjaProvider = context.read<PacijentOboljenjaProvider>();
 
     _fetchInitialData();
   }
@@ -63,6 +69,7 @@ class _EkartonScreen extends State<EkartonScreen> {
     var pregledData = await _pregledProvider.get();
     var doktorData = await _doktorProvider.get();
     var terapijaData = await _terapijaProvider.get();
+    var pacijentOboljenjaData = await _pacijentOboljenjaProvider.get();
 
     setState(() {
       filteredNalazi = data.result
@@ -70,6 +77,10 @@ class _EkartonScreen extends State<EkartonScreen> {
           .toList();
 
       filteredMjere = mjereData.result
+          ?.where((mjere) => mjere.pacijentId == widget.pacijent?.pacijentId)
+          .toList();
+
+      pacijentOboljenja = pacijentOboljenjaData.result
           ?.where((mjere) => mjere.pacijentId == widget.pacijent?.pacijentId)
           .toList();
 
@@ -188,7 +199,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                     child: Container(
                       padding: EdgeInsets.all(16.0),
                       color: Colors.white,
-                      child: _buildPeriodicnaTable(),
+                      child: _buildOboljenjeTable(),
                     ),
                   ),
                   SizedBox(height: 24),
@@ -205,7 +216,7 @@ class _EkartonScreen extends State<EkartonScreen> {
                     child: Container(
                       padding: EdgeInsets.all(16.0),
                       color: Colors.white,
-                      child: _buildOboljenjeTable(),
+                      child: _buildPeriodicnaTable(),
                     ),
                   ),
                   Visibility(
@@ -573,7 +584,7 @@ class _EkartonScreen extends State<EkartonScreen> {
   }
 
   Widget _buildOboljenjeTable() {
-    if (filteredMjere == null || filteredMjere!.isEmpty) {
+    if (pacijentOboljenja == null || pacijentOboljenja!.isEmpty) {
       return Center(child: Text("Nema oboljenja za ovog pacijenta."));
     }
 
@@ -602,12 +613,16 @@ class _EkartonScreen extends State<EkartonScreen> {
                   padding: const EdgeInsets.only(right: 8.0, bottom: 16.0),
                   child: DataTable(
                     columns: const [
-                      DataColumn(label: Text('Condition')),
+                      DataColumn(label: Text('Nesposoban za rad')),
+                      DataColumn(label: Text('Nesposoban za rad od')),
+                      DataColumn(label: Text('Nesposoban za rad do')),
                     ],
-                    rows: filteredMjere!.map((mjere) {
+                    rows: pacijentOboljenja!.map((mjere) {
                       return DataRow(
                         cells: [
-                          DataCell(Text(mjere.stanje.toString())),
+                          DataCell(Text(mjere.nesposobanZaRad.toString())),
+                          DataCell(Text(mjere.nesposobanZaRadOd.toString())),
+                          DataCell(Text(mjere.nesposobanZaRadDo.toString())),
                         ],
                       );
                     }).toList(),
@@ -620,9 +635,11 @@ class _EkartonScreen extends State<EkartonScreen> {
       ),
     );
   }
-   Widget _buildPeriodicnaTable() {
+
+  Widget _buildPeriodicnaTable() {
     if (filteredMjere == null || filteredMjere!.isEmpty) {
-      return Center(child: Text("Nema periodicnih pregleda za ovog pacijenta."));
+      return Center(
+          child: Text("Nema periodicnih pregleda za ovog pacijenta."));
     }
 
     final _verticalScrollController = ScrollController();
@@ -646,21 +663,6 @@ class _EkartonScreen extends State<EkartonScreen> {
               child: SingleChildScrollView(
                 controller: _horizontalScrollController,
                 scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 8.0, bottom: 16.0),
-                  child: DataTable(
-                    columns: const [
-                      DataColumn(label: Text('Condition')),
-                    ],
-                    rows: filteredMjere!.map((mjere) {
-                      return DataRow(
-                        cells: [
-                          DataCell(Text(mjere.stanje.toString())),
-                        ],
-                      );
-                    }).toList(),
-                  ),
-                ),
               ),
             ),
           ),

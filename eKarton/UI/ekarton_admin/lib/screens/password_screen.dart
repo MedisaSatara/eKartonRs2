@@ -1,9 +1,6 @@
-import 'package:ekarton_admin/models/korisnik.dart';
 import 'package:ekarton_admin/providers/korisnik_provider.dart';
-import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -61,7 +58,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
-
               },
               child: Text('OK'),
             ),
@@ -80,7 +76,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           content: Text(message),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(), 
+              onPressed: () => Navigator.of(context).pop(),
               child: Text('OK'),
             ),
           ],

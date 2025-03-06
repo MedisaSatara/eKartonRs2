@@ -316,26 +316,4 @@ abstract class BaseProvider<T> with ChangeNotifier {
       throw Exception("Unknown error");
     }
   }
-
-  Future<SearchResult<KorisnikUloga>> getKorisnikUloga(
-      {Map<String, String>? filter}) async {
-    final response = await http.get(
-      Uri.parse('https://localhost:7285/KorisnikUloga'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      var filteredData = data.where((item) {
-        return item['korisnikId'] == filter?['korisnikId'] &&
-            item['ulogaId'] == filter?['ulogaId'];
-      }).toList();
-
-      return SearchResult<KorisnikUloga>();
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
 }

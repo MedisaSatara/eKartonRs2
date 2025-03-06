@@ -126,7 +126,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(16.0),
                       width: 400,
-                      height: 280,
+                      height: 310,
                       color: Colors.white,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,7 +159,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(16.0),
                       width: 200,
-                      height: 280,
+                      height: 310,
                       color: Colors.white,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,8 +221,7 @@ class _DoktorScreenState extends State<DoktorScreen> {
                           );
 
                           return InkWell(
-                            onTap: () => _navigateToDoktorDetails(
-                                doktor), 
+                            onTap: () => _navigateToDoktorDetails(doktor),
                             child: Card(
                               elevation: 4,
                               margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -248,6 +247,19 @@ class _DoktorScreenState extends State<DoktorScreen> {
                                     Text(
                                         "Department: ${odjel?.naziv ?? 'N/A'}"),
                                     SizedBox(height: 8),
+                                    IconButton(
+                                      icon:
+                                          Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () async {
+                                        bool? confirmDelete =
+                                            await _showDeleteDialog();
+                                        if (confirmDelete == true) {
+                                          await _doktorProvider
+                                              .delete(doktor.doktorId);
+                                          _fetchInitialData();
+                                        }
+                                      },
+                                    ),
                                   ],
                                 ),
                               ),
@@ -263,6 +275,32 @@ class _DoktorScreenState extends State<DoktorScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<bool?> _showDeleteDialog() {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete confirmation'),
+          content: Text('Are you sure you want to delete this doctor?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text('Delete'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

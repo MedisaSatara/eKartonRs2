@@ -294,7 +294,6 @@ class _KorisnikScreen extends State<KorisnikScreen> {
               if (result != null) {
                 _fetchKorisnici();
               }
-              
             },
             trailing: IconButton(
               icon: Icon(Icons.delete, color: Colors.red),
