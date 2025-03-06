@@ -295,7 +295,7 @@ class _ReportScreen extends State<ReportScreen> {
                 children: [
                   if (currentReport == 'doktor')
                     _buildReportSection(
-                      title: 'Top 3 Najposećenija Doktora',
+                      title: 'Top 3 najposećenija doktora',
                       future: futureDoktorReports,
                       itemBuilder: (context, doktor) => ListTile(
                         title: Text(doktor.imeDoktora ?? ""),
@@ -315,7 +315,7 @@ class _ReportScreen extends State<ReportScreen> {
                     ),
                   if (currentReport == 'pregledi')
                     _buildReportSection(
-                      title: 'Pregledi Po Doktoru',
+                      title: 'Pregledi po doktoru',
                       future: futurePreglediReports,
                       itemBuilder: (context, pregled) => ListTile(
                         title: Text(pregled.imeDoktora ?? ""),
@@ -336,7 +336,7 @@ class _ReportScreen extends State<ReportScreen> {
                     ),
                   if (currentReport == 'bolesti')
                     _buildReportSection(
-                      title: 'Bolesti Po Godištu',
+                      title: 'Bolesti po godištu',
                       future: futureBolestiReports,
                       itemBuilder: (context, bolest) => ListTile(
                         title: Text('Godina: ${bolest.decade}'),
