@@ -17,7 +17,7 @@ class KorisnikUlogaScreen extends StatefulWidget {
   final Korisnik? korisnik;
   final Function? onDataChanged;
   KorisnikUlogaScreen(
-      {Key? key, this.korisnikUloga,this.korisnik, this.onDataChanged})
+      {Key? key, this.korisnikUloga, this.korisnik, this.onDataChanged})
       : super(key: key);
 
   @override
@@ -34,7 +34,7 @@ class _KorisnikUlogaScreen extends State<KorisnikUlogaScreen> {
   List<Uloga>? _uloga;
   List<KorisnikUloga>? _korisnikUloga;
 
-  String? _selectedKorisnikId;  
+  String? _selectedKorisnikId;
   String? _selectedUlogaId;
   String? _korisnikIme;
 
@@ -46,7 +46,7 @@ class _KorisnikUlogaScreen extends State<KorisnikUlogaScreen> {
     super.initState();
     _initialValue = {
       'korisnikUlogaId': widget.korisnikUloga?.korisnikUlogaId,
-      'korisnikId': null,  
+      'korisnikId': null,
       'ulogaId': widget.korisnikUloga?.uloga,
       'datumIzmjene': widget.korisnikUloga?.datumIzmjene,
     };
@@ -107,11 +107,13 @@ class _KorisnikUlogaScreen extends State<KorisnikUlogaScreen> {
 
       try {
         if (widget.korisnikUloga == null) {
-          await _korisnikUlogaProvider.insert(KorisnikUloga.fromJson(mutableFormData));
+          await _korisnikUlogaProvider
+              .insert(KorisnikUloga.fromJson(mutableFormData));
           _showSuccessMessage('User role successfully added!');
         } else {
           await _korisnikUlogaProvider.update(
-              widget.korisnikUloga!.korisnikUlogaId!, KorisnikUloga.fromJson(mutableFormData));
+              widget.korisnikUloga!.korisnikUlogaId!,
+              KorisnikUloga.fromJson(mutableFormData));
           _showSuccessMessage('User role successfully updated!');
         }
         Navigator.of(context).pop();
@@ -194,9 +196,12 @@ class _KorisnikUlogaScreen extends State<KorisnikUlogaScreen> {
                       labelText: 'Korisnik',
                     ),
                     items: _korisnik
-                            ?.map((korisnik) => DropdownMenuItem<String>(value: korisnik.korisnikId.toString(), child: Text(korisnik.ime ?? "")))
-                            .toList() ?? [],
-                    initialValue: _selectedKorisnikId,  
+                            ?.map((korisnik) => DropdownMenuItem<String>(
+                                value: korisnik.korisnikId.toString(),
+                                child: Text(korisnik.ime ?? "")))
+                            .toList() ??
+                        [],
+                    initialValue: _selectedKorisnikId,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Ovo polje je obavezno!';
@@ -214,7 +219,8 @@ class _KorisnikUlogaScreen extends State<KorisnikUlogaScreen> {
                                   value: uloga.ulogaId.toString(),
                                   child: Text(uloga.naziv ?? ""),
                                 ))
-                            .toList() ?? [],
+                            .toList() ??
+                        [],
                     initialValue: _initialValue['ulogaId']?.toString(),
                     onChanged: (value) {
                       setState(() {
@@ -237,9 +243,7 @@ class _KorisnikUlogaScreen extends State<KorisnikUlogaScreen> {
           ),
         ),
       ),
-      title: widget.korisnikUloga != null
-          ? "User Role:"
-          : "User Role Details",
+      title: widget.korisnikUloga != null ? "User Role:" : "User Role Details",
     );
   }
 }

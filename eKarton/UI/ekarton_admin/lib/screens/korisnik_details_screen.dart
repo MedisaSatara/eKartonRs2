@@ -11,7 +11,10 @@ import 'package:provider/provider.dart';
 
 class KorisniciDetailsScreen extends StatefulWidget {
   final Korisnik? korisnik;
-  KorisniciDetailsScreen({Key? key, this.korisnik}) : super(key: key);
+  final Function? onDataChanged;
+
+  KorisniciDetailsScreen({Key? key, this.korisnik, this.onDataChanged})
+      : super(key: key);
 
   @override
   State<KorisniciDetailsScreen> createState() => _KorisniciDetailsScreenState();
@@ -60,13 +63,17 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
 
         if (widget.korisnik == null) {
           await _korisnikProvider.insert(Korisnik.fromJson(formData));
-
           _showSuccessDialog('User added successfully', 'success');
         } else {
           await _korisnikProvider.update(
               widget.korisnik!.korisnikId!, Korisnik.fromJson(formData));
+          if (widget.onDataChanged != null) {
+            widget.onDataChanged!();
+          }
 
-          _showSuccessDialog('User updated successfully', 'updated');
+          Navigator.pop(context);
+
+          _showSnackbar('User updated successfully');
         }
       } catch (e) {
         print('Error: $e');
@@ -88,6 +95,15 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
     }
   }
 
+  void _showSnackbar(String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.green,
+      duration: Duration(seconds: 3),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   void _showSuccessDialog(String message, String result) {
     showDialog(
       context: context,
@@ -99,7 +115,9 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                _showAddRoleDialog();
+                if (widget.korisnik == null) {
+                  _showAddRoleDialog();
+                }
               },
               child: Text('OK'),
             ),

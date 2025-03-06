@@ -155,7 +155,7 @@ class _OdjelScreenState extends State<OdjelScreen> {
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _navigateToAddOdjel,
-                  child: Text("Add New Odjel"),
+                  child: Text("Add New Department"),
                 ),
               ],
             ),

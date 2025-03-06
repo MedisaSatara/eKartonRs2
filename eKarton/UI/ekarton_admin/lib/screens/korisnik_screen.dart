@@ -2,8 +2,10 @@ import 'package:ekarton_admin/models/korisnik.dart';
 import 'package:ekarton_admin/models/search_result.dart';
 import 'package:ekarton_admin/providers/korisnik_provider.dart';
 import 'package:ekarton_admin/screens/korisnik_details_screen.dart';
+import 'package:ekarton_admin/screens/korisnik_uloga_list_screen.dart';
 import 'package:ekarton_admin/widget/master_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 class KorisnikScreen extends StatefulWidget {
@@ -102,6 +104,32 @@ class _KorisnikScreen extends State<KorisnikScreen> {
                 _buildButton(),
                 const SizedBox(height: 12),
                 Expanded(child: _buildDataListView()),
+                const SizedBox(height: 12),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => KorisnikUlogaListScreen(),
+                      ));
+                    },
+                    child: Text(
+                      "Show User Roles",
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 63, 125, 137),
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -260,13 +288,56 @@ class _KorisnikScreen extends State<KorisnikScreen> {
               final result = await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => KorisniciDetailsScreen(
                   korisnik: korisnik,
+                  onDataChanged: _fetchKorisnici,
                 ),
               ));
               if (result != null) {
                 _fetchKorisnici();
               }
+              
             },
+            trailing: IconButton(
+              icon: Icon(Icons.delete, color: Colors.red),
+              onPressed: () async {
+                bool? shouldDelete = await _showDeleteDialog();
+                if (shouldDelete == true) {
+                  try {
+                    await _korisnikProvider.delete(korisnik.korisnikId);
+                    _showSnackbar('User sucessufully deleted!');
+                    await _fetchKorisnici();
+                  } catch (e) {
+                    _showSnackbar('Error while deleting user!');
+                  }
+                }
+              },
+            ),
           ),
+        );
+      },
+    );
+  }
+
+  Future<bool?> _showDeleteDialog() {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete confirmation'),
+          content: Text('Are you sure you want to delete this user?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text('Delete'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
         );
       },
     );
