@@ -1,6 +1,7 @@
 import 'package:ekarton_mobile/consts.dart';
 import 'package:ekarton_mobile/providers/bolnica_provider.dart';
 import 'package:ekarton_mobile/providers/doktor_provider.dart';
+import 'package:ekarton_mobile/providers/kategorija_transkcija_provider.dart';
 import 'package:ekarton_mobile/providers/korisnik_provider.dart';
 import 'package:ekarton_mobile/providers/nalaz_provider.dart';
 import 'package:ekarton_mobile/providers/ocjena_doktor_provider.dart';
@@ -11,6 +12,8 @@ import 'package:ekarton_mobile/providers/pregled_provider.dart';
 import 'package:ekarton_mobile/providers/preventivne_mjere_provider.dart';
 import 'package:ekarton_mobile/providers/terapija_provider.dart';
 import 'package:ekarton_mobile/providers/termin_provider.dart';
+import 'package:ekarton_mobile/providers/transkacijaLog_provider.dart';
+import 'package:ekarton_mobile/providers/transkacije_provider.dart';
 import 'package:ekarton_mobile/providers/uloga_provider.dart';
 import 'package:ekarton_mobile/screens/ekarton_screen.dart';
 import 'package:ekarton_mobile/screens/home_screen.dart';
@@ -43,6 +46,17 @@ void main() async {
       ChangeNotifierProvider(create: (_) => UlogaProvider()),
       ChangeNotifierProvider(create: (_) => OcjenaDoktorProvider()),
       ChangeNotifierProvider(create: (_) => OdjelProvider()),
+      ChangeNotifierProvider(create: (_) => TranskacijeProvider()),
+      ChangeNotifierProvider(create: (_) => KategorijaTranskcijaProvider()),
+      ChangeNotifierProvider(create: (_) => TranskacijalogProvider()),
+
+
+
+
+
+
+
+
     ],
     child: MyApp(),
   ));

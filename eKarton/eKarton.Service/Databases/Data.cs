@@ -151,6 +151,80 @@ namespace eKarton.Services.Database
                   });
             #endregion
 
+            #region Dodavanje KategorijaTransakcija25062025
+            modelBuilder.Entity<KategorijaTransakcija25062025>().HasData(
+                new KategorijaTransakcija25062025()
+                {
+                    KategorijaTransakcijaId = 5678,
+                    NazivKategorije = "Hrana",
+                    TipKategorije = "Prihod",
+                },
+                  new KategorijaTransakcija25062025()
+                  {
+                      KategorijaTransakcijaId = 5679,
+                      NazivKategorije = "Prevoz",
+                      TipKategorije = "Prihod",
+                  });
+            #endregion
+            #region Dodavanje Transakcije25062025
+            modelBuilder.Entity<Transakcije25062025>().HasData(
+                new Transakcije25062025()
+                {
+                    TransakcijeId=8988,
+                    KategorijaTransakcijaId = 5678,
+                    KorisnikId=1002,
+                    Iznos=200,
+                    DatumTransakcije=new DateTime(2025,06,25),
+                    Opis="Transkacije racunom",
+                    Status="Planirano",
+                },
+                  new Transakcije25062025()
+                  {
+                      TransakcijeId = 8989,
+                      KategorijaTransakcijaId = 5679,
+                      KorisnikId = 1002,
+                      Iznos = 500,
+                      DatumTransakcije = new DateTime(2025, 06, 15),
+                      Opis = "Transkacije racunom",
+                      Status = "Planirano",
+                  });
+            #endregion
+
+            #region Dodavanje Transakcije25062025
+            modelBuilder.Entity<TransakcijaLog25062025>().HasData(
+                new TransakcijaLog25062025()
+                {
+                    TransakcijaLogId = 8938,
+                    KorisnikId = 1002,
+                    TransakcijeId= 8988,
+                    StariStatus ="Planirano",
+                    NoviStatus="Realizovano",
+                    VrijemePromjene=DateTime.Now,
+
+
+                },
+                  new TransakcijaLog25062025()
+                  {
+                      TransakcijaLogId = 8939,
+                      KorisnikId = 1002,
+                      TransakcijeId = 8989,
+                      StariStatus = "Planirano",
+                      NoviStatus = "Otkazano",
+                      VrijemePromjene = DateTime.Now,
+                  });
+            #endregion
+
+            #region Dodavanje Transakcije25062025
+            modelBuilder.Entity<FinansijskiLimit250262025>().HasData(
+                new FinansijskiLimit250262025()
+                {
+                    FinansijskiLimitId = 8138,
+                    KategorijaTransakcijaId= 5678,
+                    IznosLimita = 300,
+
+
+                });
+            #endregion
 
             #region Podaci Bolnice
             modelBuilder.Entity<Bolnica>().HasData(
@@ -1093,6 +1167,7 @@ namespace eKarton.Services.Database
                 });
             #endregion
 
+         
 
 
             //OnModelCreatingPartial(modelBuilder);

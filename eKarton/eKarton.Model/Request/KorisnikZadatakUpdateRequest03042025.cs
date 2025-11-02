@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace eKarton.Model.Request
+{
+    public class KorisnikZadatakUpdateRequest03042025
+    {
+        public DateTime? DatumPocetkaZadatka { get; set; }
+        public DateTime? DatumZavrsetkaZadatka { get; set; }
+        public string? Status { get; set; }
+        public string? Napomena { get; set; }
+        public string? Prioritet { get; set; }
+       // public int? KorisnikId { get; set; }
+       // public int? ZadatakId { get; set; }
+    }
+}

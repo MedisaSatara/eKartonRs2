@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -38,6 +39,8 @@ class _ReportScreen extends State<ReportScreen> {
     final pdf = pw.Document();
     final fontData = await rootBundle.load('assets/fonts/ttf/DejaVuSans.ttf');
     final ttf = pw.Font.ttf(fontData);
+    String formattedDate =
+        DateFormat('dd.MM.yyyy HH:mm').format(DateTime.now());
 
     pdf.addPage(
       pw.MultiPage(
@@ -53,7 +56,7 @@ class _ReportScreen extends State<ReportScreen> {
             ),
           ),
           pw.Paragraph(
-            text: "Izvještaj generisan: ${DateTime.now().toString()}",
+            text: "Izvještaj generisan: $formattedDate",
             style: pw.TextStyle(
                 fontSize: 12, fontStyle: pw.FontStyle.italic, font: ttf),
           ),

@@ -13,9 +13,7 @@ Pacijent _$PacijentFromJson(Map<String, dynamic> json) => Pacijent(
       json['spol'] as String?,
       json['datumRodjenja'] == null
           ? null
-          : (json['datumRodjenja'] is String
-              ? DateTime.parse(json['datumRodjenja'] as String)
-              : json['datumRodjenja'] as DateTime),
+          : DateTime.parse(json['datumRodjenja'] as String),
       json['mjestoRodjenja'] as String?,
       json['jmbg'] as String?,
       json['telefon'] as String?,

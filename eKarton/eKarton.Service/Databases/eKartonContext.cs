@@ -40,6 +40,17 @@ namespace eKarton.Service.Databases
         public virtual DbSet<Uloga> Ulogas { get; set; } = null!;
         public virtual DbSet<Uputnica> Uputnicas { get; set; } = null!;
         public virtual DbSet<Vakcinacija> Vakcinacijas { get; set; } = null!;
+        public virtual DbSet<KategorijaTransakcija25062025> KategorijaTransakcija25062025s { get; set; } = null!;
+        public virtual DbSet<TransakcijaLog25062025> TransakcijaLog25062025s { get; set; } = null!;
+        public virtual DbSet<Transakcije25062025> Transakcije25062025s { get; set; } = null!;
+        public virtual DbSet<FinansijskiLimit250262025> FinansijskiLimit250262025s { get; set; } = null!;
+
+
+
+
+
+
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -74,6 +85,80 @@ namespace eKarton.Service.Databases
                     .HasConstraintName("FK_Bolnica_Administrator");
             });
 
+            modelBuilder.Entity<KategorijaTransakcija25062025>(entity =>
+            {
+                entity.ToTable("KategorijaTransakcija25062025");
+
+                entity.Property(e => e.NazivKategorije).HasMaxLength(50);
+                entity.Property(e => e.TipKategorije).HasMaxLength(250);
+
+
+            });
+            modelBuilder.Entity<KategorijaTransakcija25062025>().HasKey(z => z.KategorijaTransakcijaId);
+           
+
+            modelBuilder.Entity<Transakcije25062025>().HasKey(z => z.TransakcijeId);
+            modelBuilder.Entity<Transakcije25062025>(entity =>
+            {
+                entity.ToTable("Transakcije25062025");
+
+
+                entity.Property(e => e.DatumTransakcije).HasMaxLength(20);
+                entity.Property(e => e.Iznos).HasMaxLength(20);
+                entity.Property(e => e.Status).HasMaxLength(250);
+                entity.Property(e => e.Opis).HasMaxLength(50);
+
+            });
+
+            modelBuilder.Entity<Transakcije25062025>()
+                .HasOne(m => m.Korisnik)
+                .WithMany()
+                .HasForeignKey(m => m.KorisnikId);
+
+            modelBuilder.Entity<Transakcije25062025>()
+               .HasOne(m => m.KategorijaTransakcija)
+               .WithMany()
+               .HasForeignKey(m => m.KategorijaTransakcijaId);
+
+            modelBuilder.Entity<TransakcijaLog25062025>().HasKey(z => z.TransakcijaLogId);
+            modelBuilder.Entity<TransakcijaLog25062025>(entity =>
+            {
+                entity.ToTable("TransakcijaLog25062025");
+
+
+                entity.Property(e => e.StariStatus).HasMaxLength(20);
+                entity.Property(e => e.NoviStatus).HasMaxLength(20);
+                entity.Property(e => e.VrijemePromjene).HasMaxLength(250);
+
+            });
+
+            modelBuilder.Entity<TransakcijaLog25062025>()
+                .HasOne(m => m.Korisnik)
+                .WithMany()
+                .HasForeignKey(m => m.KorisnikId);
+
+            modelBuilder.Entity<TransakcijaLog25062025>()
+               .HasOne(m => m.Transakcije25062025)
+               .WithMany()
+               .HasForeignKey(m => m.TransakcijeId);
+
+            modelBuilder.Entity<FinansijskiLimit250262025>().HasKey(z => z.FinansijskiLimitId);
+            modelBuilder.Entity<FinansijskiLimit250262025>(entity =>
+            {
+                entity.ToTable("FinansijskiLimit250262025");
+
+
+                entity.Property(e => e.IznosLimita).HasMaxLength(20);
+
+            });
+
+            modelBuilder.Entity<FinansijskiLimit250262025>()
+                .HasOne(m => m.KategorijaTransakcija25062025)
+                .WithMany()
+                .HasForeignKey(m => m.KategorijaTransakcijaId);
+
+
+
             modelBuilder.Entity<Bolnica>(entity =>
             {
                 entity.ToTable("Bolnica");
@@ -87,6 +172,7 @@ namespace eKarton.Service.Databases
                 entity.Property(e => e.Telefon).HasMaxLength(20);
             });
 
+        
             modelBuilder.Entity<DodjeljeniDoktor>(entity =>
             {
                 entity.ToTable("DodjeljeniDoktor");
@@ -105,6 +191,7 @@ namespace eKarton.Service.Databases
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Pacijent_DodjeljeniDoktor");
             });
+
 
             modelBuilder.Entity<Doktor>(entity =>
             {

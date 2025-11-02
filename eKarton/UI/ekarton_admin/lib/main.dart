@@ -79,7 +79,7 @@ class MyMaterialApp extends StatelessWidget {
     return MaterialApp(
       title: 'RS II Material app',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: WelcomeScreen(),
+      home: HomeScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -32,6 +32,12 @@ builder.Services.AddTransient<ITehnickaPodrska, TehnickaPodrskaService>();
 builder.Services.AddTransient<IUlogaService, UlogaService>();
 builder.Services.AddTransient<IKorisnikUlogaService, KorisnikUlogaService>();
 builder.Services.AddTransient<IOboljenjeService, OboljenjeService>();
+builder.Services.AddTransient<ITransakcijaService, TranskacijaService>();
+builder.Services.AddTransient<IKategorijaTranskacijaService, KategorijaTransakcijaService>();
+builder.Services.AddTransient<ITransakcijaLogService, TransakcijaLogService>();
+builder.Services.AddTransient<IFinansijskiLimitService, FinansijskiLimit25062025>();
+
+
 
 
 
@@ -127,10 +133,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<eKartonContext>();
     dataContext.Database.Migrate();
-}
+}*/
 
 app.Run();

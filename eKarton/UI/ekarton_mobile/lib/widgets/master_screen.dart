@@ -1,5 +1,6 @@
 import 'package:ekarton_mobile/models/odjel.dart';
 import 'package:ekarton_mobile/screens/bolnica_screen.dart';
+import 'package:ekarton_mobile/screens/frmTransakcije25062025.dart';
 import 'package:ekarton_mobile/screens/home_screen.dart';
 import 'package:ekarton_mobile/screens/korisnik_profile_screen.dart';
 import 'package:ekarton_mobile/screens/ocjena_doktor_screen.dart';
@@ -127,6 +128,10 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     'Recommended doctors': RecommendedDoctorsScreen(),
     'Contact': BolnicaScreen(),
     //'Online paymant': PaymentDetailsScreen(paymentIntentId: "",),
+    'Kategorije': Frmtransakcije25062025(),
+
+
+
   };
 
   void _onMainItemTapped(int index) {

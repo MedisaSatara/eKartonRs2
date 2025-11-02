@@ -90,10 +90,25 @@ namespace eKarton.Service.Mapping
             CreateMap<OcjenaDoktorInsertRequest, Databases.OcjenaDoktor>();
             CreateMap<OcjenaDoktorUpdateRequest, Databases.OcjenaDoktor>();
 
+            CreateMap<Databases.KategorijaTransakcija25062025, Model.Models.KategorijaTransakcija25062025>();
+            CreateMap<KategorijaTransakcijaSearchObject, Databases.KategorijaTransakcija25062025>();
+            CreateMap<KategorijaTransakcijaInsertRequest, Databases.KategorijaTransakcija25062025>();
+            CreateMap<KategorijaTransakcijaUpdateRequest, Databases.KategorijaTransakcija25062025>();
 
+            CreateMap<Databases.Transakcije25062025, Model.Models.Transakcije25062025>();
+            CreateMap<TransakcijaSearchObject, Databases.Transakcije25062025>();
+            CreateMap<TransakcijaInsertRequest, Databases.Transakcije25062025>();
+            CreateMap<TransakcijaUpdateRequest, Databases.Transakcije25062025>();
 
+            CreateMap<Databases.TransakcijaLog25062025, Model.Models.TransakcijaLog25062025>();
+            CreateMap<TransakcijaLogSearchObject, Databases.TransakcijaLog25062025>();
+            CreateMap<TransakcijaLogInsertRequest, Databases.TransakcijaLog25062025>();
+            CreateMap<TranskacijaLogUpdateRequest, Databases.TransakcijaLog25062025>();
 
-
+            CreateMap<Databases.FinansijskiLimit250262025, Model.Models.FinansijskiLimit25062025>();
+            CreateMap<BaseSearchObject, Databases.FinansijskiLimit250262025>();
+            CreateMap<FinansijskiLimitInsertRequest, Databases.FinansijskiLimit250262025>();
+            CreateMap<FinansijskiLimitUpdateRequest, Databases.FinansijskiLimit250262025>();
 
 
         }

@@ -15,9 +15,7 @@ Termin _$TerminFromJson(Map<String, dynamic> json) => Termin(
       (json['doktorId'] as num?)?.toInt(),
       json['stateMachine'] as String?,
       json['brojTransakcije'] as String?,
-      json['cijenaPregleda'] as double?,
-
-
+      (json['cijenaPregleda'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$TerminToJson(Termin instance) => <String, dynamic>{
@@ -28,8 +26,6 @@ Map<String, dynamic> _$TerminToJson(Termin instance) => <String, dynamic>{
       'pacijentId': instance.pacijentId,
       'doktorId': instance.doktorId,
       'stateMachine': instance.stateMachine,
-      'cijenaPregleda': instance.cijenaPregleda,
       'brojTransakcije': instance.brojTransakcije,
-
-
+      'cijenaPregleda': instance.cijenaPregleda,
     };
